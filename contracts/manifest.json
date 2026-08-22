@@ -301,6 +301,42 @@
       "itemsAt": null,
       "auth": true,
       "$why": "Mutation. Same enveloped bare ConsultationDto, now with cancelledAtUtc/cancellationReason populated \u2014 recorded manually. See contracts/consultation-reschedule-cancel.json. PUT .../cancel (the sibling route) shares the same DTO; not separately recorded \u2014 this app calls the POST form."
+    },
+    {
+      "op": "GET /api/v1/admin/consultations",
+      "label": "admin-consultations",
+      "sample": "?pageSize=50",
+      "schema": "adminConsultationListResponse",
+      "itemsAt": "data.items",
+      "auth": true,
+      "$why": "Admin booking list. Paged: data.{items,page,pageSize,totalCount} \u2014 no totalPages/hasMore (ConsultationPagedResultDto). A separate table from the legacy /admin/inspections; this is what the app's booking flow writes into."
+    },
+    {
+      "op": "GET /api/v1/admin/consultations/pricing",
+      "label": "admin-consultations-pricing",
+      "sample": "",
+      "schema": "adminConsultationPricingResponse",
+      "itemsAt": "data",
+      "auth": true,
+      "$why": "Per-type fee config; same rows (same ids) as /admin/inspections/pricing, and the source of `fee` on /consultations/types."
+    },
+    {
+      "op": "PUT /api/v1/admin/consultations/{id}/cancel",
+      "label": "admin-consultation-cancel",
+      "sample": "",
+      "schema": "adminConsultationCancelResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded manually 2026-08-22 by cancelling the orphaned guest booking \"Anon Check\" (BACKLOG). Returns ApiEnvelope<ConsultationDto>, same item shape as the list; cancellation policy lives in `message`."
+    },
+    {
+      "op": "PUT /api/v1/admin/consultations/pricing/{id}",
+      "label": "admin-consultation-pricing-update",
+      "sample": "",
+      "schema": "adminConsultationPricingItemResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded manually 2026-08-22 with a no-op write (same values back). Returns ApiEnvelope<ConsultationPricingConfigDto>."
     }
   ]
 }

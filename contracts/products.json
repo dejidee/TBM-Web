@@ -36,6 +36,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "null",
             "aiKeywords": "null",
             "materialType": "null",
@@ -109,6 +112,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "null",
             "aiKeywords": "null",
             "materialType": "null",
@@ -170,6 +176,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "string",
             "materialType": "string",
@@ -204,268 +213,7 @@
             "installationType": "string",
             "material": "null",
             "color": "null",
-            "size": "string",
-            "variants": {
-              "type": "array",
-              "length": 4,
-              "of": {
-                "id": "string",
-                "size": "string",
-                "price": "number",
-                "stockQuantity": "number",
-                "isActive": "boolean",
-                "displayOrder": "number"
-              }
-            },
-            "images": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "primaryImageUrl": "null",
-            "similarProducts": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "createdAt": "string",
-            "updatedAt": "string"
-          },
-          {
-            "id": "string",
-            "name": "string",
-            "description": "string",
-            "shortDescription": "string",
-            "slug": "string",
-            "sku": "string",
-            "brandType": "number",
-            "brandName": "string",
-            "productType": "number",
-            "productTypeName": "string",
-            "categoryId": "string",
-            "categoryName": "string",
-            "price": "number",
-            "compareAtPrice": "number",
-            "showPrice": "boolean",
-            "priceDisplay": "string",
-            "stockQuantity": "number",
-            "inStock": "boolean",
-            "trackInventory": "boolean",
-            "isActive": "boolean",
-            "isFeatured": "boolean",
-            "displayOrder": "number",
-            "lowStockThreshold": "number",
-            "averageRating": "number",
-            "reviewCount": "number",
-            "tags": "string",
-            "aiKeywords": "string",
-            "materialType": "string",
-            "qualityTier": "string",
-            "recommendedFor": "string",
-            "specifications": {
-              "type": "array",
-              "length": 5,
-              "of": {
-                "key": "string",
-                "value": "string"
-              }
-            },
-            "keyFeatures": {
-              "type": "array",
-              "length": 6,
-              "of": "string"
-            },
-            "whatsIncluded": {
-              "type": "array",
-              "length": 3,
-              "of": "string"
-            },
-            "whatsNotIncluded": {
-              "type": "array",
-              "length": 7,
-              "of": "string"
-            },
-            "dimensions": "null",
-            "warranty": "null",
-            "finishType": "null",
-            "installationType": "string",
-            "material": "null",
-            "color": "null",
-            "size": "string",
-            "variants": {
-              "type": "array",
-              "length": 4,
-              "of": {
-                "id": "string",
-                "size": "string",
-                "price": "number",
-                "stockQuantity": "number",
-                "isActive": "boolean",
-                "displayOrder": "number"
-              }
-            },
-            "images": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "primaryImageUrl": "null",
-            "similarProducts": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "createdAt": "string",
-            "updatedAt": "string"
-          },
-          {
-            "id": "string",
-            "name": "string",
-            "description": "string",
-            "shortDescription": "string",
-            "slug": "string",
-            "sku": "string",
-            "brandType": "number",
-            "brandName": "string",
-            "productType": "number",
-            "productTypeName": "string",
-            "categoryId": "string",
-            "categoryName": "string",
-            "price": "number",
-            "compareAtPrice": "number",
-            "showPrice": "boolean",
-            "priceDisplay": "string",
-            "stockQuantity": "number",
-            "inStock": "boolean",
-            "trackInventory": "boolean",
-            "isActive": "boolean",
-            "isFeatured": "boolean",
-            "displayOrder": "number",
-            "lowStockThreshold": "number",
-            "averageRating": "number",
-            "reviewCount": "number",
-            "tags": "string",
-            "aiKeywords": "string",
-            "materialType": "string",
-            "qualityTier": "string",
-            "recommendedFor": "string",
-            "specifications": {
-              "type": "array",
-              "length": 5,
-              "of": {
-                "key": "string",
-                "value": "string"
-              }
-            },
-            "keyFeatures": {
-              "type": "array",
-              "length": 6,
-              "of": "string"
-            },
-            "whatsIncluded": {
-              "type": "array",
-              "length": 4,
-              "of": "string"
-            },
-            "whatsNotIncluded": {
-              "type": "array",
-              "length": 4,
-              "of": "string"
-            },
-            "dimensions": "null",
-            "warranty": "null",
-            "finishType": "null",
-            "installationType": "string",
-            "material": "null",
-            "color": "null",
-            "size": "string",
-            "variants": {
-              "type": "array",
-              "length": 4,
-              "of": {
-                "id": "string",
-                "size": "string",
-                "price": "number",
-                "stockQuantity": "number",
-                "isActive": "boolean",
-                "displayOrder": "number"
-              }
-            },
-            "images": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "primaryImageUrl": "null",
-            "similarProducts": {
-              "type": "array",
-              "length": 0,
-              "of": "unknown"
-            },
-            "createdAt": "string",
-            "updatedAt": "string"
-          },
-          {
-            "id": "string",
-            "name": "string",
-            "description": "string",
-            "shortDescription": "string",
-            "slug": "string",
-            "sku": "string",
-            "brandType": "number",
-            "brandName": "string",
-            "productType": "number",
-            "productTypeName": "string",
-            "categoryId": "string",
-            "categoryName": "string",
-            "price": "number",
-            "compareAtPrice": "number",
-            "showPrice": "boolean",
-            "priceDisplay": "string",
-            "stockQuantity": "number",
-            "inStock": "boolean",
-            "trackInventory": "boolean",
-            "isActive": "boolean",
-            "isFeatured": "boolean",
-            "displayOrder": "number",
-            "lowStockThreshold": "number",
-            "averageRating": "number",
-            "reviewCount": "number",
-            "tags": "null",
-            "aiKeywords": "null",
-            "materialType": "string",
-            "qualityTier": "string",
-            "recommendedFor": "string",
-            "specifications": {
-              "type": "array",
-              "length": 5,
-              "of": {
-                "key": "string",
-                "value": "string"
-              }
-            },
-            "keyFeatures": {
-              "type": "array",
-              "length": 6,
-              "of": "string"
-            },
-            "whatsIncluded": {
-              "type": "array",
-              "length": 3,
-              "of": "string"
-            },
-            "whatsNotIncluded": {
-              "type": "array",
-              "length": 6,
-              "of": "string"
-            },
-            "dimensions": "null",
-            "warranty": "null",
-            "finishType": "null",
-            "installationType": "string",
-            "material": "null",
-            "color": "null",
-            "size": "string",
+            "size": "null",
             "variants": {
               "type": "array",
               "length": 4,
@@ -485,8 +233,8 @@
                 "id": "string",
                 "productId": "string",
                 "imageUrl": "string",
-                "altText": "string",
-                "viewType": "string",
+                "altText": "null",
+                "viewType": "null",
                 "displayOrder": "number",
                 "isPrimary": "boolean"
               }
@@ -526,6 +274,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "string",
             "materialType": "string",
@@ -546,12 +297,12 @@
             },
             "whatsIncluded": {
               "type": "array",
-              "length": 4,
+              "length": 3,
               "of": "string"
             },
             "whatsNotIncluded": {
               "type": "array",
-              "length": 5,
+              "length": 7,
               "of": "string"
             },
             "dimensions": "null",
@@ -560,7 +311,7 @@
             "installationType": "string",
             "material": "null",
             "color": "null",
-            "size": "string",
+            "size": "null",
             "variants": {
               "type": "array",
               "length": 4,
@@ -575,10 +326,18 @@
             },
             "images": {
               "type": "array",
-              "length": 0,
-              "of": "unknown"
+              "length": 1,
+              "of": {
+                "id": "string",
+                "productId": "string",
+                "imageUrl": "string",
+                "altText": "null",
+                "viewType": "null",
+                "displayOrder": "number",
+                "isPrimary": "boolean"
+              }
             },
-            "primaryImageUrl": "null",
+            "primaryImageUrl": "string",
             "similarProducts": {
               "type": "array",
               "length": 0,
@@ -613,6 +372,303 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
+            "tags": "string",
+            "aiKeywords": "string",
+            "materialType": "string",
+            "qualityTier": "string",
+            "recommendedFor": "string",
+            "specifications": {
+              "type": "array",
+              "length": 5,
+              "of": {
+                "key": "string",
+                "value": "string"
+              }
+            },
+            "keyFeatures": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "whatsIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "whatsNotIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "dimensions": "null",
+            "warranty": "null",
+            "finishType": "null",
+            "installationType": "string",
+            "material": "null",
+            "color": "null",
+            "size": "null",
+            "variants": {
+              "type": "array",
+              "length": 4,
+              "of": {
+                "id": "string",
+                "size": "string",
+                "price": "number",
+                "stockQuantity": "number",
+                "isActive": "boolean",
+                "displayOrder": "number"
+              }
+            },
+            "images": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "productId": "string",
+                "imageUrl": "string",
+                "altText": "null",
+                "viewType": "null",
+                "displayOrder": "number",
+                "isPrimary": "boolean"
+              }
+            },
+            "primaryImageUrl": "string",
+            "similarProducts": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "createdAt": "string",
+            "updatedAt": "string"
+          },
+          {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "shortDescription": "string",
+            "slug": "string",
+            "sku": "string",
+            "brandType": "number",
+            "brandName": "string",
+            "productType": "number",
+            "productTypeName": "string",
+            "categoryId": "string",
+            "categoryName": "string",
+            "price": "number",
+            "compareAtPrice": "number",
+            "showPrice": "boolean",
+            "priceDisplay": "string",
+            "stockQuantity": "number",
+            "inStock": "boolean",
+            "trackInventory": "boolean",
+            "isActive": "boolean",
+            "isFeatured": "boolean",
+            "displayOrder": "number",
+            "lowStockThreshold": "number",
+            "averageRating": "number",
+            "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
+            "tags": "null",
+            "aiKeywords": "null",
+            "materialType": "string",
+            "qualityTier": "string",
+            "recommendedFor": "string",
+            "specifications": {
+              "type": "array",
+              "length": 5,
+              "of": {
+                "key": "string",
+                "value": "string"
+              }
+            },
+            "keyFeatures": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "whatsIncluded": {
+              "type": "array",
+              "length": 3,
+              "of": "string"
+            },
+            "whatsNotIncluded": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "dimensions": "null",
+            "warranty": "null",
+            "finishType": "null",
+            "installationType": "string",
+            "material": "null",
+            "color": "null",
+            "size": "null",
+            "variants": {
+              "type": "array",
+              "length": 4,
+              "of": {
+                "id": "string",
+                "size": "string",
+                "price": "number",
+                "stockQuantity": "number",
+                "isActive": "boolean",
+                "displayOrder": "number"
+              }
+            },
+            "images": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "productId": "string",
+                "imageUrl": "string",
+                "altText": "null",
+                "viewType": "null",
+                "displayOrder": "number",
+                "isPrimary": "boolean"
+              }
+            },
+            "primaryImageUrl": "string",
+            "similarProducts": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "createdAt": "string",
+            "updatedAt": "string"
+          },
+          {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "shortDescription": "string",
+            "slug": "string",
+            "sku": "string",
+            "brandType": "number",
+            "brandName": "string",
+            "productType": "number",
+            "productTypeName": "string",
+            "categoryId": "string",
+            "categoryName": "string",
+            "price": "number",
+            "compareAtPrice": "number",
+            "showPrice": "boolean",
+            "priceDisplay": "string",
+            "stockQuantity": "number",
+            "inStock": "boolean",
+            "trackInventory": "boolean",
+            "isActive": "boolean",
+            "isFeatured": "boolean",
+            "displayOrder": "number",
+            "lowStockThreshold": "number",
+            "averageRating": "number",
+            "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
+            "tags": "string",
+            "aiKeywords": "string",
+            "materialType": "string",
+            "qualityTier": "string",
+            "recommendedFor": "string",
+            "specifications": {
+              "type": "array",
+              "length": 5,
+              "of": {
+                "key": "string",
+                "value": "string"
+              }
+            },
+            "keyFeatures": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "whatsIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "whatsNotIncluded": {
+              "type": "array",
+              "length": 5,
+              "of": "string"
+            },
+            "dimensions": "null",
+            "warranty": "null",
+            "finishType": "null",
+            "installationType": "string",
+            "material": "null",
+            "color": "null",
+            "size": "null",
+            "variants": {
+              "type": "array",
+              "length": 4,
+              "of": {
+                "id": "string",
+                "size": "string",
+                "price": "number",
+                "stockQuantity": "number",
+                "isActive": "boolean",
+                "displayOrder": "number"
+              }
+            },
+            "images": {
+              "type": "array",
+              "length": 3,
+              "of": {
+                "id": "string",
+                "productId": "string",
+                "imageUrl": "string",
+                "altText": "null",
+                "viewType": "null",
+                "displayOrder": "number",
+                "isPrimary": "boolean"
+              }
+            },
+            "primaryImageUrl": "string",
+            "similarProducts": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "createdAt": "string",
+            "updatedAt": "string"
+          },
+          {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "shortDescription": "string",
+            "slug": "string",
+            "sku": "string",
+            "brandType": "number",
+            "brandName": "string",
+            "productType": "number",
+            "productTypeName": "string",
+            "categoryId": "string",
+            "categoryName": "string",
+            "price": "number",
+            "compareAtPrice": "number",
+            "showPrice": "boolean",
+            "priceDisplay": "string",
+            "stockQuantity": "number",
+            "inStock": "boolean",
+            "trackInventory": "boolean",
+            "isActive": "boolean",
+            "isFeatured": "boolean",
+            "displayOrder": "number",
+            "lowStockThreshold": "number",
+            "averageRating": "number",
+            "reviewCount": "number",
+            "metaTitle": "string",
+            "metaDescription": "string",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "string",
             "materialType": "string",
@@ -708,6 +764,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "string",
             "materialType": "string",
@@ -803,6 +862,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "null",
             "materialType": "null",
@@ -864,6 +926,9 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "string",
             "aiKeywords": "null",
             "materialType": "null",
@@ -925,6 +990,99 @@
             "lowStockThreshold": "number",
             "averageRating": "number",
             "reviewCount": "number",
+            "metaTitle": "string",
+            "metaDescription": "string",
+            "metaKeywords": "null",
+            "tags": "string",
+            "aiKeywords": "string",
+            "materialType": "string",
+            "qualityTier": "string",
+            "recommendedFor": "string",
+            "specifications": {
+              "type": "array",
+              "length": 5,
+              "of": {
+                "key": "string",
+                "value": "string"
+              }
+            },
+            "keyFeatures": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "whatsIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "whatsNotIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "dimensions": "null",
+            "warranty": "null",
+            "finishType": "null",
+            "installationType": "string",
+            "material": "null",
+            "color": "null",
+            "size": "string",
+            "variants": {
+              "type": "array",
+              "length": 4,
+              "of": {
+                "id": "string",
+                "size": "string",
+                "price": "number",
+                "stockQuantity": "number",
+                "isActive": "boolean",
+                "displayOrder": "number"
+              }
+            },
+            "images": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "primaryImageUrl": "null",
+            "similarProducts": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "createdAt": "string",
+            "updatedAt": "string"
+          },
+          {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "shortDescription": "string",
+            "slug": "string",
+            "sku": "string",
+            "brandType": "number",
+            "brandName": "string",
+            "productType": "number",
+            "productTypeName": "string",
+            "categoryId": "string",
+            "categoryName": "string",
+            "price": "number",
+            "compareAtPrice": "number",
+            "showPrice": "boolean",
+            "priceDisplay": "string",
+            "stockQuantity": "null",
+            "inStock": "boolean",
+            "trackInventory": "boolean",
+            "isActive": "boolean",
+            "isFeatured": "boolean",
+            "displayOrder": "number",
+            "lowStockThreshold": "number",
+            "averageRating": "number",
+            "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
             "tags": "null",
             "aiKeywords": "null",
             "materialType": "string",
@@ -979,8 +1137,106 @@
                 "id": "string",
                 "productId": "string",
                 "imageUrl": "string",
-                "altText": "string",
-                "viewType": "string",
+                "altText": "null",
+                "viewType": "null",
+                "displayOrder": "number",
+                "isPrimary": "boolean"
+              }
+            },
+            "primaryImageUrl": "string",
+            "similarProducts": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "createdAt": "string",
+            "updatedAt": "string"
+          },
+          {
+            "id": "string",
+            "name": "string",
+            "description": "string",
+            "shortDescription": "string",
+            "slug": "string",
+            "sku": "string",
+            "brandType": "number",
+            "brandName": "string",
+            "productType": "number",
+            "productTypeName": "string",
+            "categoryId": "string",
+            "categoryName": "string",
+            "price": "number",
+            "compareAtPrice": "number",
+            "showPrice": "boolean",
+            "priceDisplay": "string",
+            "stockQuantity": "number",
+            "inStock": "boolean",
+            "trackInventory": "boolean",
+            "isActive": "boolean",
+            "isFeatured": "boolean",
+            "displayOrder": "number",
+            "lowStockThreshold": "number",
+            "averageRating": "number",
+            "reviewCount": "number",
+            "metaTitle": "null",
+            "metaDescription": "null",
+            "metaKeywords": "null",
+            "tags": "string",
+            "aiKeywords": "string",
+            "materialType": "string",
+            "qualityTier": "string",
+            "recommendedFor": "string",
+            "specifications": {
+              "type": "array",
+              "length": 5,
+              "of": {
+                "key": "string",
+                "value": "string"
+              }
+            },
+            "keyFeatures": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "whatsIncluded": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "whatsNotIncluded": {
+              "type": "array",
+              "length": 5,
+              "of": "string"
+            },
+            "dimensions": "null",
+            "warranty": "null",
+            "finishType": "null",
+            "installationType": "string",
+            "material": "null",
+            "color": "null",
+            "size": "null",
+            "variants": {
+              "type": "array",
+              "length": 4,
+              "of": {
+                "id": "string",
+                "size": "string",
+                "price": "number",
+                "stockQuantity": "number",
+                "isActive": "boolean",
+                "displayOrder": "number"
+              }
+            },
+            "images": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "productId": "string",
+                "imageUrl": "string",
+                "altText": "null",
+                "viewType": "null",
                 "displayOrder": "number",
                 "isPrimary": "boolean"
               }
@@ -1031,6 +1287,9 @@
     "lowStockThreshold": "number",
     "averageRating": "number",
     "reviewCount": "number",
+    "metaTitle": "null|string",
+    "metaDescription": "null|string",
+    "metaKeywords": "null",
     "tags": "null|string",
     "aiKeywords": "null|string",
     "materialType": "null|string",

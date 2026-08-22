@@ -1,0 +1,35 @@
+{
+  "endpoint": "/admin/consultations/pricing",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "success": "boolean",
+    "message": "string",
+    "data": {
+      "type": "array",
+      "length": 5,
+      "of": {
+        "id": "string",
+        "consultationType": "string",
+        "fee": "number",
+        "currency": "string",
+        "location": "null",
+        "creditedTowardProject": "boolean",
+        "isActive": "boolean",
+        "updatedAt": "string"
+      }
+    },
+    "errors": "null"
+  },
+  "itemFieldTypes": {
+    "id": "string",
+    "consultationType": "string",
+    "fee": "number",
+    "currency": "string",
+    "location": "null",
+    "creditedTowardProject": "boolean",
+    "isActive": "boolean",
+    "updatedAt": "string"
+  },
+  "sampleSize": 5
+}

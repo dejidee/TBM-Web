@@ -25,6 +25,8 @@ export const consultationTypeSchema = z.looseObject({
   name: z.string(),
   durationMinutes: z.number(),
   fee: z.number(),
+  /** Added by the backend after 2026-08-12; "NGN" on every row since. */
+  currency: z.string().optional(),
   format: z.string(),
   description: z.unknown(),
 });
@@ -53,6 +55,12 @@ export const consultationAvailabilityResponse = envelope(
  * confirmed both states live (null right after booking; `paymentReference`
  * populated once `initialize-payment` runs, `cancelledAtUtc`/
  * `cancellationReason` populated once cancelled).
+ *
+ * `propertyType`, `siteAddress`, `siteCity`, `siteState` and `notes` were
+ * modelled as plain strings on 2026-08-12 because every booking this app had
+ * made filled them in. The admin list (contracts/admin-consultations.json,
+ * 13 rows) shows all five as `null|string` — a video consultation has no site
+ * and the DTO does not require any of them. Widened 2026-08-22.
  */
 export const consultationSchema = z.looseObject({
   id: z.string(),
@@ -70,11 +78,11 @@ export const consultationSchema = z.looseObject({
   contactName: z.string(),
   contactEmail: z.string(),
   contactPhone: z.string(),
-  propertyType: z.string(),
-  siteAddress: z.string(),
-  siteCity: z.string(),
-  siteState: z.string(),
-  notes: z.string(),
+  propertyType: z.string().nullable(),
+  siteAddress: z.string().nullable(),
+  siteCity: z.string().nullable(),
+  siteState: z.string().nullable(),
+  notes: z.string().nullable(),
   cancelledAtUtc: z.string().nullable(),
   cancellationReason: z.string().nullable(),
   cancellationRequiresManualRefundReview: z.boolean(),
@@ -129,3 +137,55 @@ export const consultationVerifyPaymentResponse = z.looseObject({
   data: z.unknown(),
   errors: z.unknown(),
 });
+
+// ── Admin ────────────────────────────────────────────────────────────────────
+//
+// `AdminConsultations` is list + cancel + pricing. Recorded 2026-08-22 —
+// contracts/admin-consultations.json, contracts/admin-consultations-pricing.json,
+// contracts/admin-consultation-cancel.json,
+// contracts/admin-consultation-pricing-update.json. Note this is a different
+// table from the legacy `/admin/inspections` surface (different ids, different
+// records); the app's booking flow writes here.
+
+/**
+ * GET /admin/consultations — paged, but with the *short* pagination block:
+ * `{ items, page, pageSize, totalCount }` and nothing else. No `totalPages`,
+ * no `hasMore` — derive them. Matches `ConsultationPagedResultDto` exactly.
+ */
+export const adminConsultationListResponse = envelope(
+  z.looseObject({
+    items: z.array(consultationSchema),
+    page: z.number(),
+    pageSize: z.number(),
+    totalCount: z.number(),
+  }),
+);
+
+/** PUT /admin/consultations/{id}/cancel — the bare Consultation, like the user-side cancel. */
+export const adminConsultationCancelResponse = envelope(consultationSchema);
+
+/**
+ * One row of the per-type fee table. `consultationType` is the *display name*
+ * ("Site Consultation"), not the `typeKey` ("site-consultation") that
+ * `/consultations/types` uses — there is no key on this row, so join on the
+ * name. `location` was null on every row; it is the not-yet-used
+ * per-location pricing hook and is left unmodelled.
+ */
+export const consultationPricingConfigSchema = z.looseObject({
+  id: z.string(),
+  consultationType: z.string(),
+  fee: z.number(),
+  currency: z.string(),
+  location: z.unknown(),
+  creditedTowardProject: z.boolean(),
+  isActive: z.boolean(),
+  updatedAt: z.string(),
+});
+
+/** GET /admin/consultations/pricing — a bare array in `data`. */
+export const adminConsultationPricingResponse = envelope(
+  z.array(consultationPricingConfigSchema),
+);
+
+/** PUT /admin/consultations/pricing/{id} — the updated row. */
+export const adminConsultationPricingItemResponse = envelope(consultationPricingConfigSchema);

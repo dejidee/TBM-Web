@@ -10,6 +10,8 @@
         "id": "string",
         "name": "string",
         "price": "number",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
         "image": "string",
         "rating": "null",
         "reviewCount": "number"
@@ -17,7 +19,19 @@
       {
         "id": "string",
         "name": "string",
+        "price": "null",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
+        "image": "null",
+        "rating": "null",
+        "reviewCount": "number"
+      },
+      {
+        "id": "string",
+        "name": "string",
         "price": "number",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
         "image": "null",
         "rating": "null",
         "reviewCount": "number"

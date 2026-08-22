@@ -57,6 +57,11 @@ import type {
   consultationTypeSchema,
   consultationTypesResponse,
   consultationVerifyPaymentResponse,
+  adminConsultationListResponse,
+  adminConsultationCancelResponse,
+  consultationPricingConfigSchema,
+  adminConsultationPricingResponse,
+  adminConsultationPricingItemResponse,
 } from "./schemas/consultations";
 import type {
   orderItemSchema,
@@ -178,6 +183,13 @@ export type ConsultationListResponse = z.infer<typeof consultationListResponse>;
 export type ConsultationPaymentInitResponse = z.infer<typeof consultationPaymentInitResponse>;
 /** POST /consultations/verify-payment — only the failure shape (400) is confirmed. */
 export type ConsultationVerifyPaymentResponse = z.infer<typeof consultationVerifyPaymentResponse>;
+/** GET /admin/consultations — `data.{items,page,pageSize,totalCount}`, no totalPages/hasMore. */
+export type AdminConsultationListResponse = z.infer<typeof adminConsultationListResponse>;
+export type AdminConsultationCancelResponse = z.infer<typeof adminConsultationCancelResponse>;
+/** One per-type fee row; `consultationType` is the display name, not the `typeKey`. */
+export type ConsultationPricingConfig = z.infer<typeof consultationPricingConfigSchema>;
+export type AdminConsultationPricingResponse = z.infer<typeof adminConsultationPricingResponse>;
+export type AdminConsultationPricingItemResponse = z.infer<typeof adminConsultationPricingItemResponse>;
 
 /**
  * `status`/`paymentStatus` are unnamed integer enums (0-7 for OrderStatus,

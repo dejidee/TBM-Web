@@ -2082,6 +2082,134 @@
         }
       }
     },
+    "/api/v1/admin/consultations/pricing": {
+      "get": {
+        "tags": [
+          "AdminConsultations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/consultations/pricing/{id}": {
+      "put": {
+        "tags": [
+          "AdminConsultations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.UpdateConsultationPricingConfigRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.UpdateConsultationPricingConfigRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.UpdateConsultationPricingConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/admin/consultations/{id}/cancel": {
       "put": {
         "tags": [
@@ -3118,6 +3246,552 @@
           },
           "400": {
             "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections": {
+      "get": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "status",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "consultationType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+            }
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/{id}": {
+      "get": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/{id}/status": {
+      "patch": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionStatusRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionStatusRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionStatusRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/availability/blocks": {
+      "get": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionAvailabilityBlockRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionAvailabilityBlockRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionAvailabilityBlockRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/availability/blocks/{id}": {
+      "delete": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/categories": {
+      "get": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionCategoryDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionCategoryDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionCategoryDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/pricing": {
+      "get": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionPricingConfigRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionPricingConfigRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CreateInspectionPricingConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/inspections/pricing/{id}": {
+      "put": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionPricingConfigRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionPricingConfigRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.UpdateInspectionPricingConfigRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "AdminInspections"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
             "content": {
               "text/plain": {
                 "schema": {
@@ -4757,17 +5431,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               }
             }
@@ -4777,17 +5451,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
                 }
               }
             }
@@ -11014,6 +11688,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -11181,6 +11862,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -11280,6 +11968,13 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -11376,6 +12071,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -11504,6 +12206,13 @@
             "schema": {
               "type": "string",
               "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -12400,17 +13109,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto"
                 }
               }
             }
@@ -12420,17 +13129,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12447,17 +13156,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionListDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionListDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionListDto"
                 }
               }
             }
@@ -12467,17 +13176,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionListDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionListDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionListDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12527,17 +13236,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto"
                 }
               }
             }
@@ -12547,17 +13256,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12606,17 +13315,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto"
                 }
               }
             }
@@ -12626,17 +13335,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12666,37 +13375,37 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12726,37 +13435,37 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto"
                 }
               }
             }
           },
-          "400": {
-            "description": "Bad Request",
+          "404": {
+            "description": "Not Found",
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12805,17 +13514,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto"
                 }
               }
             }
@@ -12825,17 +13534,119 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/fees": {
+      "get": {
+        "tags": [
+          "Inspection"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/availability": {
+      "get": {
+        "tags": [
+          "Inspection"
+        ],
+        "parameters": [
+          {
+            "name": "consultationType",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+            }
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "state",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12844,6 +13655,65 @@
       }
     },
     "/api/v1/inspections/{id}/initialize-payment": {
+      "post": {
+        "tags": [
+          "Inspection"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InitializeInspectionPaymentRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InitializeInspectionPaymentRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InitializeInspectionPaymentRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/{id}/payment": {
       "post": {
         "tags": [
           "Inspection"
@@ -12952,17 +13822,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -12972,17 +13842,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -13020,17 +13890,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -13040,17 +13910,225 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Object, System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/mine": {
+      "get": {
+        "tags": [
+          "Inspection"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/{id}": {
+      "get": {
+        "tags": [
+          "Inspection"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/{id}/reschedule": {
+      "patch": {
+        "tags": [
+          "Inspection"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.RescheduleInspectionRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.RescheduleInspectionRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.RescheduleInspectionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/inspections/{id}/cancel": {
+      "post": {
+        "tags": [
+          "Inspection"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "X-Consultation-Token",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CancelInspectionRequestDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CancelInspectionRequestDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.CancelInspectionRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]"
                 }
               }
             }
@@ -20689,6 +21767,33 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Consultations.ConsultationTypeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
         "type": "object",
         "properties": {
@@ -20703,6 +21808,168 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.ConsultationTypeDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionCategoryDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionCategoryDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionDetailDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Inspections.InspectionFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionFeeDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Products.ProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Products.ProductDto"
+            },
+            "nullable": true
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[System.Collections.Generic.List`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]], System.Private.CoreLib, Version=9.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Subscriptions.ConsultationFeeDto"
             },
             "nullable": true
           },
@@ -20877,6 +22144,167 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionListDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionListDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.ProjectQuotationDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
@@ -20900,6 +22328,167 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.BookInspectionResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.BookInspectionResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionAvailabilityDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionAvailabilityDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.InspectionDetailDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionDetailDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Products.AdminProductDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
         "type": "object",
         "properties": {
@@ -20912,6 +22501,29 @@
           },
           "data": {
             "$ref": "#/components/schemas/TBM.Application.DTOs.Products.AdminProductDto"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Common.ApiResponse`1[[TBM.Application.DTOs.Subscriptions.ConsultationFeeDto, TBM.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "data": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.Subscriptions.ConsultationFeeDto"
           },
           "errors": {
             "type": "array",
@@ -21188,6 +22800,43 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Consultations.ConsultationPricingConfigDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "consultationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Consultations.ConsultationSlotDto": {
         "type": "object",
         "properties": {
@@ -21224,6 +22873,10 @@
             "type": "number",
             "format": "double"
           },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
           "format": {
             "type": "string",
             "nullable": true
@@ -21251,6 +22904,30 @@
           "scheduledStart": {
             "type": "string",
             "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Consultations.UpdateConsultationPricingConfigRequestDto": {
+        "type": "object",
+        "properties": {
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -21319,9 +22996,132 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.DesignFlow.AddDesignSessionToCartResponseDto": {
+        "type": "object",
+        "properties": {
+          "cartId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "itemsAdded": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.BillOfMaterialsDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "designSessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "bomNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalEstimatedCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "itemCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.BomItemDto"
+            },
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.BomItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "double"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalPrice": {
+            "type": "number",
+            "format": "double"
+          },
+          "inStock": {
+            "type": "boolean"
+          },
+          "vendorId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "leadTimeDays": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.DesignFlow.CreateDesignSessionRequestDto": {
         "type": "object",
         "properties": {
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
           "projectName": {
             "type": "string",
             "nullable": true
@@ -21339,6 +23139,28 @@
           },
           "roomDimensions": {
             "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.RoomDimensionsDto"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.CreateDesignSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sessionNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "uploadUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -21406,11 +23228,215 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.DesignFlow.DesignSessionDetailDto": {
+        "type": "object",
+        "properties": {
+          "session": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionDto"
+          },
+          "billOfMaterials": {
+            "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.BillOfMaterialsDto"
+          },
+          "allItemsInStock": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.DesignSessionDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sessionNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "projectName": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomType": {
+            "type": "string",
+            "nullable": true
+          },
+          "visionText": {
+            "type": "string",
+            "nullable": true
+          },
+          "tier": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.DesignSessionTier"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "progress": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentStep": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "originalImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "generatedImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomLength": {
+            "type": "number",
+            "format": "double"
+          },
+          "roomWidth": {
+            "type": "number",
+            "format": "double"
+          },
+          "roomHeight": {
+            "type": "number",
+            "format": "double"
+          },
+          "bomId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.DesignSessionListDto": {
+        "type": "object",
+        "properties": {
+          "sessions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.DesignFlow.DesignSessionSummaryDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.DesignSessionStatusDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "progress": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentStep": {
+            "type": "string",
+            "nullable": true
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "bomGenerated": {
+            "type": "boolean"
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.DesignSessionSummaryDto": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sessionNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "projectName": {
+            "type": "string",
+            "nullable": true
+          },
+          "roomType": {
+            "type": "string",
+            "nullable": true
+          },
+          "tier": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.DesignSessionTier"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "progress": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "imageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.DesignFlow.GenerateDesignSessionRequestDto": {
         "type": "object",
         "properties": {
           "generateBOM": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.DesignFlow.GenerateDesignSessionResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "estimatedTime": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "statusUrl": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -21521,7 +23547,32 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.DesignFlow.UploadDesignSessionPhotoResponseDto": {
+        "type": "object",
+        "properties": {
+          "originalImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Inspections.BookInspectionRequestDto": {
+        "required": [
+          "consultationType",
+          "contactEmail",
+          "contactName",
+          "contactPhone",
+          "preferredDate1",
+          "propertyType",
+          "siteAddress",
+          "siteCity",
+          "siteState"
+        ],
         "type": "object",
         "properties": {
           "projectId": {
@@ -21529,29 +23580,37 @@
             "format": "uuid",
             "nullable": true
           },
+          "consultationType": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+          },
+          "propertyType": {
+            "minLength": 1,
+            "type": "string"
+          },
           "contactName": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "contactPhone": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "contactEmail": {
+            "minLength": 1,
             "type": "string",
-            "nullable": true
+            "format": "email"
           },
           "siteAddress": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "siteCity": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "siteState": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1,
+            "type": "string"
           },
           "preferredDate1": {
             "type": "string",
@@ -21580,6 +23639,128 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Inspections.BookInspectionResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "bookingId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "consultationType": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+          },
+          "propertyType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "scheduledStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "managementToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.CancelInspectionRequestDto": {
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.CreateInspectionAvailabilityBlockRequestDto": {
+        "required": [
+          "end",
+          "start"
+        ],
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "staffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.CreateInspectionPricingConfigRequestDto": {
+        "required": [
+          "consultationType",
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "consultationType": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "fee": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Inspections.InitializeInspectionPaymentRequestDto": {
         "type": "object",
         "properties": {
@@ -21590,10 +23771,328 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Inspections.InitializeInspectionPaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "authorizationUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "accessCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionAvailabilityBlockDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          },
+          "staffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionAvailabilityDto": {
+        "type": "object",
+        "properties": {
+          "consultationType": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "timeZone": {
+            "type": "string",
+            "nullable": true
+          },
+          "slots": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Inspections.InspectionSlotDto"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionCategoryDto": {
+        "type": "object",
+        "properties": {
+          "consultationType": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+          },
+          "pricingConfigType": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionDetailDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "projectId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "consultationType": {
+            "$ref": "#/components/schemas/TBM.Core.Enums.ConsultationType"
+          },
+          "propertyType": {
+            "type": "string",
+            "nullable": true
+          },
+          "staffId": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactName": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactPhone": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteCity": {
+            "type": "string",
+            "nullable": true
+          },
+          "siteState": {
+            "type": "string",
+            "nullable": true
+          },
+          "scheduledStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "scheduledEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentVerified": {
+            "type": "boolean"
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancelledAtUtc": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "cancellationReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "cancellationRequiresManualRefundReview": {
+            "type": "boolean"
+          },
+          "additionalNotes": {
+            "type": "string",
+            "nullable": true
+          },
+          "uploadedFileUrls": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionFeeDto": {
+        "type": "object",
+        "properties": {
+          "consultationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.InspectionSlotDto": {
+        "type": "object",
+        "properties": {
+          "start": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "end": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "available": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.RescheduleInspectionRequestDto": {
+        "required": [
+          "scheduledStart"
+        ],
+        "type": "object",
+        "properties": {
+          "scheduledStart": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.UpdateInspectionPricingConfigRequestDto": {
+        "required": [
+          "currency"
+        ],
+        "type": "object",
+        "properties": {
+          "fee": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.UpdateInspectionStatusRequestDto": {
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Inspections.VerifyInspectionPaymentRequestDto": {
         "type": "object",
         "properties": {
           "reference": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Inspections.VerifyInspectionPaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "reference": {
+            "type": "string",
+            "nullable": true
+          },
+          "paidAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "message": {
             "type": "string",
             "nullable": true
           }
@@ -22042,6 +24541,18 @@
             "type": "integer",
             "format": "int32"
           },
+          "metaTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "metaDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "metaKeywords": {
+            "type": "string",
+            "nullable": true
+          },
           "tags": {
             "type": "string",
             "nullable": true
@@ -22150,18 +24661,6 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
-          },
-          "metaTitle": {
-            "type": "string",
-            "nullable": true
-          },
-          "metaDescription": {
-            "type": "string",
-            "nullable": true
-          },
-          "metaKeywords": {
-            "type": "string",
-            "nullable": true
           }
         },
         "additionalProperties": false
@@ -22347,7 +24846,15 @@
           },
           "price": {
             "type": "number",
-            "format": "double"
+            "format": "double",
+            "nullable": true
+          },
+          "showPrice": {
+            "type": "boolean"
+          },
+          "priceDisplay": {
+            "type": "string",
+            "nullable": true
           },
           "image": {
             "type": "string",
@@ -22642,6 +25149,231 @@
           },
           "inStock": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TBM.Application.DTOs.Products.ProductDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "shortDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "slug": {
+            "type": "string",
+            "nullable": true
+          },
+          "sku": {
+            "type": "string",
+            "nullable": true
+          },
+          "brandType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "brandName": {
+            "type": "string",
+            "nullable": true
+          },
+          "productType": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "productTypeName": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "compareAtPrice": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "showPrice": {
+            "type": "boolean"
+          },
+          "priceDisplay": {
+            "type": "string",
+            "nullable": true
+          },
+          "stockQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "inStock": {
+            "type": "boolean"
+          },
+          "trackInventory": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isFeatured": {
+            "type": "boolean"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lowStockThreshold": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "averageRating": {
+            "type": "number",
+            "format": "double"
+          },
+          "reviewCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "metaTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "metaDescription": {
+            "type": "string",
+            "nullable": true
+          },
+          "metaKeywords": {
+            "type": "string",
+            "nullable": true
+          },
+          "tags": {
+            "type": "string",
+            "nullable": true
+          },
+          "aiKeywords": {
+            "type": "string",
+            "nullable": true
+          },
+          "materialType": {
+            "type": "string",
+            "nullable": true
+          },
+          "qualityTier": {
+            "type": "string",
+            "nullable": true
+          },
+          "recommendedFor": {
+            "type": "string",
+            "nullable": true
+          },
+          "specifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Products.SpecificationItemDto"
+            },
+            "nullable": true
+          },
+          "keyFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "whatsIncluded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "whatsNotIncluded": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          },
+          "dimensions": {
+            "type": "string",
+            "nullable": true
+          },
+          "warranty": {
+            "type": "string",
+            "nullable": true
+          },
+          "finishType": {
+            "type": "string",
+            "nullable": true
+          },
+          "installationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "material": {
+            "type": "string",
+            "nullable": true
+          },
+          "color": {
+            "type": "string",
+            "nullable": true
+          },
+          "size": {
+            "type": "string",
+            "nullable": true
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Products.ProductVariantDto"
+            },
+            "nullable": true
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Products.ProductImageDto"
+            },
+            "nullable": true
+          },
+          "primaryImageUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "similarProducts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TBM.Application.DTOs.Products.ProductCardDto"
+            },
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         },
         "additionalProperties": false
@@ -23116,6 +25848,35 @@
         },
         "additionalProperties": false
       },
+      "TBM.Application.DTOs.Subscriptions.ConsultationFeeDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "consultationType": {
+            "type": "string",
+            "nullable": true
+          },
+          "fee": {
+            "type": "number",
+            "format": "double"
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "creditedTowardProject": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "TBM.Application.DTOs.Subscriptions.CreateDiscountDto": {
         "type": "object",
         "properties": {
@@ -23457,6 +26218,17 @@
         "enum": [
           0,
           1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "TBM.Core.Enums.ConsultationType": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
         ],
         "type": "integer",
         "format": "int32"
