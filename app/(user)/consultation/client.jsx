@@ -34,6 +34,7 @@ import {
   CONSULTATION_ATTEMPT_TTL_MS,
 } from "@/hooks/use-persisted-state";
 import { useSession } from "@/hooks/use-session";
+import { rememberManagementToken } from "@/lib/consultation-tokens";
 import { showToast } from "@/components/shared/toast";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -168,15 +169,20 @@ export default function ConsultationClient() {
         });
         const consultation = result?.data?.consultation;
         if (!consultation?.id) throw new Error("Booking succeeded but no confirmation was returned.");
+        // A guest's only credential for this booking. Null for a signed-in
+        // user, whose session is the credential instead.
+        const token = result?.data?.managementToken ?? null;
+        if (token) rememberManagementToken(consultation.id, token);
 
         if (consultation.fee > 0 && !consultation.paymentVerified) {
           // Persisted *before* initializing payment — if that request's
           // response is lost, the consultation id survives so a retry never
           // re-books, only re-initiates payment for the same one.
-          setAttempt({ consultationId: consultation.id, createdAt: Date.now() });
+          setAttempt({ consultationId: consultation.id, createdAt: Date.now(), token });
           const payment = await initPaymentMutation.mutateAsync({
             id: consultation.id,
             email: values.contactEmail,
+            token,
           });
           const paymentData = payment?.data;
           if (!paymentData?.authorizationUrl) {
@@ -186,6 +192,7 @@ export default function ConsultationClient() {
             consultationId: consultation.id,
             createdAt: Date.now(),
             reference: paymentData.reference,
+            token,
           });
           window.location.href = paymentData.authorizationUrl;
           return;
@@ -193,6 +200,8 @@ export default function ConsultationClient() {
 
         // Free type — already Confirmed, no payment needed.
         router.push(`/consultation/verify?consultationId=${consultation.id}&confirmed=true`);
+        // (The verify page finds the token in localStorage / the attempt; a
+        // guest is then handed `manageHref()` as their link.)
       } catch (err) {
         showToast.error("Booking failed", err.message);
       }
@@ -222,11 +231,27 @@ export default function ConsultationClient() {
 
   const selectedType = types?.find((t) => t.key === formik.values.typeKey) ?? null;
   const isInPerson = selectedType?.format === "InPerson";
+  // Product rule (2026-08-22): free types can be booked as a guest — the
+  // management link is enough to reschedule or cancel. Paid types need an
+  // account, because a lost link on a paid booking means a refund the guest
+  // can't see the status of. Not an API requirement; the backend allows both.
+  const isPaid = (selectedType?.fee ?? 0) > 0;
+  const needsSignIn = !sessionLoading && !isAuthenticated && isPaid;
 
   const { data: availability, isLoading: availabilityLoading } = useConsultationAvailability(
     formik.values.typeKey,
     selectedDate,
   );
+
+  // Today is usually empty (weekend, or the 24-hour lead time). Rather than
+  // open on "No slots for this day", jump once to the first day that has one.
+  // Only ever moves forward, and only while the user hasn't picked a time.
+  useEffect(() => {
+    const first = availability?.firstAvailableDate;
+    if (!first || formik.values.scheduledStart) return;
+    if (availability.slots.length === 0 && first > selectedDate) setSelectedDate(first);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [availability]);
 
   function selectType(key) {
     formik.setFieldValue("typeKey", key);
@@ -582,14 +607,15 @@ export default function ConsultationClient() {
                   </div>
                 </section>
 
-                {!sessionLoading && !isAuthenticated && (
+                {!sessionLoading && !isAuthenticated && (isPaid ? (
                   <div className="border border-gold/25 bg-gold/6 p-5">
                     <div className="flex items-start gap-3">
                       <Lock size={16} className="text-gold shrink-0 mt-0.5" />
                       <div className="min-w-0">
-                        <p className="text-[14px] font-semibold text-white">Sign in to confirm your booking</p>
+                        <p className="text-[14px] font-semibold text-white">Sign in to book a paid consultation</p>
                         <p className="mt-1 text-[13px] text-white/50 leading-relaxed">
-                          An account lets you track this consultation, reschedule it, and keep your estimates and designs in one place.
+                          Paid bookings live under your account so you can always see the payment status, reschedule, or
+                          request a refund. Your details here are kept while you sign in.
                         </p>
                         <div className="mt-4 flex flex-wrap gap-2">
                           <Link href={`/sign-in?from=${encodeURIComponent(pathname)}`} className="btn-gold px-5 py-2.5 min-h-11">
@@ -602,7 +628,24 @@ export default function ConsultationClient() {
                       </div>
                     </div>
                   </div>
-                )}
+                ) : (
+                  <div className="border border-white/10 bg-white/3 p-5">
+                    <div className="flex items-start gap-3">
+                      <Lock size={16} className="text-gold shrink-0 mt-0.5" />
+                      <div className="min-w-0">
+                        <p className="text-[14px] font-semibold text-white">No account needed for a free consultation</p>
+                        <p className="mt-1 text-[13px] text-white/50 leading-relaxed">
+                          You&rsquo;ll get a private link to view, reschedule or cancel this booking. Prefer to keep
+                          everything in one place?{" "}
+                          <Link href={`/sign-in?from=${encodeURIComponent(pathname)}`} className="text-gold hover:underline">
+                            Sign in
+                          </Link>{" "}
+                          before you confirm and it will appear under My Consultations.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </motion.div>
             )}
           </AnimatePresence>
@@ -622,7 +665,7 @@ export default function ConsultationClient() {
                 Continue <ArrowRight size={14} />
               </button>
             ) : (
-              <button type="submit" disabled={submitting || uploading || !isAuthenticated} className="btn-gold px-7 py-3.5 min-h-11 disabled:opacity-40 disabled:cursor-not-allowed">
+              <button type="submit" disabled={submitting || uploading || needsSignIn} className="btn-gold px-7 py-3.5 min-h-11 disabled:opacity-40 disabled:cursor-not-allowed">
                 {submitting ? (
                   <>
                     <Loader2 size={14} className="animate-spin" /> {initPaymentMutation.isPending ? "Redirecting to payment…" : "Booking…"}

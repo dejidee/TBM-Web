@@ -13,6 +13,8 @@ import {
   CONSULTATION_KEYS,
 } from "@/hooks/use-persisted-state";
 import { showToast } from "@/components/shared/toast";
+import { useSession } from "@/hooks/use-session";
+import { getManagementToken, manageHref } from "@/lib/consultation-tokens";
 
 // Quick automatic retries on a *network* failure (checkout's pattern —
 // BACKLOG.md — adapted for how this backend actually signals failure: a
@@ -45,6 +47,11 @@ function ConsultationVerifyContent() {
   const reference = searchParams.get("reference") || searchParams.get("trxref") || attempt?.reference;
   const consultationId = searchParams.get("consultationId") || attempt?.consultationId;
   const alreadyConfirmed = searchParams.get("confirmed") === "true";
+  const { isAuthenticated } = useSession();
+  // A guest's management token survives the Paystack round-trip in the
+  // persisted attempt and in lib/consultation-tokens.js; a signed-in owner
+  // has neither and needs neither.
+  const token = attempt?.token ?? getManagementToken(consultationId);
 
   // "loading" | "checking" | "success" | "failed" | "uncertain"
   const [status, setStatus] = useState("loading");
@@ -68,7 +75,7 @@ function ConsultationVerifyContent() {
         // would either double-book or hit slot-locking). What's safe to
         // retry is initialize-payment against the *same* consultation id, so
         // keep that id, just drop the dead reference.
-        setAttempt((prev) => (prev ? { consultationId: prev.consultationId, createdAt: prev.createdAt } : null));
+        setAttempt((prev) => (prev ? { consultationId: prev.consultationId, createdAt: prev.createdAt, token: prev.token } : null));
       }
       // "uncertain" clears nothing — the consultation may still resolve.
     },
@@ -83,7 +90,7 @@ function ConsultationVerifyContent() {
         // observed (only the 400 failure path has) — re-fetch the
         // consultation itself for the authoritative status either way.
         if (consultationId) {
-          const res = await consultationsApi.getConsultation(consultationId);
+          const res = await consultationsApi.getConsultation(consultationId, token);
           return { reachable: true, consultation: res?.data };
         }
         return { reachable: true, assumedPaid: true };
@@ -94,7 +101,7 @@ function ConsultationVerifyContent() {
           // some other path.
           if (consultationId) {
             try {
-              const res = await consultationsApi.getConsultation(consultationId);
+              const res = await consultationsApi.getConsultation(consultationId, token);
               return { reachable: true, consultation: res?.data };
             } catch {
               /* fall through to network-unreachable below */
@@ -108,7 +115,7 @@ function ConsultationVerifyContent() {
     }
     if (consultationId) {
       try {
-        const res = await consultationsApi.getConsultation(consultationId);
+        const res = await consultationsApi.getConsultation(consultationId, token);
         return { reachable: true, consultation: res?.data };
       } catch {
         return { reachable: false };
@@ -167,7 +174,7 @@ function ConsultationVerifyContent() {
   useEffect(() => {
     if (alreadyConfirmed && consultationId) {
       consultationsApi
-        .getConsultation(consultationId)
+        .getConsultation(consultationId, token)
         .then((res) => finish("success", "", res?.data))
         .catch(() => finish("success")); // free booking: already confirmed at booking time regardless
       return;
@@ -194,10 +201,10 @@ function ConsultationVerifyContent() {
     setRetrying(true);
     try {
       const email = consultation?.contactEmail;
-      const payment = await consultationsApi.initializePayment(consultationId, email);
+      const payment = await consultationsApi.initializePayment(consultationId, email, token);
       const data = payment?.data;
       if (data?.authorizationUrl) {
-        setAttempt({ consultationId, createdAt: Date.now(), reference: data.reference });
+        setAttempt({ consultationId, createdAt: Date.now(), reference: data.reference, token });
         window.location.href = data.authorizationUrl;
         return;
       }
@@ -323,15 +330,21 @@ function ConsultationVerifyContent() {
               ? `Payment of ${formatFee(consultation.fee)} received. `
               : ""}
             We&rsquo;ll send a reminder ahead of your session.
+            {!isAuthenticated && token && (
+              <>
+                {" "}
+                Keep the manage link on the next page &mdash; it&rsquo;s how you reschedule or cancel without an account.
+              </>
+            )}
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
-              href="/consultation/mine"
+              href={isAuthenticated ? "/consultation/mine" : manageHref(consultationId, token)}
               className="px-6 py-3 rounded-lg font-semibold transition-opacity hover:opacity-90 text-black"
               style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
             >
-              View My Consultations
+              {isAuthenticated ? "View My Consultations" : "Manage This Booking"}
             </Link>
             <Link
               href="/bogat/materials"

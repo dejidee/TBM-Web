@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { SlidersHorizontal, X, Search } from "lucide-react";
 import ActiveFilterTags from "./active-filter-tabs";
 
@@ -181,12 +182,12 @@ function CollectionsFilter({
             Tell us about your space and our design team will recommend the right
             collection.
           </p>
-          <a
+          <Link
             href="/consultation"
             className="text-sm font-medium text-[#D4AF37]/80 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1 font-manrope"
           >
             Book a consultation →
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -433,12 +434,12 @@ function FullFilterSidebar({
           Tell us about your space and our design team will recommend the right
           collection.
         </p>
-        <a
+        <Link
           href="/consultation"
           className="text-sm font-medium text-[#D4AF37]/80 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1 font-manrope"
         >
           Book a consultation →
-        </a>
+        </Link>
       </div>
     </div>
   );

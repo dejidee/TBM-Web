@@ -15,12 +15,32 @@ export function useConsultationTypes() {
   });
 }
 
-/** GET /consultations/availability — public. Disabled until a type is chosen. */
+/**
+ * GET /consultations/availability — public. Disabled until a type is chosen.
+ *
+ * `date` is treated by the backend as the *start of a window*, not a single
+ * day: observed 2026-08-22, a request for one date returned up to 200 slots
+ * spanning ~25 working days (it was one day's slots on 2026-08-12). The
+ * pickers here are day-at-a-time, so the slots are narrowed to `date` in
+ * `select`. Slot timestamps carry the WAT offset, so the first ten characters
+ * are the local calendar date.
+ */
 export function useConsultationAvailability(typeKey, date) {
   return useQuery({
     queryKey: ["consultations", "availability", typeKey, date ?? "default"],
     queryFn: () => consultationsApi.getAvailability(typeKey, date),
-    select: (res) => res?.data,
+    select: (res) => {
+      const data = res?.data;
+      if (!data || !date) return data;
+      const all = data.slots ?? [];
+      return {
+        ...data,
+        slots: all.filter((s) => s.start?.slice(0, 10) === date),
+        // The window's first bookable day — lets a picker skip past today
+        // when today has nothing (weekends, the 24h lead time).
+        firstAvailableDate: all.find((s) => s.isAvailable)?.start?.slice(0, 10) ?? null,
+      };
+    },
     enabled: Boolean(typeKey),
     staleTime: 30 * 1000, // slots can be taken by someone else
   });
@@ -46,7 +66,7 @@ export function useBookConsultation() {
 /** POST /consultations/{id}/initialize-payment — safe to call more than once; see lib/api/consultations.js. */
 export function useInitializeConsultationPayment() {
   return useMutation({
-    mutationFn: ({ id, email }) => consultationsApi.initializePayment(id, email),
+    mutationFn: ({ id, email, token }) => consultationsApi.initializePayment(id, email, token),
   });
 }
 
@@ -57,13 +77,18 @@ export function useVerifyConsultationPayment() {
   });
 }
 
-/** GET /consultations/{id} */
-export function useConsultation(id) {
+/**
+ * GET /consultations/{id}. `token` is a guest's management token; a signed-in
+ * owner passes none. Not gated on the session on purpose — a guest has no
+ * session, and an id without either credential just gets a clean 401.
+ */
+export function useConsultation(id, token) {
   return useQuery({
     queryKey: ["consultations", "detail", id],
-    queryFn: () => consultationsApi.getConsultation(id),
+    queryFn: () => consultationsApi.getConsultation(id, token),
     select: (res) => res?.data,
     enabled: Boolean(id),
+    retry: (count, err) => err?.status !== 401 && err?.status !== 404 && count < 2,
   });
 }
 
@@ -82,7 +107,7 @@ export function useMyConsultations() {
 export function useRescheduleConsultation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, scheduledStart }) => consultationsApi.reschedule(id, scheduledStart),
+    mutationFn: ({ id, scheduledStart, token }) => consultationsApi.reschedule(id, scheduledStart, token),
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["consultations", "mine"] });
       queryClient.invalidateQueries({ queryKey: ["consultations", "detail", id] });
@@ -93,7 +118,7 @@ export function useRescheduleConsultation() {
 export function useCancelConsultation() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, reason }) => consultationsApi.cancel(id, reason),
+    mutationFn: ({ id, reason, token }) => consultationsApi.cancel(id, reason, token),
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ["consultations", "mine"] });
       queryClient.invalidateQueries({ queryKey: ["consultations", "detail", id] });
