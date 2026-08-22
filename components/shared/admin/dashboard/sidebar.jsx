@@ -11,6 +11,7 @@ import {
   CreditCard,
   Package,
   Images,
+  CalendarCheck,
   LayoutGrid,
   Users,
   Wallet,
@@ -43,6 +44,11 @@ const navItems = [
     label: "Portfolio",
     icon: Images,
     href: "/admin/dashboard/portfolio",
+  },
+  {
+    label: "Consultations",
+    icon: CalendarCheck,
+    href: "/admin/dashboard/consultations",
   },
   {
     label: "Financial Report",
