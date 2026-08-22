@@ -103,6 +103,13 @@ const productFields = {
   /** A comma-separated string, not an array. Null on most products. */
   tags: z.string().nullable(),
 
+  // Write-only until 2026-08-22; now returned on every read. Null on all 136
+  // live products (nothing could prefill them before) — widen to
+  // z.string().nullable() once a non-null value has been observed.
+  metaTitle: z.unknown(),
+  metaDescription: z.unknown(),
+  metaKeywords: z.unknown(),
+
   // Added 2026-08-12 once the reviews API shipped (BACKLOG.md). 0/0 on every
   // product checked so far — no product has a review yet — but the fields
   // themselves are non-null, unlike the block below.

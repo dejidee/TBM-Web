@@ -47,30 +47,6 @@ function CheckboxRow({ formik, name, children }) {
   );
 }
 
-/**
- * `metaTitle` and `metaDescription` are accepted on write and returned by no
- * read endpoint (checked against contracts/products.json — every other field in
- * this form comes back). An edit form therefore cannot prefill them, and the
- * PUT replaces whatever is stored.
- *
- * Marked on the two fields it applies to, in the same muted style as
- * `Brand · immutable`. It was an amber warning banner over the whole section,
- * which read as an incident, implicated four fields when only two are affected,
- * and explained the backend rather than the input.
- */
-function NotPrefilled() {
-  return (
-    <span className="font-normal text-white/25" title="This field's saved value is not returned when the product loads.">
-      · not prefilled
-    </span>
-  );
-}
-
-/** Appends the not-prefilled note to a field's own hint, in edit mode only. */
-function withSaveNote(base, isEdit) {
-  return isEdit ? `${base} Saving replaces the stored value.` : base;
-}
-
 function Field({ formik, name, children, hint }) {
   const touched = formik.touched[name];
   const error = formik.errors[name];
@@ -448,10 +424,10 @@ export default function ProductForm({
             <Field
               formik={formik}
               name="metaTitle"
-              hint={withSaveNote("Up to 70 characters.", isEdit)}
+              hint="Up to 70 characters."
             >
               <label className={label} htmlFor="metaTitle">
-                Meta title {isEdit && <NotPrefilled />}
+                Meta title
               </label>
               <input id="metaTitle" className={input} {...formik.getFieldProps("metaTitle")} />
             </Field>
@@ -459,10 +435,10 @@ export default function ProductForm({
             <Field
               formik={formik}
               name="metaDescription"
-              hint={withSaveNote("Up to 160 characters.", isEdit)}
+              hint="Up to 160 characters."
             >
               <label className={label} htmlFor="metaDescription">
-                Meta description {isEdit && <NotPrefilled />}
+                Meta description
               </label>
               <textarea
                 id="metaDescription"
