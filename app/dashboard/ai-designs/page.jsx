@@ -4,7 +4,7 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
-import { Wand2 } from "lucide-react";
+import { Wand2, Calculator } from "lucide-react";
 
 import DashboardLayout from "@/components/shared/dashboard/layout";
 import DesignsFilters from "@/components/shared/dashboard/designs/filters";
@@ -90,14 +90,23 @@ export default function DesignsPage() {
             </p>
           </div>
 
-          <Link
-            href={CREATE_HREF}
-            className="inline-flex min-h-11 shrink-0 items-center gap-2 self-start rounded-xl px-5 text-[14px] font-semibold text-black transition-all hover:opacity-90 active:scale-[0.98] sm:self-auto"
-            style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
-          >
-            <Wand2 className="h-4 w-4" strokeWidth={2} />
-            Create New Design
-          </Link>
+          <div className="flex shrink-0 items-center gap-3 self-start sm:self-auto">
+            <Link
+              href="/dashboard/ai-designs/estimates"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/15 px-5 text-[14px] font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
+            >
+              <Calculator className="h-4 w-4" strokeWidth={2} />
+              My Estimates
+            </Link>
+            <Link
+              href={CREATE_HREF}
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl px-5 text-[14px] font-semibold text-black transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+            >
+              <Wand2 className="h-4 w-4" strokeWidth={2} />
+              Create New Design
+            </Link>
+          </div>
         </motion.div>
 
         <SubscriptionPanel />

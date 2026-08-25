@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useFormik } from "formik";
-import { Loader2 } from "lucide-react";
+import { Loader2, Crown } from "lucide-react";
 import ModalShell, { Field, inputClass } from "./modal-shell";
+import EstimateResult from "./estimate-result";
 import { useCreateRenovationEstimate } from "@/hooks/use-ai-services";
+import { useSubscriptionState } from "@/hooks/use-subscription";
 import { renovationEstimateSchema, FINISH_LEVELS } from "@/lib/validations/estimate";
 
 const SCOPE_FIELDS = [
@@ -13,8 +16,6 @@ const SCOPE_FIELDS = [
   { name: "includeElectrical", label: "Electrical" },
   { name: "includePlumbing", label: "Plumbing" },
 ];
-
-const naira = (n) => `₦${Number(n ?? 0).toLocaleString()}`;
 
 /**
  * "Get Estimate" from a design card. A Design carries no dimensions (only its
@@ -28,6 +29,12 @@ const naira = (n) => `₦${Number(n ?? 0).toLocaleString()}`;
 export default function EstimateModal({ design, onClose }) {
   const [result, setResult] = useState(null);
   const createEstimate = useCreateRenovationEstimate();
+  // Master spec's package table: Economy gets "no cost data"; Premium and
+  // Luxury both get the full estimate. Gated here, once, so every entry point
+  // (this design-card action, the studio's "Continue to Estimate") inherits it
+  // for free instead of each caller re-implementing the check.
+  const { isLuxury, isPremium, isLoading: isSubLoading } = useSubscriptionState();
+  const canEstimate = isLuxury || isPremium;
 
   const formik = useFormik({
     initialValues: {
@@ -71,76 +78,49 @@ export default function EstimateModal({ design, onClose }) {
     },
   });
 
+  if (isSubLoading) {
+    return (
+      <ModalShell title="Get an Estimate" onClose={onClose}>
+        <div className="flex items-center justify-center py-10">
+          <Loader2 className="w-6 h-6 animate-spin text-white/30" />
+        </div>
+      </ModalShell>
+    );
+  }
+
+  if (!canEstimate) {
+    return (
+      <ModalShell title="Get an Estimate" onClose={onClose}>
+        <div className="text-center py-4">
+          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-[#D4AF37]/10">
+            <Crown className="w-6 h-6 text-[#D4AF37]" />
+          </div>
+          <p className="mt-4 text-[15px] font-semibold text-white">Premium feature</p>
+          <p className="mt-1.5 text-[13px] text-white/45">
+            Cost estimates and material mapping are available on the Premium and Luxury plans.
+          </p>
+          <Link
+            href="/ziora#pricing"
+            className="mt-5 inline-flex min-h-11 items-center justify-center rounded-lg px-6 text-[14px] font-semibold text-black transition-opacity hover:opacity-90"
+            style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+          >
+            Upgrade your plan
+          </Link>
+        </div>
+      </ModalShell>
+    );
+  }
+
   if (result) {
     return (
       <ModalShell title="Renovation Estimate" onClose={onClose} maxWidthClass="max-w-lg">
-        <div className="space-y-5">
-          <div className="rounded-lg border border-[#D4AF37]/20 bg-[#D4AF37]/06 p-4 text-center">
-            <p className="text-[12px] text-white/50 uppercase tracking-wide">Total estimate</p>
-            <p className="text-[28px] font-semibold text-[#D4AF37] mt-1">{naira(result.totalEstimate)}</p>
-            <p className="text-[12px] text-white/40 mt-1">{result.summary}</p>
-          </div>
-
-          <div className="grid grid-cols-3 gap-3 text-center">
-            <div className="rounded-lg bg-white/04 p-3">
-              <p className="text-[11px] text-white/40">Materials</p>
-              <p className="text-[14px] text-white font-medium mt-0.5">{naira(result.materialsSubtotal)}</p>
-            </div>
-            <div className="rounded-lg bg-white/04 p-3">
-              <p className="text-[11px] text-white/40">Labour</p>
-              <p className="text-[14px] text-white font-medium mt-0.5">{naira(result.laborSubtotal)}</p>
-            </div>
-            <div className="rounded-lg bg-white/04 p-3">
-              <p className="text-[11px] text-white/40">Contingency</p>
-              <p className="text-[14px] text-white font-medium mt-0.5">{naira(result.contingencyAmount)}</p>
-            </div>
-          </div>
-
-          {result.lineItems?.length > 0 && (
-            <div>
-              <p className="text-[13px] font-medium text-white/70 mb-2">Breakdown</p>
-              <div className="rounded-lg border border-white/08 divide-y divide-white/06">
-                {result.lineItems.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between gap-3 px-3 py-2.5 text-[13px]">
-                    <div className="min-w-0">
-                      <p className="text-white truncate">{item.name}</p>
-                      <p className="text-white/35 text-[11px]">
-                        {item.quantity} {item.unit} · {item.group}
-                      </p>
-                    </div>
-                    <p className="text-white/70 shrink-0">{naira(item.totalCost)}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {result.nextSteps?.length > 0 && (
-            <div>
-              <p className="text-[13px] font-medium text-white/70 mb-2">Next steps</p>
-              <div className="flex flex-col gap-2">
-                {result.nextSteps.map((step, i) => (
-                  <a
-                    key={i}
-                    href={step.url}
-                    className="min-h-11 flex items-center justify-between px-3.5 rounded-lg bg-white/06 hover:bg-white/10 text-[13px] text-white/80 transition-colors"
-                  >
-                    {step.label}
-                    <span className="text-white/30">&rarr;</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          )}
-
-          <button
-            onClick={onClose}
-            className="w-full min-h-11 rounded-lg text-[14px] font-semibold text-black transition-opacity hover:opacity-90"
-            style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
-          >
-            Done
-          </button>
-        </div>
+        <EstimateResult result={result} onDone={onClose} doneLabel="Done" />
+        <Link
+          href="/dashboard/ai-designs/estimates"
+          className="block text-center text-[13px] text-white/40 hover:text-white/70 transition-colors mt-4"
+        >
+          View all estimates
+        </Link>
       </ModalShell>
     );
   }

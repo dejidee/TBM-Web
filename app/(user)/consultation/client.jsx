@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useFormik } from "formik";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -119,6 +119,7 @@ function SummaryRow({ label, value }) {
 export default function ConsultationClient() {
   const pathname = usePathname();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isAuthenticated, isLoading: sessionLoading } = useSession();
 
   const [step, setStep] = useState(1);
@@ -150,7 +151,11 @@ export default function ConsultationClient() {
       siteCity: "",
       siteState: "",
       scheduledStart: "",
-      notes: "",
+      // Seeded from `?notes=`, which Ziora's "Start Project with TBM" links
+      // with — the design's brief, so the team booking this sees what the
+      // client already designed instead of a blank notes field. Read once,
+      // as the initial value, same as `prompt` in studio-view.jsx.
+      notes: searchParams.get("notes") ?? "",
     },
     validationSchema: consultationSchema,
     onSubmit: async (values) => {

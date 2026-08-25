@@ -79,3 +79,24 @@ export const renovationEstimateResponse = z.looseObject({
   nextSteps: z.array(renovationEstimateNextStepSchema),
   paymentPlanOptions: z.array(renovationEstimatePaymentPlanSchema),
 });
+
+/**
+ * GET /ai/renovation/estimates — a lighter summary per row (no envelope, no
+ * pagination — the backend returns the full list). Observed live 2026-08-25
+ * (contracts/renovation-estimates-list.json). `GET /ai/renovation-estimates`
+ * (hyphenated) returns the identical shape for the same resource — confirmed
+ * live; the app uses the nested family for consistency with the POST.
+ */
+export const renovationEstimateSummarySchema = z.looseObject({
+  estimateId: z.string(),
+  projectId: z.string().nullable(),
+  projectName: z.string(),
+  roomType: z.string(),
+  createdAtUtc: z.string(),
+  totalEstimate: z.number(),
+  currency: z.string(),
+});
+
+export const renovationEstimateListResponse = z.looseObject({
+  estimates: z.array(renovationEstimateSummarySchema),
+});

@@ -1,4 +1,7 @@
+import { Suspense } from "react";
+
 import ConsultationClient from "./client";
+import ConsultationLoading from "./loading";
 
 export const metadata = {
   title: "Book a Consultation | TBM Building Services",
@@ -21,6 +24,16 @@ export const metadata = {
   alternates: { canonical: "/consultation" },
 };
 
+/**
+ * ConsultationClient reads `?notes=` via useSearchParams (Ziora's "Start
+ * Project with TBM" carries a design's brief forward into the booking form's
+ * notes field), which opts the subtree into client-side rendering — Next
+ * requires a Suspense boundary around it. Mirrors app/ziora/studio/page.jsx.
+ */
 export default function ConsultationPage() {
-  return <ConsultationClient />;
+  return (
+    <Suspense fallback={<ConsultationLoading />}>
+      <ConsultationClient />
+    </Suspense>
+  );
 }

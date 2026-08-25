@@ -291,7 +291,7 @@ export default function ZioraSection() {
                 className="text-[#D4AF37] font-manrope font-extrabold uppercase mb-5 text-[16px]"
                 style={{ letterSpacing: "0.3em" }}
               >
-                TBM&apos;s AI Design &amp; Estimate Advantage
+                TBM&apos;s Ziora Design &amp; Estimate Advantage
               </p>
 
               <h2 className="font-poppins font-bold text-[26px] sm:text-[34px] md:text-[40px] text-white leading-[1.12] mb-4">
