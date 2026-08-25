@@ -2,7 +2,6 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import DesignCard from "./card";
 import DesignsEmptyState from "./empty-state";
 import SectionEmpty from "@/components/shared/dashboard/section-empty";
@@ -17,9 +16,15 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
  * copy of the same action — and because it was appended to the item list it
  * also skewed the pagination maths (`designs.length + 1`) and reappeared on
  * whichever page it happened to land on.
+ *
+ * Pagination is the server's (`pagination` from GET /Designs). It used to be
+ * sliced client-side from a single fetch — which, with the backend's default
+ * page of 10, meant a gallery could never show an eleventh design.
  */
 export default function DesignsGrid({
   designs,
+  pagination,
+  onPageChange,
   isLoading,
   isError,
   view,
@@ -27,9 +32,6 @@ export default function DesignsGrid({
   onClearFilters,
   onRetry,
 }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
   if (isLoading) return <LoadingSkeleton view={view} />;
 
   if (isError) {
@@ -61,9 +63,9 @@ export default function DesignsGrid({
     return <DesignsEmptyState />;
   }
 
-  const totalPages = Math.ceil(designs.length / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const currentItems = designs.slice(startIndex, startIndex + itemsPerPage);
+  const currentPage = pagination?.page ?? 1;
+  const totalPages = pagination?.totalPages ?? 1;
+  const currentItems = designs;
 
   return (
     <>
@@ -94,7 +96,7 @@ export default function DesignsGrid({
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
             className={`p-2 rounded-lg border border-white/10 transition-all ${
               currentPage === 1 ? "text-white/20 cursor-not-allowed" : "text-white/50 hover:bg-white/05"
@@ -107,7 +109,7 @@ export default function DesignsGrid({
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => onPageChange(i + 1)}
                 className="w-10 h-10 rounded-lg text-[14px] font-medium transition-all text-black"
                 style={
                   currentPage === i + 1
@@ -121,7 +123,7 @@ export default function DesignsGrid({
           </div>
 
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg border border-white/10 transition-all ${
               currentPage === totalPages ? "text-white/20 cursor-not-allowed" : "text-white/50 hover:bg-white/05"

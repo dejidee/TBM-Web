@@ -23,16 +23,46 @@ const DEFAULT_FILTERS = {
   view: "grid",
 };
 
-export default function DesignsPage() {
-  const [filters, setFilters] = useState(DEFAULT_FILTERS);
+/** Rows per page. Two full rows at the widest (4-column) breakpoint. */
+const PAGE_SIZE = 8;
 
-  const { data: designs, isLoading, isError, refetch } = useDesigns(filters);
+export default function DesignsPage() {
+  const [filters, setFiltersState] = useState(DEFAULT_FILTERS);
+  const [page, setPage] = useState(1);
+
+  // Any filter change restarts at page 1 — page 3 of "all designs" is not a
+  // page of "bathrooms". `view` is purely presentational and keeps the page.
+  const setFilters = (update) => {
+    setFiltersState((prev) => {
+      const next = typeof update === "function" ? update(prev) : update;
+      if (
+        next.roomType !== prev.roomType ||
+        next.search !== prev.search ||
+        next.sortBy !== prev.sortBy
+      ) {
+        setPage(1);
+      }
+      return next;
+    });
+  };
+
+  // `isPending`, not `isLoading`: the query is gated on the session, and while
+  // the session resolves it is pending-but-idle. `isLoading` is false then,
+  // which would flash the "no designs yet" pitch at every signed-in user.
+  const { data, isPending, isError, refetch } = useDesigns({
+    ...filters,
+    page,
+    limit: PAGE_SIZE,
+  });
+  const designs = data?.designs;
+  const pagination = data?.pagination;
 
   // `sortBy` and `view` reorder or restyle the same set, so they are not
   // filters — narrowing is what decides whether an empty result is a dead end.
   const hasActiveFilters = filters.roomType !== "all" || filters.search !== "";
 
-  const count = designs?.length ?? 0;
+  // Total across all pages, not the length of this one.
+  const count = pagination?.total ?? designs?.length ?? 0;
 
   // A room-type tab strip and a sort dropdown above a single design is furniture
   // for a gallery that does not exist yet. Shown once there is something to sort
@@ -76,7 +106,9 @@ export default function DesignsPage() {
 
         <DesignsGrid
           designs={designs}
-          isLoading={isLoading}
+          pagination={pagination}
+          onPageChange={setPage}
+          isLoading={isPending}
           isError={isError}
           view={filters.view}
           hasActiveFilters={hasActiveFilters}

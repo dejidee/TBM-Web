@@ -337,6 +337,60 @@
       "itemsAt": null,
       "auth": true,
       "$why": "Mutation \u2014 recorded manually 2026-08-22 with a no-op write (same values back). Returns ApiEnvelope<ConsultationPricingConfigDto>."
+    },
+    {
+      "op": "GET /api/v1/Designs",
+      "label": "designs",
+      "sample": "?limit=50",
+      "schema": "designListResponse",
+      "itemsAt": "designs",
+      "auth": true,
+      "$why": "No envelope \u2014 bare { designs, pagination } with /flooring-style page/limit/total/hasMore. Default limit is 10 and pageSize is ignored. roomType/search/page/limit/sortBy=newest|oldest are honoured; sortBy=favorites|alphabetical are accepted and ignored (confirmed 2026-08-25 by toggling a favourite). See contracts/designs.json."
+    },
+    {
+      "op": "GET /api/v1/Designs/{id}",
+      "label": "designs-detail",
+      "sample": "",
+      "schema": "designResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded manually 2026-08-25. No envelope, and NOT the list row: the image is outputUrl, plus width/height/durationSeconds. See contracts/designs-detail.json."
+    },
+    {
+      "op": "GET /api/v1/Designs/{id}/download",
+      "label": "designs-download",
+      "sample": "",
+      "schema": "designDownloadResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path. Recorded manually 2026-08-25 with and without ?quality=high \u2014 same { success, downloadUrl } either way. See contracts/designs-detail.json."
+    },
+    {
+      "op": "POST /api/v1/Designs/{id}/favorite",
+      "label": "designs-favorite",
+      "sample": "",
+      "schema": "designFavoriteResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 a reversible toggle on the recorder's own design, toggled straight back. Recorded manually 2026-08-25. No envelope: { success, isFavorite }. See contracts/designs-detail.json."
+    },
+    {
+      "op": "POST /api/v1/projects",
+      "label": "projects-create",
+      "sample": "",
+      "schema": "createProjectResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation, recorded manually 2026-08-25 (scripts run ad hoc, not checked in) for the design-card \"make into a project\" action. Enveloped, unlike GET /Designs. No DELETE /projects/{id} exists, so the call left one permanent row in the dev database, name-prefixed \"Contract Recorder Test Project\". See contracts/projects-create.json."
+    },
+    {
+      "op": "POST /api/v1/ai/renovation/estimate",
+      "label": "renovation-estimate",
+      "sample": "",
+      "schema": "renovationEstimateResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation, recorded manually 2026-08-25 for the design-card \"get estimate\" action. No envelope. No DELETE endpoint exists for a renovation estimate, so the call left one permanent row in the dev database, name-prefixed \"Contract Recorder Test Estimate\". See contracts/renovation-estimate.json."
     }
   ]
 }

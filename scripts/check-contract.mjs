@@ -49,6 +49,7 @@ const schemas = {
   ...(await import("../lib/api/schemas/catalog.ts")),
   ...(await import("../lib/api/schemas/admin-products.ts")),
   ...(await import("../lib/api/schemas/ai.ts")),
+  ...(await import("../lib/api/schemas/designs.ts")),
 };
 const manifest = JSON.parse(
   readFileSync(join(ROOT, "contracts/manifest.json"), "utf8"),

@@ -1,0 +1,35 @@
+{
+  "recordedAt": "2026-08-25",
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "note": "Shapes only, no values. POST /projects has no DELETE — this created one permanent test project on the dev database, name-prefixed 'Contract Recorder Test Project'.",
+  "operations": {
+    "POST /api/v1/projects": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string",
+        "projectNumber": "string",
+        "userId": "string",
+        "designSessionId": "null",
+        "orderId": "null",
+        "bomId": "null",
+        "vendorId": "null",
+        "name": "string",
+        "description": "string",
+        "roomType": "string",
+        "status": "string",
+        "startDate": "string",
+        "expectedCompletionDate": "null",
+        "actualCompletionDate": "null",
+        "financial": {
+          "totalBudget": "number",
+          "amountPaid": "number",
+          "amountPending": "number"
+        },
+        "createdAt": "string",
+        "updatedAt": "string"
+      },
+      "errors": "null"
+    }
+  }
+}

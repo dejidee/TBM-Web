@@ -41,7 +41,12 @@ import type {
   adminProductImageUploadResponse,
   adminProductUpdateResponse,
 } from "./schemas/admin-products";
-import type { aiStyleSchema, aiStylesResponse } from "./schemas/ai";
+import type {
+  aiStyleSchema,
+  aiStylesResponse,
+  renovationEstimateResponse,
+} from "./schemas/ai";
+import type { createProjectResponse, projectSchema } from "./schemas/projects";
 import type {
   productReviewsDataSchema,
   productReviewsResponse,
@@ -71,6 +76,14 @@ import type {
   vendorOrderListItemSchema,
   vendorOrderListResponse,
 } from "./schemas/orders";
+import type {
+  designDetailSchema,
+  designDownloadResponse,
+  designFavoriteResponse,
+  designListResponse,
+  designResponse,
+  designSchema,
+} from "./schemas/designs";
 import type {
   checkoutAddressSchema,
   checkoutDataResponse,
@@ -215,6 +228,31 @@ export type CheckoutPaymentResponse = z.infer<typeof checkoutPaymentResponse>;
 /** GET /Checkout/payment/paystack/verify/{reference} — no envelope. */
 export type CheckoutVerifyResponse = z.infer<typeof checkoutVerifyResponse>;
 
+/**
+ * A row from GET /Designs. Heading is `prompt` (there is no name/title);
+ * `roomType` is backend-derived lower-case text or null; `outputType` has only
+ * been observed as "Image".
+ */
+export type Design = z.infer<typeof designSchema>;
+/** GET /Designs — no envelope: `{ designs, pagination }`. `pageSize` is ignored; send `limit`. */
+export type DesignListResponse = z.infer<typeof designListResponse>;
+/** GET /Designs/{id} — no envelope, and the image is `outputUrl`, not `url`. */
+export type DesignDetail = z.infer<typeof designDetailSchema>;
+export type DesignResponse = z.infer<typeof designResponse>;
+/** GET /Designs/{id}/download — no envelope. */
+export type DesignDownloadResponse = z.infer<typeof designDownloadResponse>;
+/** POST /Designs/{id}/favorite — no envelope; `isFavorite` is the state after the toggle. */
+export type DesignFavoriteResponse = z.infer<typeof designFavoriteResponse>;
+
+/** Query params for GET /Designs. Only `newest`/`oldest` are honoured for `sortBy`. */
+export interface DesignListParams {
+  page?: number;
+  limit?: number;
+  roomType?: string;
+  search?: string;
+  sortBy?: "newest" | "oldest";
+}
+
 /** Query params for the image-upload endpoint. The file goes in the body. */
 export interface UploadImageParams {
   isPrimary?: boolean;
@@ -318,6 +356,44 @@ export interface UpdateProductDto extends ProductDtoBase {
 
 /** POST /admin/AdminProducts/bulk — a bare array, no envelope. */
 export type BulkCreateProductDto = CreateProductDto[];
+
+/** POST /ai/renovation/estimate — no envelope. */
+export type RenovationEstimateResponse = z.infer<typeof renovationEstimateResponse>;
+
+/** Request body for POST /ai/renovation/estimate. `roomDimensions` duplicates the three `*Meters` fields — the backend rejects unknown keys, so send both. */
+export interface CreateRenovationEstimateRequestDto {
+  projectId: string | null;
+  projectName: string | null;
+  roomType: string | null;
+  lengthMeters: number;
+  widthMeters: number;
+  heightMeters: number;
+  finishLevel: string | null;
+  includeFlooring: boolean;
+  includePainting: boolean;
+  includeElectrical: boolean;
+  includePlumbing: boolean;
+  contingencyPercent: number;
+  roomDimensions: { length: number; width: number; height: number };
+}
+
+/**
+ * A project as returned by POST /projects. `designSessionId`/`orderId`/
+ * `bomId`/`vendorId` were null on the only project observed — one created
+ * directly, not derived from a design session or order.
+ */
+export type Project = z.infer<typeof projectSchema>;
+/** POST /projects — enveloped. */
+export type CreateProjectResponse = z.infer<typeof createProjectResponse>;
+
+/** Request body for POST /projects. */
+export interface CreateProjectRequestDto {
+  name?: string | null;
+  description?: string | null;
+  roomType?: string | null;
+  startDate?: string | null;
+  totalBudget?: number | null;
+}
 
 /** Error thrown by the api* helpers. `message` is already user-safe. */
 export interface ApiError extends Error {
