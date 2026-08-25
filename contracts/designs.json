@@ -1,0 +1,51 @@
+{
+  "endpoint": "/Designs",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "designs": {
+      "type": "array",
+      "length": 2,
+      "of": [
+        {
+          "id": "string",
+          "projectId": "string",
+          "roomType": "null",
+          "prompt": "string",
+          "url": "string",
+          "outputType": "string",
+          "createdAt": "string",
+          "isFavorite": "boolean"
+        },
+        {
+          "id": "string",
+          "projectId": "string",
+          "roomType": "string",
+          "prompt": "string",
+          "url": "string",
+          "outputType": "string",
+          "createdAt": "string",
+          "isFavorite": "boolean"
+        }
+      ]
+    },
+    "pagination": {
+      "page": "number",
+      "limit": "number",
+      "total": "number",
+      "totalPages": "number",
+      "hasMore": "boolean"
+    }
+  },
+  "itemFieldTypes": {
+    "id": "string",
+    "projectId": "string",
+    "roomType": "null|string",
+    "prompt": "string",
+    "url": "string",
+    "outputType": "string",
+    "createdAt": "string",
+    "isFavorite": "boolean"
+  },
+  "sampleSize": 2
+}

@@ -5,7 +5,7 @@
 The backend's OpenAPI document declares all 324 operations as a bare `200: OK`
 with no response body type. This table records what we have actually observed.
 
-**33 of 324 operations (10.2%) have a validated schema.**
+**39 of 324 operations (12.0%) have a validated schema.**
 
 `npm run contract:coverage -- <Tag>` lists a tag's operations and their state.
 
@@ -13,7 +13,7 @@ with no response body type. This table records what we have actually observed.
 | --- | --- | --- |
 | AI | 1 | 8 |
 | AIAssistant | 0 | 9 |
-| AIRenovationEstimator | 0 | 6 |
+| AIRenovationEstimator | 1 | 6 |
 | AIUpload | 0 | 1 |
 | Account | 0 | 22 |
 | AdminAI | 0 | 4 |
@@ -42,7 +42,7 @@ with no response body type. This table records what we have actually observed.
 | Contact | 0 | 1 |
 | Dashboard | 0 | 5 |
 | DesignSessions | 0 | 7 |
-| Designs | 0 | 7 |
+| Designs | 4 | 7 |
 | Inspection | 0 | 10 |
 | Inspiration | 0 | 1 |
 | Lookups | 0 | 10 |
@@ -53,7 +53,7 @@ with no response body type. This table records what we have actually observed.
 | ProductReviews | 1 | 2 |
 | Products | 4 | 16 |
 | ProjectRequests | 0 | 3 |
-| Projects | 0 | 8 |
+| Projects | 1 | 8 |
 | PublicProjects | 0 | 1 |
 | Saved | 0 | 7 |
 | Subscription | 0 | 6 |
@@ -68,6 +68,9 @@ with no response body type. This table records what we have actually observed.
 - `GET /api/v1/Categories` → `categoryListResponse`
 - `GET /api/v1/Checkout` → `checkoutDataResponse`
 - `GET /api/v1/Checkout/payment/paystack/verify/{reference}` → `checkoutVerifyResponse`
+- `GET /api/v1/Designs` → `designListResponse`
+- `GET /api/v1/Designs/{id}` → `designResponse`
+- `GET /api/v1/Designs/{id}/download` → `designDownloadResponse`
 - `GET /api/v1/Products` → `productListResponse`
 - `GET /api/v1/Products/featured` → `productArrayResponse`
 - `GET /api/v1/admin/consultations` → `adminConsultationListResponse`
@@ -84,14 +87,17 @@ with no response body type. This table records what we have actually observed.
 - `GET /api/v1/products/{productId}/reviews` → `productReviewsResponse`
 - `GET /api/v1/vendor/orders` → `vendorOrderListResponse`
 - `POST /api/v1/Checkout/payment` → `checkoutPaymentResponse`
+- `POST /api/v1/Designs/{id}/favorite` → `designFavoriteResponse`
 - `POST /api/v1/admin/AdminProducts` → `adminProductCreateResponse`
 - `POST /api/v1/admin/AdminProducts/bulk` → `adminProductBulkResponse`
 - `POST /api/v1/admin/AdminProducts/{productId}/images/upload` → `adminProductImageUploadResponse`
+- `POST /api/v1/ai/renovation/estimate` → `renovationEstimateResponse`
 - `POST /api/v1/consultations` → `consultationBookingResponse`
 - `POST /api/v1/consultations/verify-payment` → `consultationVerifyPaymentResponse`
 - `POST /api/v1/consultations/{id}/cancel` → `consultationResponse`
 - `POST /api/v1/consultations/{id}/initialize-payment` → `consultationPaymentInitResponse`
 - `POST /api/v1/orders` → `orderResponse`
+- `POST /api/v1/projects` → `createProjectResponse`
 - `PUT /api/v1/admin/AdminProducts/{id}` → `adminProductUpdateResponse`
 - `PUT /api/v1/admin/consultations/pricing/{id}` → `adminConsultationPricingItemResponse`
 - `PUT /api/v1/admin/consultations/{id}/cancel` → `adminConsultationCancelResponse`

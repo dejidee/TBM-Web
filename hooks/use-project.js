@@ -16,7 +16,26 @@ export const projectKeys = {
   public: () => ["projects", "public"],
 };
 
-// ── Project list ────────────────────────────────────────────────────────────────
+// ── Create project ─────────────────────────────────────────────────────────────
+
+/**
+ * POST /projects — enveloped (`res.data` is the created Project). Used by the
+ * "make into a project" design-card action; there's no backend link between a
+ * design and a project (BACKLOG.md #5), so this just pre-fills a new one.
+ */
+export function useCreateProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => projectsApi.createProject(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: projectKeys.list() });
+    },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to create project"),
+  });
+}
+
+// ── Project list ────────────────────────────────────────────────────────────────────
 export function useProjects() {
   return useQuery({
     queryKey: projectKeys.list(),

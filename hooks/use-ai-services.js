@@ -8,7 +8,9 @@ import {
   aiUsageApi,
   aiAssistantApi,
   aiStylesApi,
+  aiRenovationApi,
 } from "@/lib/api/ai-services";
+import { showToast } from "@/components/shared/toast";
 
 // ─── Query key factory ────────────────────────────────────────────────────────
 export const aiKeys = {
@@ -34,6 +36,20 @@ export function useAIStyles() {
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     select: (res) => (Array.isArray(res) ? res : (res?.data ?? [])),
+  });
+}
+
+// ─── AI Renovation Estimator ────────────────────────────────────────────────
+
+/**
+ * POST /ai/renovation/estimate — no query key, since a "get estimate" run
+ * isn't a resource to cache or refetch; each submission is its own mutation.
+ */
+export function useCreateRenovationEstimate() {
+  return useMutation({
+    mutationFn: (data) => aiRenovationApi.createEstimate(data),
+    onError: (error) =>
+      showToast.error(error.message || "Failed to generate estimate"),
   });
 }
 
