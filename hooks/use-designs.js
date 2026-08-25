@@ -18,7 +18,8 @@ export function useDesigns(filters = {}) {
     refetchOnWindowFocus: false,
     select: (res) => {
       // API returns { designs: [...], pagination: {...} }
-      let items = res?.designs ?? res?.data?.items ?? res?.data ?? res?.items ?? [];
+      let items =
+        res?.designs ?? res?.data?.items ?? res?.data ?? res?.items ?? [];
       if (!Array.isArray(items)) items = [];
 
       // Client-side filtering (backend doesn't support these params)
@@ -50,6 +51,7 @@ export function useDesigns(filters = {}) {
           }
         });
       }
+      console.log(items);
       return items;
     },
   });
@@ -133,7 +135,8 @@ export function useDesignSessionStatus(sessionId, { enabled = true } = {}) {
     refetchInterval: (query) => {
       const status = query.state.data?.data?.status ?? query.state.data?.status;
       // Stop polling when generation is complete or failed
-      if (status === "Generated" || status === "Failed" || status === "Ordered") return false;
+      if (status === "Generated" || status === "Failed" || status === "Ordered")
+        return false;
       return 3000; // Poll every 3s while processing
     },
     select: (res) => res?.data ?? res,
@@ -158,9 +161,12 @@ export function useUploadSessionPhoto() {
     mutationFn: ({ sessionId, file }) =>
       designSessionsApi.uploadPhoto(sessionId, file),
     onSuccess: (_data, { sessionId }) => {
-      queryClient.invalidateQueries({ queryKey: ["design-session", sessionId] });
+      queryClient.invalidateQueries({
+        queryKey: ["design-session", sessionId],
+      });
     },
-    onError: (error) => showToast.error(error.message || "Failed to upload photo"),
+    onError: (error) =>
+      showToast.error(error.message || "Failed to upload photo"),
   });
 }
 

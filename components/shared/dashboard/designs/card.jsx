@@ -78,12 +78,7 @@ export default function DesignCard({ design, index, isList = false }) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const menuBtnRef = useRef(null);
 
-  const imageUrl =
-    design.url ??
-    design.generatedImageUrl ??
-    design.imageUrl ??
-    design.image ??
-    "/placeholder-design.jpg";
+  const imageUrl = design.url ?? "/placeholder-design.jpg";
   const title =
     design.projectName ??
     design.name ??
