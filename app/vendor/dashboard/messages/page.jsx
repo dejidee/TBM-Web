@@ -16,7 +16,7 @@ import {
   useVendorConversationMessages,
   useSendConversationMessage,
 } from "@/hooks/use-messages";
-import { mockQuickReplies } from "@/lib/mock/messages";
+import { QUICK_REPLIES } from "@/lib/data/quick-replies";
 import { avatarStyle } from "@/lib/theme/avatar";
 
 export default function MessagesPage() {
@@ -378,7 +378,7 @@ export default function MessagesPage() {
           {/* Quick Replies */}
           <div className="px-4 md:px-6 py-3 border-t border-white/08">
             <div className="flex flex-wrap md:flex-nowrap gap-1 md:gap-2 overflow-x-auto pb-2 -mb-2">
-              {mockQuickReplies.map((reply, index) => (
+              {QUICK_REPLIES.map((reply, index) => (
                 <motion.button
                   key={index}
                   whileHover={{ scale: 1.02 }}
@@ -430,11 +430,17 @@ export default function MessagesPage() {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={handleSendMessage}
-                disabled={!messageInput.trim() || sendMessage.isLoading}
+                disabled={!messageInput.trim() || sendMessage.isPending}
                 className="px-4 md:px-6 py-2 md:py-3 bg-accent-solid text-white rounded-lg font-manrope text-[13px] font-medium hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
               >
-                <span className="hidden sm:inline">Send</span>
-                <Send size={16} />
+                <span className="hidden sm:inline">
+                  {sendMessage.isPending ? "Sending…" : "Send"}
+                </span>
+                {sendMessage.isPending ? (
+                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                ) : (
+                  <Send size={16} />
+                )}
               </motion.button>
             </div>
           </div>

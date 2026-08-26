@@ -17,7 +17,7 @@ import Reveal from "@/components/common/reveal";
 
 const CHECKLIST = [
   "3D Visualizations",
-  "Accurate Cost Estimate",
+  "Estimated Cost Range",
   "Smart Design Recommendations",
 ];
 
@@ -38,10 +38,10 @@ const NAV_ITEMS = [
 ];
 
 const THUMBS = [
-  "/product-1.jpg",
-  "/product-2.jpg",
-  "/product-3.jpg",
-  "/product-4.png",
+  "/site-images/web/interior-finished.jpg",
+  "/site-images/web/kitchen-lux-after.jpg",
+  "/site-images/web/bathroom-2-after.jpg",
+  "/site-images/web/patio-after.jpg",
 ];
 
 function ZioraAppMockup() {
@@ -134,7 +134,8 @@ function ZioraAppMockup() {
               color: "rgba(255,255,255,0.3)",
             }}
           >
-            Project Estimate
+            Project Estimate{" "}
+            <span style={{ color: "rgba(255,255,255,0.18)" }}>(Sample)</span>
           </p>
 
           <p
@@ -266,9 +267,10 @@ export default function ZioraSection() {
           {/* ── Left: copy ───────────────────────────────────────── */}
           <div>
             <Reveal direction="up">
-              {/* ZIORA AI badge */}
+              {/* ZIORA AI badge — sized to never outrank TBM's core-offer
+                  headings (capped at text-4xl, same ceiling as "Our Services") */}
               <div className="flex items-center gap-2.5 mb-3">
-                <span className="font-poppins font-bold text-white text-3xl sm:text-4xl lg:text-5xl  tracking-[0.2em]">
+                <span className="font-poppins font-bold text-white text-2xl sm:text-3xl lg:text-4xl tracking-[0.2em]">
                   ZIORA
                 </span>
                 <span
@@ -289,7 +291,7 @@ export default function ZioraSection() {
                 className="text-[#D4AF37] font-manrope font-extrabold uppercase mb-5 text-[16px]"
                 style={{ letterSpacing: "0.3em" }}
               >
-                3D Designs &amp; Project Estimate
+                TBM&apos;s Ziora Design &amp; Estimate Advantage
               </p>
 
               <h2 className="font-poppins font-bold text-[26px] sm:text-[34px] md:text-[40px] text-white leading-[1.12] mb-4">
@@ -305,7 +307,8 @@ export default function ZioraSection() {
                 style={{ fontSize: 16, maxWidth: 320 }}
               >
                 Upload your space, choose your style and get stunning 3D designs
-                with accurate project estimates in minutes.
+                with a cost estimate range in minutes — assisted by TBM&apos;s
+                team.
               </p>
             </Reveal>
 
@@ -335,14 +338,14 @@ export default function ZioraSection() {
             <Reveal direction="up" delay={160}>
               <div className="flex items-center gap-5 flex-wrap">
                 <Link href="/ziora" className="btn-gold">
-                  Try Ziora Now →
+                  Design with Ziora Now →
                 </Link>
                 <Link
                   href="/services#how-it-works"
                   className="flex items-center gap-2.5 group"
                   style={{ color: "rgba(255,255,255,0.5)" }}
                 >
-                  <span className="flex items-center justify-center w-9 h-9 rounded-full border border-white/18 group-hover:border-white/35 transition-colors shrink-0">
+                  <span className="flex items-center justify-center w-11 h-11 rounded-full border border-white/18 group-hover:border-white/35 transition-colors shrink-0">
                     <Play
                       className="w-3 h-3 ml-0.5 text-white"
                       fill="currentColor"

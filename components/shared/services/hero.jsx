@@ -30,7 +30,7 @@ export default function ServicesHero() {
             From full-scale renovation and interior fit-outs to maintenance and design consultation — TBM delivers expert execution at every stage.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/contact?type=consultation" className="btn-gold px-8 py-4">
+            <Link href="/consultation" className="btn-gold px-8 py-4">
               Book Inspection
               <ArrowRight className="w-4 h-4" />
             </Link>

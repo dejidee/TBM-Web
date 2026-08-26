@@ -24,13 +24,13 @@ export default function HelpSection() {
         <div>
           <h3 className="text-[16px] font-semibold text-white mb-2">Have a question?</h3>
           <p className="text-[14px] text-white/40 mb-4 leading-relaxed">
-            Our renovation experts are here to help with installation guides.
+            Our renovation experts are here to help with your order.
           </p>
           <Link
-            href="/help"
+            href="/contact"
             className="text-[14px] font-semibold text-[#D4AF37] hover:text-[#D4AF37]/70 transition-colors"
           >
-            Visit Help Center →
+            Contact Us →
           </Link>
         </div>
       </div>

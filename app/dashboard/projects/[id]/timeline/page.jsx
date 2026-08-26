@@ -106,7 +106,7 @@ export default function TimelinePage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 pt-12 md:pt-0 w-full max-w-[700px]">
+      <div className="space-y-6 w-full max-w-[700px]">
         {/* Back */}
         <button
           onClick={() => router.push(`/dashboard/projects/${id}`)}

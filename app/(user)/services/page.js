@@ -18,7 +18,7 @@ export const metadata = {
   openGraph: {
     title: "Services | TBM Building Services",
     description:
-      "Expert renovation, construction, and fit-out services across Abuja and Lagos — powered by Ziora AI and Bogat materials.",
+      "Expert renovation, construction, and fit-out services across Abuja and Lagos — assisted by Ziora AI, with premium bathroom fixtures from Bogat.",
     type: "website",
   },
 };

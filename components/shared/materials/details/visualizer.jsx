@@ -77,7 +77,7 @@ export default function AIVisualizer() {
         <motion.button
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          className="shrink-0 w-8 h-8 flex items-center justify-center rounded-full transition-colors"
+          className="shrink-0 w-11 h-11 flex items-center justify-center rounded-full transition-colors"
           style={{ background: "rgba(212,175,55,0.12)" }}
         >
           <MessageCircle className="w-4 h-4 text-[#D4AF37]" />

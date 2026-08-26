@@ -261,7 +261,7 @@ export default function BogatGuideClient() {
             transition={{ delay: 0.22 }}
             className="flex flex-wrap gap-x-8 gap-y-3"
           >
-            {["100% Authentic products", "Delivery across Nigeria", "Expert support available"].map((t) => (
+            {["Verified authentic products", "Delivery across Nigeria", "Expert support available"].map((t) => (
               <span key={t} className="flex items-center gap-2 text-[11px] text-white/30">
                 <span className="w-1 h-1 rounded-full bg-[#D4AF37]/50" />
                 {t}

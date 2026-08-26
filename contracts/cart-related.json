@@ -10,15 +10,31 @@
         "id": "string",
         "name": "string",
         "price": "number",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
         "image": "string",
-        "rating": "number"
+        "rating": "null",
+        "reviewCount": "number"
+      },
+      {
+        "id": "string",
+        "name": "string",
+        "price": "null",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
+        "image": "null",
+        "rating": "null",
+        "reviewCount": "number"
       },
       {
         "id": "string",
         "name": "string",
         "price": "number",
+        "showPrice": "boolean",
+        "priceDisplay": "string",
         "image": "null",
-        "rating": "number"
+        "rating": "null",
+        "reviewCount": "number"
       }
     ]
   }

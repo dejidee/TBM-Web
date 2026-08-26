@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 import { useIsAuthenticated } from "@/hooks/use-auth";
 import { useIsSaved, useToggleSave } from "@/hooks/use-saved";
 
@@ -30,6 +30,15 @@ function HeartIcon({ filled, loading, className = "w-4 h-4" }) {
   );
 }
 
+/**
+ * The hit area is 44×44 by default, not the icon's 16px.
+ *
+ * In grid view this was `h-9 w-9` (36px) and in list view it had no size class
+ * at all, so the tap target was the 16px heart itself. Both clear WCAG 2.5.8's
+ * 24px floor and both get mis-tapped — CLAUDE.md sets the house standard at 44,
+ * and a save control that toggles on a near-miss is exactly the kind of thing
+ * that makes an expensive-looking page feel cheap in the hand.
+ */
 function SaveButton({ productId, className = "", iconClass = "w-4 h-4" }) {
   const { isAuthenticated } = useIsAuthenticated();
   const { isSaved, savedId, isLoading } = useIsSaved(productId);
@@ -51,11 +60,25 @@ function SaveButton({ productId, className = "", iconClass = "w-4 h-4" }) {
     <button
       onClick={handleClick}
       disabled={isLoading || toggleSave.isPending}
-      className={`flex items-center justify-center transition-transform hover:scale-110 disabled:opacity-60 ${className}`}
+      className={`flex h-11 w-11 shrink-0 items-center justify-center transition-transform hover:scale-110 disabled:opacity-60 ${className}`}
       aria-label={isSaved ? "Remove from saved" : "Save item"}
     >
       <HeartIcon filled={isSaved} loading={isLoading} className={iconClass} />
     </button>
+  );
+}
+
+// Only rendered once a product has at least one real review — averageRating
+// is 0 and reviewCount is 0 on every unreviewed product, and "0.0 ★ (0)" on
+// every card would read as broken, not honest.
+function RatingBadge({ averageRating, reviewCount, className = "" }) {
+  if (!reviewCount) return null;
+  return (
+    <span className={`inline-flex items-center gap-1 text-[11px] text-white/50 font-manrope ${className}`}>
+      <Star className="h-3 w-3 fill-[#D4AF37] text-[#D4AF37]" />
+      {averageRating.toFixed(1)}
+      <span className="text-white/30">({reviewCount})</span>
+    </span>
   );
 }
 
@@ -92,9 +115,13 @@ export default function ProductCard({ product, viewMode = "grid" }) {
   // Bogat (brandType 2) is made to order — never show fast-stock language, and
   // frame the price as a starting point ("From"), never a fixed sticker.
   const isMadeToOrder = product.brandType === 2;
-  const priceLabel = product.showPrice
-    ? product.priceDisplay
-    : "Request price";
+
+  // `showPrice` can be true while the price itself is 0 — the catalogue has
+  // pieces that have not been priced yet, and they were rendering as "₦0.00".
+  // A free luxury basin is not a claim we want to make; fall back to the same
+  // wording used for quote-only pieces.
+  const hasRealPrice = Number(product.price) > 0;
+  const priceLabel = product.showPrice && hasRealPrice ? product.priceDisplay : "Request price";
 
   // ── List view ──────────────────────────────────────────────────────────────
   if (viewMode === "list") {
@@ -111,7 +138,11 @@ export default function ProductCard({ product, viewMode = "grid" }) {
                   src={imageUrl}
                   alt={product.name}
                   fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  // `object-contain`, not `object-cover`: a forced 4:5 crop cut
+                  // off pieces of whatever aspect ratio the source photo
+                  // actually was. Letterboxing on the card's own dark
+                  // background loses no product, unlike a crop.
+                  className="object-contain transition-transform duration-700 group-hover:scale-105"
                   sizes="224px"
                 />
               ) : (
@@ -133,6 +164,11 @@ export default function ProductCard({ product, viewMode = "grid" }) {
               <h3 className="font-poppins text-lg font-semibold text-white leading-snug">
                 {product.name}
               </h3>
+              <RatingBadge
+                averageRating={product.averageRating}
+                reviewCount={product.reviewCount}
+                className="mt-1"
+              />
               {product.shortDescription && (
                 <p className="mt-1.5 text-sm text-white/45 line-clamp-2 font-manrope">
                   {product.shortDescription}
@@ -141,7 +177,7 @@ export default function ProductCard({ product, viewMode = "grid" }) {
             </div>
             <div className="mt-4 flex items-end justify-between gap-3">
               <div>
-                {product.showPrice && isMadeToOrder && (
+                {product.showPrice && hasRealPrice && isMadeToOrder && (
                   <span className="block text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
                     From
                   </span>
@@ -176,7 +212,7 @@ export default function ProductCard({ product, viewMode = "grid" }) {
               src={imageUrl}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              className="object-contain transition-transform duration-700 ease-out group-hover:scale-105"
               sizes="(max-width: 768px) 50vw, 33vw"
             />
           ) : (
@@ -201,7 +237,7 @@ export default function ProductCard({ product, viewMode = "grid" }) {
 
           <SaveButton
             productId={product.id}
-            className="absolute right-3 top-3 h-9 w-9 border border-white/10 bg-black/40 backdrop-blur-sm"
+            className="absolute right-3 top-3 rounded-lg border border-white/10 bg-black/40 backdrop-blur-sm"
             iconClass="w-4 h-4"
           />
 
@@ -221,10 +257,20 @@ export default function ProductCard({ product, viewMode = "grid" }) {
           <h3 className="font-poppins text-[15px] font-semibold leading-snug text-white line-clamp-2">
             {product.name}
           </h3>
+          <RatingBadge
+            averageRating={product.averageRating}
+            reviewCount={product.reviewCount}
+            className="mt-1"
+          />
+          {product.shortDescription && (
+            <p className="mt-1.5 text-[13px] text-white/45 line-clamp-2 font-manrope">
+              {product.shortDescription}
+            </p>
+          )}
 
           <div className="mt-auto pt-4">
             <div className="flex items-baseline gap-2">
-              {product.showPrice && isMadeToOrder && (
+              {product.showPrice && hasRealPrice && isMadeToOrder && (
                 <span className="text-[10px] font-medium uppercase tracking-[0.18em] text-white/35">
                   From
                 </span>

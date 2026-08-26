@@ -49,6 +49,13 @@ export default function InventoryProductsTable({ products, isLoading }) {
     updateQuantity.mutate({ id: productId, quantity: newQuantity });
   };
 
+  // `updateQuantity` is one mutation instance shared by every row's +/- buttons.
+  // Gating on `.isPending` alone would disable every row's buttons while any
+  // single row is in flight, so pending is scoped to the row actually mutating.
+  const pendingProductId = updateQuantity.isPending
+    ? updateQuantity.variables?.id
+    : null;
+
   const handleSelectProduct = (productId) => {
     setSelectedProducts((prev) =>
       prev.includes(productId)
@@ -161,7 +168,7 @@ export default function InventoryProductsTable({ products, isLoading }) {
                       alt={product.name}
                       width={35}
                       height={35}
-                      className="flex-shrink-0"
+                      className="flex-shrink-0 object-contain"
                     />
                   ) : (
                     <div
@@ -210,7 +217,8 @@ export default function InventoryProductsTable({ products, isLoading }) {
                           handleQuantityChange(product.id, product.quantity, -1)
                         }
                         disabled={
-                          product.quantity === 0 || updateQuantity.isLoading
+                          product.quantity === 0 ||
+                          pendingProductId === product.id
                         }
                         className="disabled:opacity-30 disabled:cursor-not-allowed"
                       >
@@ -219,7 +227,11 @@ export default function InventoryProductsTable({ products, isLoading }) {
 
                       <div className="inline-flex items-center justify-center min-w-[50px] px-3 py-1 border-[0.87px] border-white/10 rounded-[3.48px]">
                         <span className="font-inter text-[12.19px] font-bold text-white leading-[17.41px]">
-                          {product.quantity}
+                          {pendingProductId === product.id ? (
+                            <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          ) : (
+                            product.quantity
+                          )}
                         </span>
                       </div>
 
@@ -229,7 +241,7 @@ export default function InventoryProductsTable({ products, isLoading }) {
                         onClick={() =>
                           handleQuantityChange(product.id, product.quantity, 1)
                         }
-                        disabled={updateQuantity.isLoading}
+                        disabled={pendingProductId === product.id}
                         className="disabled:opacity-30"
                       >
                         <img src="/assets/svgs/vendor/inventory/addButton.svg" alt="Add" width={25} height={25} />
@@ -293,7 +305,7 @@ export default function InventoryProductsTable({ products, isLoading }) {
                       alt={product.name}
                       width={35}
                       height={35}
-                      className="flex-shrink-0"
+                      className="flex-shrink-0 object-contain"
                     />
                   ) : (
                     <div
@@ -333,7 +345,8 @@ export default function InventoryProductsTable({ products, isLoading }) {
                         handleQuantityChange(product.id, product.quantity, -1)
                       }
                       disabled={
-                        product.quantity === 0 || updateQuantity.isLoading
+                        product.quantity === 0 ||
+                        pendingProductId === product.id
                       }
                       className="w-7 h-7 bg-white/10 text-white rounded-[5.22px] flex items-center justify-center active:bg-white/20 transition-colors disabled:opacity-30"
                     >
@@ -342,7 +355,11 @@ export default function InventoryProductsTable({ products, isLoading }) {
 
                     <div className="text-center min-w-[50px]">
                       <span className="font-inter text-[12.19px] font-bold text-white">
-                        {product.quantity}
+                        {pendingProductId === product.id ? (
+                          <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        ) : (
+                          product.quantity
+                        )}
                       </span>
                     </div>
 
@@ -351,7 +368,7 @@ export default function InventoryProductsTable({ products, isLoading }) {
                       onClick={() =>
                         handleQuantityChange(product.id, product.quantity, 1)
                       }
-                      disabled={updateQuantity.isLoading}
+                      disabled={pendingProductId === product.id}
                       className="w-7 h-7 bg-white/10 text-white rounded-[5.22px] flex items-center justify-center active:bg-white/20 transition-colors"
                     >
                       <Plus size={12} />

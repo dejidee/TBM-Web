@@ -15,6 +15,8 @@ import {
   Calendar,
 } from "lucide-react";
 import DashboardLayout from "@/components/shared/dashboard/layout";
+import SectionEmpty from "@/components/shared/dashboard/section-empty";
+import SectionError from "@/components/shared/dashboard/section-error";
 import { useProjects } from "@/hooks/use-project";
 
 const STATUS_STYLES = {
@@ -188,34 +190,19 @@ function ProjectCard({ project, index }) {
   );
 }
 
+/** Uses the shared dashboard empty state so Projects, Orders and Saved Items
+ *  agree on what "nothing here yet" looks like. The CTA is a real link now —
+ *  it was `window.location.href = ...`, which drops the SPA transition and
+ *  cannot be opened in a new tab or middle-clicked. */
 function EmptyState() {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center py-24 text-center"
-    >
-      <div
-        className="w-16 h-16 rounded-2xl border border-white/08 flex items-center justify-center mb-5"
-        style={{ background: "#0d0b08" }}
-      >
-        <FolderOpen className="w-7 h-7 text-white/20" />
-      </div>
-      <h3 className="text-[17px] font-bold text-white mb-2">No projects yet</h3>
-      <p className="text-[13px] text-white/35 max-w-xs leading-relaxed mb-6">
-        Once you pay for a renovation, your project will appear here with full
-        tracking — timeline, gallery, documents and financials.
-      </p>
-      <button
-        onClick={() => (window.location.href = "/ziora")}
-        className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-[13px] font-semibold text-black"
-        style={{
-          background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)",
-        }}
-      >
-        <Plus className="w-4 h-4" /> Start with AI Visualizer
-      </button>
-    </motion.div>
+    <SectionEmpty
+      icon={FolderOpen}
+      title="No projects yet"
+      body="Once a renovation is underway, it appears here with full tracking — timeline, gallery, documents and financials."
+      action={{ label: "Design a room with Ziora", href: "/ziora/studio", icon: Plus }}
+      secondary={{ label: "Book a consultation", href: "/consultation" }}
+    />
   );
 }
 
@@ -241,11 +228,11 @@ function SkeletonCard() {
 }
 
 export default function ProjectsListPage() {
-  const { data: projects = [], isLoading, isError } = useProjects();
+  const { data: projects = [], isLoading, isError, refetch } = useProjects();
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 pt-12 md:pt-0 w-full">
+      <div className="space-y-6 w-full">
         {/* Page header */}
         <motion.div
           initial={{ opacity: 0, y: -12 }}
@@ -276,11 +263,11 @@ export default function ProjectsListPage() {
         )}
 
         {isError && (
-          <div className="text-center py-20">
-            <p className="text-white/35 text-[13px]">
-              Could not load your projects. Please refresh.
-            </p>
-          </div>
+          <SectionError
+            title="We couldn't load your projects"
+            body="Your projects are safe — this is a problem reaching them. Try again in a moment."
+            onRetry={refetch}
+          />
         )}
 
         {!isLoading && !isError && projects.length === 0 && <EmptyState />}

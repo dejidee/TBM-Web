@@ -11,7 +11,7 @@ export default function GalleryPage() {
 
   return (
     <DashboardLayout>
-      <div className="pt-12 md:pt-0 space-y-4 w-full">
+      <div className="space-y-4 w-full">
         <button
           onClick={() => router.push(`/dashboard/projects/${id}`)}
           className="inline-flex items-center gap-2 text-white/35 hover:text-white transition-colors text-[13px] font-medium"

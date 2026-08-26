@@ -1,10 +1,13 @@
-import CreateDesignView from "@/components/shared/dashboard/designs/create-design-view";
+import { redirect } from "next/navigation";
 
-export const metadata = {
-  title: "Create a New Design | TBM Building Services",
-  description: "Upload your room, choose a style, and let Ziora render your redesigned space.",
-};
-
-export default function NewDesignPage() {
-  return <CreateDesignView />;
+/**
+ * The creation flow moved out of the dashboard shell to /ziora/studio, which
+ * has no navbar, sidebar, or footer — see app/ziora/studio/layout.jsx.
+ *
+ * This stub stays because the old path is in users' history and in links we
+ * have already shipped. It is a redirect rather than a `next.config` rewrite so
+ * it lives next to the route it replaces and disappears with it.
+ */
+export default function LegacyNewDesignPage() {
+  redirect("/ziora/studio");
 }

@@ -4,16 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePortfolio } from "@/hooks/use-project";
-
-const CATEGORIES = [
-  "Guest Toilet Renovation",
-  "Construction (Shell to Finish)",
-  "Outdoor / Exterior Design",
-  "Bathroom Renovation",
-  "Interior Finishing",
-  "Interior Renovation",
-];
+import { usePortfolio, usePortfolioCategories } from "@/hooks/use-project";
 
 const CATEGORY_COLORS = {
   "Guest Toilet Renovation": "bg-black/75 text-blue-300 border-blue-400/60",
@@ -45,12 +36,12 @@ function PortfolioCard({ item }) {
       className="group cursor-pointer bg-[#111] border border-white/8 rounded-2xl overflow-hidden hover:border-[#D4AF37]/40 transition-colors duration-300"
     >
       {/* Thumbnail */}
-      <div className="relative aspect-[4/3] bg-[#1a1a1a] overflow-hidden">
+      <div className="relative aspect-square sm:aspect-[4/3] bg-[#1a1a1a] overflow-hidden">
         {item.thumbnailUrl ? (
           <img
             src={item.thumbnailUrl}
             alt={item.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white/20 text-sm">
@@ -105,6 +96,10 @@ export default function PortfolioPage() {
     ...(activeCategory ? { category: activeCategory } : {}),
   });
 
+  // Derived from the published portfolio, the same source the admin form picks
+  // from — a tab can never offer a category no project carries.
+  const { data: categories } = usePortfolioCategories();
+
   const items = data?.items ?? [];
   const totalCount = data?.totalCount ?? 0;
   const totalPages = Math.ceil(totalCount / 12);
@@ -150,7 +145,7 @@ export default function PortfolioPage() {
             >
               All
             </FilterBtn>
-            {CATEGORIES.map((cat) => (
+            {(categories ?? []).map((cat) => (
               <FilterBtn
                 key={cat}
                 active={activeCategory === cat}
@@ -173,7 +168,7 @@ export default function PortfolioPage() {
                   key={i}
                   className="bg-[#111] border border-white/8 rounded-2xl overflow-hidden animate-pulse"
                 >
-                  <div className="aspect-[4/3] bg-white/5" />
+                  <div className="aspect-square sm:aspect-[4/3] bg-white/5" />
                   <div className="p-4 space-y-2">
                     <div className="h-4 bg-white/5 rounded w-3/4" />
                     <div className="h-3 bg-white/5 rounded w-1/2" />
@@ -218,7 +213,7 @@ export default function PortfolioPage() {
                   <button
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1 || isFetching}
-                    className="flex items-center gap-1.5 px-4 py-2 text-sm font-manrope text-white/60 hover:text-white border border-white/15 hover:border-white/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="flex items-center justify-center gap-1.5 min-h-11 px-4 text-sm font-manrope text-white/60 hover:text-white border border-white/15 hover:border-white/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" /> Prev
                   </button>
@@ -228,7 +223,7 @@ export default function PortfolioPage() {
                   <button
                     onClick={() => setPage((p) => p + 1)}
                     disabled={!hasMore || isFetching}
-                    className="flex items-center gap-1.5 px-4 py-2 text-sm font-manrope text-white/60 hover:text-white border border-white/15 hover:border-white/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                    className="flex items-center justify-center gap-1.5 min-h-11 px-4 text-sm font-manrope text-white/60 hover:text-white border border-white/15 hover:border-white/30 rounded-lg disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
                   >
                     Next <ChevronRight className="w-4 h-4" />
                   </button>
@@ -246,7 +241,7 @@ function FilterBtn({ children, active, onClick }) {
   return (
     <button
       onClick={onClick}
-      className={`shrink-0 px-4 py-1.5 rounded-full text-xs font-manrope font-medium border transition-colors duration-200 whitespace-nowrap ${
+      className={`shrink-0 flex items-center justify-center min-h-11 px-4 rounded-full text-xs font-manrope font-medium border transition-colors duration-200 whitespace-nowrap ${
         active
           ? "bg-[#D4AF37] text-black border-[#D4AF37]"
           : "bg-transparent text-white/50 border-white/15 hover:text-white hover:border-white/30"

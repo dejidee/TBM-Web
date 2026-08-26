@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminPricingAPI, adminDiscountsAPI } from "@/lib/api/admin";
+import { showToast } from "@/components/shared/toast";
 
 export const SUBSCRIPTION_QUERY_KEYS = {
   pricing: ["admin", "pricing"],
@@ -23,6 +24,7 @@ export function useUpdateAdminPricing() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: SUBSCRIPTION_QUERY_KEYS.pricing });
     },
+    onError: (error) => showToast.error(error.message || "Failed to save pricing"),
   });
 }
 
@@ -43,6 +45,8 @@ export function useCreateAdminDiscount() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "discounts"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to create discount"),
   });
 }
 
@@ -53,6 +57,8 @@ export function useUpdateAdminDiscount() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "discounts"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to update discount"),
   });
 }
 
@@ -62,6 +68,9 @@ export function useDeleteAdminDiscount() {
     mutationFn: adminDiscountsAPI.remove,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "discounts"] });
+      showToast.success("Discount deactivated");
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to deactivate discount"),
   });
 }

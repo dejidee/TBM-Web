@@ -114,7 +114,7 @@ export default function ProjectDocumentsPage() {
 
   return (
     <DashboardLayout>
-      <div className="pt-12 md:pt-0 space-y-5 w-full max-w-[720px]">
+      <div className="space-y-5 w-full max-w-[720px]">
         {/* Back */}
         <button
           onClick={() => router.push(`/dashboard/projects/${id}`)}

@@ -1,0 +1,33 @@
+{
+  "endpoint": "/consultations/types",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "success": "boolean",
+    "message": "string",
+    "data": {
+      "type": "array",
+      "length": 5,
+      "of": {
+        "key": "string",
+        "name": "string",
+        "durationMinutes": "number",
+        "fee": "number",
+        "currency": "string",
+        "format": "string",
+        "description": "null"
+      }
+    },
+    "errors": "null"
+  },
+  "itemFieldTypes": {
+    "key": "string",
+    "name": "string",
+    "durationMinutes": "number",
+    "fee": "number",
+    "currency": "string",
+    "format": "string",
+    "description": "null"
+  },
+  "sampleSize": 5
+}

@@ -134,6 +134,20 @@ const Footer = () => {
             >
               info@tbmbuilding.com
             </a>
+            <div className="mt-4 flex flex-col gap-1 text-white/40 text-sm font-manrope">
+              <a
+                href="https://www.tbmbuilding.com"
+                className="hover:text-white/70 transition-colors"
+              >
+                www.tbmbuilding.com
+              </a>
+              {/* TODO(client): @tbmbuildingservices is confirmed as the
+                  social handle (audit PDF, Priority 4), but which platform
+                  (Instagram, X, Facebook...) and the real profile URL
+                  weren't specified — shown as plain text, not a link, until
+                  confirmed. */}
+              <span>@tbmbuildingservices</span>
+            </div>
           </div>
         </div>
 
@@ -143,7 +157,8 @@ const Footer = () => {
         {/* Copyright */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-white/30 text-xs font-manrope tracking-wide">
-            © 2026 TBM Building Services. All Rights Reserved.
+            © 2026 TBM Building Services — The Building Doctors. All Rights
+            Reserved.
           </p>
           <Link
             href="/privacy-policy"

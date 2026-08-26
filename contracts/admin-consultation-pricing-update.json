@@ -1,0 +1,23 @@
+{
+  "recordedAt": "2026-08-22",
+  "endpoint": "/admin/consultations/pricing/{id}",
+  "method": "PUT",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "note": "Shapes only, no values. Recorded manually with a no-op write (the row read back from GET /admin/consultations/pricing, sent unchanged). Enveloped bare ConsultationPricingConfigDto, same item shape as the list; `updatedAt` moves on every write, even a no-op.",
+  "shape": {
+    "success": "boolean",
+    "message": "string",
+    "data": {
+      "id": "string",
+      "consultationType": "string",
+      "fee": "number",
+      "currency": "string",
+      "location": "null",
+      "creditedTowardProject": "boolean",
+      "isActive": "boolean",
+      "updatedAt": "string"
+    },
+    "errors": "null"
+  }
+}

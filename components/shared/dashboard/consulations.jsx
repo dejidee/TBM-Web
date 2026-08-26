@@ -4,6 +4,7 @@
 import { motion } from "framer-motion";
 import { Calendar } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useConsultations } from "@/hooks/use-user-dashboard";
 
 const cardClass = "rounded-2xl p-6 border border-white/08";
@@ -40,9 +41,15 @@ export default function Consultations() {
           <Calendar className="w-5 h-5 text-white/30" />
           <h2 className="text-[16px] font-semibold text-white">Consultations</h2>
         </div>
-        <p className="text-[14px] text-white/30 text-center py-8">
-          No consultations scheduled
-        </p>
+        <div className="text-center py-8">
+          <p className="text-[14px] text-white/30">No consultations scheduled</p>
+          <Link
+            href="/consultation"
+            className="mt-4 inline-flex items-center justify-center min-h-11 px-5 rounded-lg text-[13px] font-medium text-[#D4AF37] border border-[#D4AF37]/30 hover:bg-[#D4AF37]/08 transition-colors"
+          >
+            Book a Consultation
+          </Link>
+        </div>
       </div>
     );
   }
@@ -62,9 +69,12 @@ export default function Consultations() {
           <h2 className="text-[16px] font-semibold text-white">Consultations</h2>
         </div>
         {consultations.canBook && (
-          <button className="text-[13px] text-[#D4AF37] font-medium hover:text-[#D4AF37]/80 transition-colors">
+          <Link
+            href="/consultation"
+            className="text-[13px] text-[#D4AF37] font-medium hover:text-[#D4AF37]/80 transition-colors"
+          >
             Book New
-          </button>
+          </Link>
         )}
       </div>
 

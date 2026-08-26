@@ -1,0 +1,41 @@
+{
+  "endpoint": "/vendor/orders",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "items": {
+      "type": "array",
+      "length": 1,
+      "of": {
+        "id": "string",
+        "orderNumber": "string",
+        "customerName": "string",
+        "type": "string",
+        "status": "number",
+        "paymentStatus": "number",
+        "total": "number",
+        "createdAt": "string",
+        "matchingItems": "number",
+        "deliveryAgentName": "null",
+        "deliveryAgentPhone": "null"
+      }
+    },
+    "total": "number",
+    "page": "number",
+    "pageSize": "number"
+  },
+  "itemFieldTypes": {
+    "id": "string",
+    "orderNumber": "string",
+    "customerName": "string",
+    "type": "string",
+    "status": "number",
+    "paymentStatus": "number",
+    "total": "number",
+    "createdAt": "string",
+    "matchingItems": "number",
+    "deliveryAgentName": "null",
+    "deliveryAgentPhone": "null"
+  },
+  "sampleSize": 1
+}

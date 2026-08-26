@@ -201,7 +201,7 @@ export default function Navbar() {
                 <>
                   {/* Saved */}
                   <Link href="/dashboard/saved">
-                    <button className="relative p-2 text-white/60 hover:text-white transition-colors">
+                    <button className="relative flex items-center justify-center w-11 h-11 text-white/60 hover:text-white transition-colors">
                       <Heart
                         className={`w-5 h-5 ${isActive("/dashboard/saved") ? "fill-[#D4AF37] text-[#D4AF37]" : ""}`}
                       />
@@ -210,7 +210,7 @@ export default function Navbar() {
                   </Link>
                   {/* Cart */}
                   <Link href="/cart">
-                    <button className="relative p-2 text-white/60 hover:text-white transition-colors">
+                    <button className="relative flex items-center justify-center w-11 h-11 text-white/60 hover:text-white transition-colors">
                       <ShoppingCart
                         className={`w-5 h-5 ${isActive("/cart") ? "text-[#D4AF37]" : ""}`}
                       />
@@ -301,7 +301,7 @@ export default function Navbar() {
                 <>
                   {/* Cart */}
                   <Link href="/cart">
-                    <button className="relative p-2 text-white/70 hover:text-white transition-colors">
+                    <button className="relative flex items-center justify-center w-11 h-11 text-white/70 hover:text-white transition-colors">
                       <ShoppingCart
                         className={`w-5 h-5 ${isActive("/cart") ? "text-[#D4AF37]" : ""}`}
                       />
@@ -312,15 +312,15 @@ export default function Navbar() {
                   {/* Login — solid white fill */}
                   <Link
                     href="/sign-in"
-                    className="px-5 py-2 rounded-lg bg-white text-black text-[13px] font-manrope font-semibold tracking-wide hover:bg-white/90 transition-colors duration-200"
+                    className="inline-flex items-center min-h-11 px-5 py-2 rounded-lg bg-white text-black text-[13px] font-manrope font-semibold tracking-wide hover:bg-white/90 transition-colors duration-200"
                   >
                     Login
                   </Link>
 
                   {/* Book Consultation — solid gold fill */}
                   <Link
-                    href="/contact?type=consultation"
-                    className="px-5 py-2 rounded-lg bg-[#D4AF37] text-black text-[13px] font-manrope font-semibold tracking-wide hover:bg-gold-dim transition-colors duration-200"
+                    href="/consultation"
+                    className="inline-flex items-center min-h-11 px-5 py-2 rounded-lg bg-[#D4AF37] text-black text-[13px] font-manrope font-semibold tracking-wide hover:bg-gold-dim transition-colors duration-200"
                   >
                     Book Consultation
                   </Link>
@@ -332,7 +332,7 @@ export default function Navbar() {
             <div className="xl:hidden flex items-center gap-1">
               {!isLoading && isAuthenticated && (
                 <Link href="/dashboard/saved">
-                  <button className="relative p-2 text-white/60">
+                  <button className="relative flex items-center justify-center w-11 h-11 text-white/60">
                     <Heart
                       className={`w-5 h-5 ${isActive("/dashboard/saved") ? "fill-[#D4AF37] text-[#D4AF37]" : ""}`}
                     />
@@ -341,7 +341,7 @@ export default function Navbar() {
                 </Link>
               )}
               <Link href="/cart">
-                <button className="relative p-2 text-white/60 hover:text-white transition-colors">
+                <button className="relative flex items-center justify-center w-11 h-11 text-white/60 hover:text-white transition-colors">
                   <ShoppingCart
                     className={`w-5 h-5 ${isActive("/cart") ? "text-[#D4AF37]" : ""}`}
                   />
@@ -350,7 +350,7 @@ export default function Navbar() {
               </Link>
               <button
                 onClick={() => setIsMenuOpen(true)}
-                className="p-2 text-white/60 hover:text-white transition-colors"
+                className="flex items-center justify-center w-11 h-11 text-white/60 hover:text-white transition-colors"
                 aria-label="Open menu"
               >
                 <Menu className="w-5 h-5" />
@@ -385,7 +385,7 @@ export default function Navbar() {
                 </span>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="p-2 text-white/50 hover:text-white transition-colors"
+                  className="flex items-center justify-center w-11 h-11 text-white/50 hover:text-white transition-colors"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -512,7 +512,7 @@ export default function Navbar() {
                       Login
                     </Link>
                     <Link
-                      href="/contact?type=consultation"
+                      href="/consultation"
                       className="flex items-center justify-center w-full px-4 py-3 text-[14px] font-semibold text-black bg-[#D4AF37] rounded-lg hover:bg-gold-dim transition-colors tracking-wide"
                       onClick={() => setIsMenuOpen(false)}
                     >

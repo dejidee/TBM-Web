@@ -11,10 +11,10 @@
     "  sample   Query string used when recording. Prefer a large pageSize: nullable",
     "           fields only reveal themselves across a wide enough sample.",
     "  schema   Named export from lib/api/schemas/catalog.ts. Omit (null) when the",
-    "           shape has been recorded but not yet modelled — coverage counts only",
+    "           shape has been recorded but not yet modelled \u2014 coverage counts only",
     "           entries that have one.",
     "  itemsAt  Dotted path to the array whose per-field nullability we summarise.",
-    "  auth     true → recorded only when CONTRACT_TOKEN is set.",
+    "  auth     true \u2192 recorded only when CONTRACT_TOKEN is set.",
     "",
     "An invented schema is worse than none: it alarms on the truth. Leave schema null",
     "until a real response has been observed."
@@ -76,7 +76,7 @@
       "schema": "cartRelatedResponse",
       "itemsAt": null,
       "auth": false,
-      "$why": "A bare array — no envelope, and items are neither Product nor MaterialSummary."
+      "$why": "A bare array \u2014 no envelope, and items are neither Product nor MaterialSummary."
     },
     {
       "op": "POST /api/v1/admin/AdminProducts",
@@ -85,7 +85,7 @@
       "schema": "adminProductCreateResponse",
       "itemsAt": null,
       "auth": true,
-      "$why": "Recorded by scripts/record-mutations.mjs. Returns ApiEnvelope<Product> — the same 41 fields as GET /Products."
+      "$why": "Recorded by scripts/record-mutations.mjs. Returns ApiEnvelope<Product> \u2014 the same 41 fields as GET /Products."
     },
     {
       "op": "PUT /api/v1/admin/AdminProducts/{id}",
@@ -130,7 +130,7 @@
       "schema": "aiStylesResponse",
       "itemsAt": null,
       "auth": false,
-      "$why": "A bare array of { id, name } — no envelope. Public. The `style` field on GenerateImageDto/GenerateVideoDto takes the id."
+      "$why": "A bare array of { id, name } \u2014 no envelope. Public. The `style` field on GenerateImageDto/GenerateVideoDto takes the id."
     },
     {
       "op": "GET /api/v1/account/me",
@@ -144,9 +144,271 @@
       "op": "GET /api/v1/orders/my-orders",
       "label": "orders-my-orders",
       "sample": "",
+      "schema": "orderListResponse",
+      "itemsAt": "data",
+      "auth": true,
+      "$why": "data is a bare array, NOT data.items like /Products \u2014 this manifest entry had itemsAt wrong until 2026-08-11. Confirmed live: scripts/record-order-shape.mjs + manual curl, see contracts/orders.json."
+    },
+    {
+      "op": "GET /api/v1/products/{productId}/reviews",
+      "label": "product-reviews",
+      "sample": "",
+      "schema": "productReviewsResponse",
+      "itemsAt": null,
+      "auth": false,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded manually against a live product; every product checked has zero reviews, so items[]'s element shape is unmodelled (z.unknown()). See contracts/product-reviews.json."
+    },
+    {
+      "op": "GET /api/v1/orders/{orderId}",
+      "label": "orders-detail",
+      "sample": "",
+      "schema": "orderResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded by scripts/record-order-shape.mjs --write, which places one order and cancels it. See contracts/orders.json."
+    },
+    {
+      "op": "POST /api/v1/orders",
+      "label": "orders-create",
+      "sample": "",
+      "schema": "orderResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded by scripts/record-order-shape.mjs --write. Was 500ing on a SQL sequence defect until 2026-08-11 (BACKLOG.md item 7); now 201s. Same envelope shape as the detail GET."
+    },
+    {
+      "op": "GET /api/v1/vendor/orders",
+      "label": "vendor-orders",
+      "sample": "?pageSize=1",
+      "schema": "vendorOrderListResponse",
+      "itemsAt": "items",
+      "auth": true,
+      "$why": "No envelope \u2014 bare { items, total, page, pageSize }. List-item shape only; the detail GET (GET /vendor/orders/{orderId}) has not been observed on success, only its 403 scope-error shape (contracts/orders.json)."
+    },
+    {
+      "op": "GET /api/v1/Checkout",
+      "label": "checkout",
+      "sample": "",
+      "schema": "checkoutDataResponse",
+      "itemsAt": "items",
+      "auth": true,
+      "$why": "No envelope. Recorded by scripts/record-checkout-shape.mjs; see contracts/checkout.json."
+    },
+    {
+      "op": "POST /api/v1/Checkout/payment",
+      "label": "checkout-payment",
+      "sample": "",
+      "schema": "checkoutPaymentResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 initiates a real (test-mode) Paystack session. Recorded by scripts/record-checkout-shape.mjs --write, confirmed live 2026-08-11. See contracts/checkout.json."
+    },
+    {
+      "op": "GET /api/v1/Checkout/payment/paystack/verify/{reference}",
+      "label": "checkout-verify",
+      "sample": "",
+      "schema": "checkoutVerifyResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded by scripts/record-checkout-shape.mjs --write. Observed paymentStatus: \"Failed\" for a reference never completed at Paystack \u2014 a 200, not an error."
+    },
+    {
+      "op": "GET /api/v1/portfolio",
+      "label": "portfolio",
+      "sample": "?pageSize=50",
       "schema": null,
       "itemsAt": "data.items",
-      "auth": true
+      "auth": false,
+      "$why": "The public before/after showcase behind /project. Enveloped, but the pagination block is the un-enveloped style \u2014 data.{items,totalCount,page,pageSize,totalPages,hasMore}, not Paged's pageNumber/hasNextPage. Each item carries beforeImages[], afterImages[], referenceImages[] and thumbnailUrl."
+    },
+    {
+      "op": "GET /api/v1/consultations/types",
+      "label": "consultations-types",
+      "sample": "",
+      "schema": "consultationTypesResponse",
+      "itemsAt": "data",
+      "auth": false,
+      "$why": "Bare array in data, 5 seeded types. contracts/consultations-types.json."
+    },
+    {
+      "op": "GET /api/v1/consultations/mine",
+      "label": "consultations-mine",
+      "sample": "",
+      "schema": "consultationListResponse",
+      "itemsAt": "data",
+      "auth": true,
+      "$why": "Bare array in data, NOT the ConsultationPagedResultDto the spec associates elsewhere. contracts/consultations-mine.json."
+    },
+    {
+      "op": "GET /api/v1/consultations/availability",
+      "label": "consultation-availability",
+      "sample": "",
+      "schema": "consultationAvailabilityResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Needs a ?type= query param \u2014 contract:record can't parameterise. Recorded manually. contracts/consultation-booking-paid.json has the type sub-shape; slots[] shape recorded ad hoc, matches ConsultationSlotDto exactly."
+    },
+    {
+      "op": "POST /api/v1/consultations",
+      "label": "consultation-booking",
+      "sample": "",
+      "schema": "consultationBookingResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded by scripts/record-consultation-shape.mjs --write (both a free and a test-mode-paid type, each cancelled after). See contracts/consultation-booking-{free,paid}.json."
+    },
+    {
+      "op": "POST /api/v1/consultations/{id}/initialize-payment",
+      "label": "consultation-payment-init",
+      "sample": "",
+      "schema": "consultationPaymentInitResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation, initiates a real (test-mode) Paystack session \u2014 recorded by scripts/record-consultation-shape.mjs --write. Enveloped, unlike POST /checkout/payment's equivalent. See contracts/consultation-booking-paid.json."
+    },
+    {
+      "op": "POST /api/v1/consultations/verify-payment",
+      "label": "consultation-verify-payment",
+      "sample": "",
+      "schema": "consultationVerifyPaymentResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation. Only the failure shape (400, data: null) has been observed \u2014 recorded by scripts/record-consultation-shape.mjs --write. A completed payment's success shape is unconfirmed."
+    },
+    {
+      "op": "GET /api/v1/consultations/{id}",
+      "label": "consultation-detail",
+      "sample": "",
+      "schema": "consultationResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded by scripts/record-consultation-shape.mjs --write. See contracts/consultation-booking-{free,paid}.json."
+    },
+    {
+      "op": "PUT /api/v1/consultations/{id}/reschedule",
+      "label": "consultation-reschedule",
+      "sample": "",
+      "schema": "consultationResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation. Same enveloped bare ConsultationDto as GET /consultations/{id} \u2014 recorded manually. See contracts/consultation-reschedule-cancel.json."
+    },
+    {
+      "op": "POST /api/v1/consultations/{id}/cancel",
+      "label": "consultation-cancel",
+      "sample": "",
+      "schema": "consultationResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation. Same enveloped bare ConsultationDto, now with cancelledAtUtc/cancellationReason populated \u2014 recorded manually. See contracts/consultation-reschedule-cancel.json. PUT .../cancel (the sibling route) shares the same DTO; not separately recorded \u2014 this app calls the POST form."
+    },
+    {
+      "op": "GET /api/v1/admin/consultations",
+      "label": "admin-consultations",
+      "sample": "?pageSize=50",
+      "schema": "adminConsultationListResponse",
+      "itemsAt": "data.items",
+      "auth": true,
+      "$why": "Admin booking list. Paged: data.{items,page,pageSize,totalCount} \u2014 no totalPages/hasMore (ConsultationPagedResultDto). A separate table from the legacy /admin/inspections; this is what the app's booking flow writes into."
+    },
+    {
+      "op": "GET /api/v1/admin/consultations/pricing",
+      "label": "admin-consultations-pricing",
+      "sample": "",
+      "schema": "adminConsultationPricingResponse",
+      "itemsAt": "data",
+      "auth": true,
+      "$why": "Per-type fee config; same rows (same ids) as /admin/inspections/pricing, and the source of `fee` on /consultations/types."
+    },
+    {
+      "op": "PUT /api/v1/admin/consultations/{id}/cancel",
+      "label": "admin-consultation-cancel",
+      "sample": "",
+      "schema": "adminConsultationCancelResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded manually 2026-08-22 by cancelling the orphaned guest booking \"Anon Check\" (BACKLOG). Returns ApiEnvelope<ConsultationDto>, same item shape as the list; cancellation policy lives in `message`."
+    },
+    {
+      "op": "PUT /api/v1/admin/consultations/pricing/{id}",
+      "label": "admin-consultation-pricing-update",
+      "sample": "",
+      "schema": "adminConsultationPricingItemResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 recorded manually 2026-08-22 with a no-op write (same values back). Returns ApiEnvelope<ConsultationPricingConfigDto>."
+    },
+    {
+      "op": "GET /api/v1/Designs",
+      "label": "designs",
+      "sample": "?limit=50",
+      "schema": "designListResponse",
+      "itemsAt": "designs",
+      "auth": true,
+      "$why": "No envelope \u2014 bare { designs, pagination } with /flooring-style page/limit/total/hasMore. Default limit is 10 and pageSize is ignored. roomType/search/page/limit/sortBy=newest|oldest are honoured; sortBy=favorites|alphabetical are accepted and ignored (confirmed 2026-08-25 by toggling a favourite). See contracts/designs.json."
+    },
+    {
+      "op": "GET /api/v1/Designs/{id}",
+      "label": "designs-detail",
+      "sample": "",
+      "schema": "designResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded manually 2026-08-25. No envelope, and NOT the list row: the image is outputUrl, plus width/height/durationSeconds. See contracts/designs-detail.json."
+    },
+    {
+      "op": "GET /api/v1/Designs/{id}/download",
+      "label": "designs-download",
+      "sample": "",
+      "schema": "designDownloadResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path. Recorded manually 2026-08-25 with and without ?quality=high \u2014 same { success, downloadUrl } either way. See contracts/designs-detail.json."
+    },
+    {
+      "op": "POST /api/v1/Designs/{id}/favorite",
+      "label": "designs-favorite",
+      "sample": "",
+      "schema": "designFavoriteResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation \u2014 a reversible toggle on the recorder's own design, toggled straight back. Recorded manually 2026-08-25. No envelope: { success, isFavorite }. See contracts/designs-detail.json."
+    },
+    {
+      "op": "POST /api/v1/projects",
+      "label": "projects-create",
+      "sample": "",
+      "schema": "createProjectResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation, recorded manually 2026-08-25 (scripts run ad hoc, not checked in) for the design-card \"make into a project\" action. Enveloped, unlike GET /Designs. No DELETE /projects/{id} exists, so the call left one permanent row in the dev database, name-prefixed \"Contract Recorder Test Project\". See contracts/projects-create.json."
+    },
+    {
+      "op": "POST /api/v1/ai/renovation/estimate",
+      "label": "renovation-estimate",
+      "sample": "",
+      "schema": "renovationEstimateResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Mutation, recorded manually 2026-08-25 for the design-card \"get estimate\" action. No envelope. No DELETE endpoint exists for a renovation estimate, so the call left one permanent row in the dev database, name-prefixed \"Contract Recorder Test Estimate\". See contracts/renovation-estimate.json."
+    },
+    {
+      "op": "GET /api/v1/ai/renovation/estimates",
+      "label": "renovation-estimates-list",
+      "sample": "",
+      "schema": "renovationEstimateListResponse",
+      "itemsAt": "estimates",
+      "auth": true,
+      "$why": "Recorded manually 2026-08-25 for the \"My Estimates\" / BOQ history list. No envelope: { estimates: [...] }, a lighter summary per row than the full estimate. GET /ai/renovation-estimates (hyphenated) returns the identical shape for the same resource \u2014 confirmed live; the app calls the nested family for consistency with POST /ai/renovation/estimate. See contracts/renovation-estimates-list.json."
+    },
+    {
+      "op": "GET /api/v1/ai/renovation/estimates/{estimateId}",
+      "label": "renovation-estimate-detail",
+      "sample": "",
+      "schema": "renovationEstimateResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded manually 2026-08-25 for the estimate detail page. Same shape as POST /ai/renovation/estimate \u2014 reuses that schema. See contracts/renovation-estimates-list.json."
     }
   ]
 }

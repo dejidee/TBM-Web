@@ -1,66 +1,77 @@
 // hooks/use-designs.js
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { designsApi, designSessionsApi } from "@/lib/api/designs";
+import { useSession } from "@/hooks/use-session";
+import { showToast } from "@/components/shared/toast";
 
 // ─── Saved Designs ────────────────────────────────────────────────────────────
 
+/** Sorts the backend accepts and actually applies. Anything else is ignored. */
+const SERVER_SORTS = new Set(["newest", "oldest"]);
+
+/**
+ * GET /Designs, one query per filter combination. Filtering and pagination are
+ * server-side — the default page is 10 rows, so filtering in the browser used
+ * to search only the first ten designs and call that the gallery.
+ *
+ * `sortBy: "favorites" | "alphabetical"` are sorted here, within the page the
+ * server returned: the backend accepts both and ignores them (verified by
+ * toggling a favourite and re-fetching, 2026-08-25).
+ *
+ * Resolves to `{ designs, pagination }` — see `DesignListResponse`.
+ */
 export function useDesigns(filters = {}) {
-  const { page, pageSize, search, roomType, sortBy } = filters;
+  const { isAuthenticated } = useSession();
+  const { page = 1, limit, search, roomType, sortBy = "newest" } = filters;
+
+  const params = {
+    page,
+    limit,
+    search: search || undefined,
+    roomType: roomType && roomType !== "all" ? roomType : undefined,
+    sortBy: SERVER_SORTS.has(sortBy) ? sortBy : "newest",
+  };
 
   return useQuery({
-    // Only pagination in the cache key so filters don't cause extra fetches
-    queryKey: ["designs", { page, pageSize }],
-    queryFn: () => designsApi.getDesigns({ page, pageSize }),
+    queryKey: ["designs", { ...params, clientSort: SERVER_SORTS.has(sortBy) ? undefined : sortBy }],
+    queryFn: () => designsApi.getDesigns(params),
+    enabled: isAuthenticated,
     staleTime: 3 * 60 * 1000,
     refetchOnWindowFocus: false,
+    // Keep the previous page on screen while the next one loads — a page flip
+    // should not flash the skeleton.
+    placeholderData: keepPreviousData,
     select: (res) => {
-      // API returns { designs: [...], pagination: {...} }
-      let items = res?.designs ?? res?.data?.items ?? res?.data ?? res?.items ?? [];
-      if (!Array.isArray(items)) items = [];
-
-      // Client-side filtering (backend doesn't support these params)
-      if (search) {
-        const q = search.toLowerCase();
-        items = items.filter(
-          (d) =>
-            d.name?.toLowerCase().includes(q) ||
-            d.projectName?.toLowerCase().includes(q) ||
-            d.roomType?.toLowerCase().includes(q),
+      let designs = Array.isArray(res?.designs) ? res.designs : [];
+      if (sortBy === "favorites") {
+        designs = [...designs].sort(
+          (a, b) => Number(b.isFavorite) - Number(a.isFavorite),
+        );
+      } else if (sortBy === "alphabetical") {
+        designs = [...designs].sort((a, b) =>
+          a.prompt.localeCompare(b.prompt, undefined, { sensitivity: "base" }),
         );
       }
-      if (roomType && roomType !== "all") {
-        items = items.filter(
-          (d) => d.roomType?.toLowerCase() === roomType.toLowerCase(),
-        );
-      }
-      if (sortBy) {
-        items = [...items].sort((a, b) => {
-          switch (sortBy) {
-            case "oldest":
-              return new Date(a.createdAt) - new Date(b.createdAt);
-            case "alphabetical":
-              return (a.name || a.projectName || "").localeCompare(
-                b.name || b.projectName || "",
-              );
-            default: // newest
-              return new Date(b.createdAt) - new Date(a.createdAt);
-          }
-        });
-      }
-      return items;
+      return { designs, pagination: res?.pagination ?? null };
     },
   });
 }
 
+/** GET /Designs/{id} — no envelope; the image is `outputUrl` here, not `url`. */
 export function useDesignDetails(designId) {
+  const { isAuthenticated } = useSession();
   return useQuery({
     queryKey: ["design", designId],
     queryFn: () => designsApi.getDesignDetails(designId),
-    enabled: !!designId,
+    enabled: isAuthenticated && !!designId,
     staleTime: 5 * 60 * 1000,
-    select: (res) => res?.data ?? res,
   });
 }
 
@@ -71,6 +82,8 @@ export function useToggleFavorite() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["designs"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to update favorite"),
   });
 }
 
@@ -81,18 +94,30 @@ export function useDeleteDesign() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["designs"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to delete design"),
   });
 }
 
+/**
+ * Resolves to `{ success, downloadUrl }`. The caller opens the URL — the
+ * mutation only mints it. `quality` is optional; the backend answers the same
+ * shape with or without it.
+ */
 export function useDownloadDesign() {
   return useMutation({
-    mutationFn: (designId) => designsApi.downloadDesign(designId),
+    mutationFn: ({ designId, quality }) =>
+      designsApi.downloadDesign(designId, quality),
+    onError: (error) =>
+      showToast.error(error.message || "Failed to download design"),
   });
 }
 
 export function useShareDesign() {
   return useMutation({
     mutationFn: (designId) => designsApi.shareDesign(designId),
+    onError: (error) =>
+      showToast.error(error.message || "Failed to share design"),
   });
 }
 
@@ -124,7 +149,8 @@ export function useDesignSessionStatus(sessionId, { enabled = true } = {}) {
     refetchInterval: (query) => {
       const status = query.state.data?.data?.status ?? query.state.data?.status;
       // Stop polling when generation is complete or failed
-      if (status === "Generated" || status === "Failed" || status === "Ordered") return false;
+      if (status === "Generated" || status === "Failed" || status === "Ordered")
+        return false;
       return 3000; // Poll every 3s while processing
     },
     select: (res) => res?.data ?? res,
@@ -138,6 +164,8 @@ export function useCreateDesignSession() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["design-sessions"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to start design session"),
   });
 }
 
@@ -147,8 +175,12 @@ export function useUploadSessionPhoto() {
     mutationFn: ({ sessionId, file }) =>
       designSessionsApi.uploadPhoto(sessionId, file),
     onSuccess: (_data, { sessionId }) => {
-      queryClient.invalidateQueries({ queryKey: ["design-session", sessionId] });
+      queryClient.invalidateQueries({
+        queryKey: ["design-session", sessionId],
+      });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to upload photo"),
   });
 }
 
@@ -161,6 +193,8 @@ export function useGenerateDesign() {
         queryKey: ["design-session-status", sessionId],
       });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to generate design"),
   });
 }
 
@@ -171,6 +205,8 @@ export function useAddBomToCart() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cart"] });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to add items to cart"),
   });
 }
 

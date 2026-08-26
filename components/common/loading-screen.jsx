@@ -2,10 +2,25 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 const EXPO = [0.76, 0, 0.24, 1];
 const SMOOTH = [0.22, 1, 0.36, 1];
+
+/**
+ * Surfaces where the intro must never play.
+ *
+ * This is a brand moment for someone arriving at the marketing site. It is 2.2
+ * seconds of `overflow: hidden` in front of a work surface for someone who has
+ * already signed in — and because <Providers> is mounted once at the root (and
+ * must stay that way), it played on /dashboard too. A user opening their orders
+ * in a new tab sat through a logo animation to reach a table.
+ *
+ * The flag is still written on these routes, so a user who starts in the app
+ * and then visits the marketing site does not get splashed mid-session either.
+ */
+const APP_PREFIXES = ["/dashboard", "/admin", "/vendor", "/ziora/studio", "/checkout", "/cart"];
 
 // ─── Corner bracket ───────────────────────────────────────────────────────────
 function CornerBracket({ corner }) {
@@ -38,14 +53,21 @@ function CornerBracket({ corner }) {
 export default function LoadingScreen() {
   const [show,  setShow]  = useState(false);
   const [phase, setPhase] = useState(0);
+  const pathname = usePathname();
 
   useEffect(() => {
+    const isAppSurface = APP_PREFIXES.some(
+      (p) => pathname === p || pathname?.startsWith(`${p}/`),
+    );
+
     try {
       if (sessionStorage.getItem("tbm:intro")) return;
       sessionStorage.setItem("tbm:intro", "1");
     } catch {
       return; // private mode / SSR guard
     }
+
+    if (isAppSurface) return; // flag consumed above — never plays in the app
 
     setShow(true);
     document.body.style.overflow = "hidden";

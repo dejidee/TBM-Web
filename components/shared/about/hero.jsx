@@ -11,15 +11,16 @@ export default function Hero() {
         <div className="w-full min-h-[80vh] overflow-hidden relative flex items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16">
           {/* Background Image */}
           <Image
-            src="/about.svg"
-            alt="About background"
+            src="/site-images/web/exterior-courtyard-dusk.jpg"
+            alt="TBM completed courtyard at dusk"
             fill
             priority
             className="object-cover"
           />
 
-          {/* Deep warm dark overlay */}
-          <div className="absolute inset-0 bg-linear-to-b from-black/50 via-black/40 to-black/70" />
+          {/* Deep warm dark overlay — heavier on the left where the copy sits */}
+          <div className="absolute inset-0 bg-linear-to-b from-black/70 via-black/55 to-black/85 md:from-black/60 md:via-black/50 md:to-black/80" />
+          <div className="absolute inset-0 hidden md:block bg-linear-to-r from-black/60 via-black/25 to-transparent" />
 
           {/* Content */}
           <motion.div
@@ -30,7 +31,7 @@ export default function Hero() {
           >
             {/* Label */}
             <div className="mb-5">
-              <span className="inline-flex items-center gap-2 border border-white/20 text-white/70 text-xs font-manrope font-medium px-4 py-2 tracking-[0.2em] uppercase">
+              <span className="inline-flex items-center gap-2 border border-white/40 bg-black/40 backdrop-blur-sm text-white text-sm font-manrope font-semibold px-4 py-2 tracking-[0.2em] uppercase">
                 <span className="w-1 h-1 bg-gold" />
                 Reimagining Spaces
               </span>
@@ -43,7 +44,7 @@ export default function Hero() {
             </h1>
 
             {/* Subtitle */}
-            <p className="text-base sm:text-lg text-white/60 leading-relaxed font-manrope max-w-xl mb-8">
+            <p className="text-lg sm:text-xl text-white/90 leading-relaxed font-manrope max-w-2xl mb-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.6)]">
               We blend AI visualization with world-class materials and expert execution — bringing your dream space to life before the first brick is laid.
             </p>
 

@@ -87,7 +87,7 @@ function Lightbox({ item, onClose }) {
       onClick={onClose}
     >
       <button
-        className="absolute top-5 right-5 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+        className="absolute top-5 right-5 w-11 h-11 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
         onClick={onClose}
       >
         <X className="w-5 h-5" />
@@ -167,7 +167,7 @@ export default function AIGalleryPage() {
               Community Designs
             </span>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-primary font-bold text-white leading-tight tracking-tight mb-6">
-              AI Design Gallery
+              Ziora Design Gallery
             </h1>
             <p className="text-base sm:text-lg font-manrope text-white/55 max-w-xl mb-8">
               Real spaces reimagined by real users. Browse AI-generated interior
@@ -178,7 +178,7 @@ export default function AIGalleryPage() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#D4AF37] text-black text-sm font-manrope font-semibold rounded-lg hover:bg-[#D4AF37]/90 transition-colors"
             >
               <Wand2 className="w-4 h-4" />
-              Try AI Visualizer
+              Try Design with Ziora
               <ArrowRight className="w-4 h-4" />
             </Link>
           </motion.div>
@@ -267,7 +267,7 @@ export default function AIGalleryPage() {
             </h2>
             <p className="text-white/50 font-manrope mb-8">
               Upload a photo of any room and let our AI generate stunning
-              renovation concepts in seconds.
+              renovation concepts in minutes.
             </p>
             <Link
               href="/ziora"

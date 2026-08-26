@@ -2,51 +2,33 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Check, SlidersHorizontal, RefreshCw } from "lucide-react";
+import { BellOff, Check, RefreshCw, SlidersHorizontal } from "lucide-react";
 import { useNotifications, useMarkAllRead } from "@/hooks/use-notifications";
 import NotificationCard from "@/components/shared/vendor/dashboard/notification/card";
 
 export default function NotificationsPage() {
-  const [filters, setFilters] = useState({
-    category: "all",
-    search: "",
-  });
-
-  const [searchInput, setSearchInput] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
-  const { data, isLoading, refetch } = useNotifications(filters);
+  // `unreadOnly` is the only filter GET /vendor/notifications accepts. The
+  // category tabs (Orders (Bogat), Enquiries (TBM), Payments, System Alerts)
+  // and the search box were filtering lib/mock/notifications.js in memory —
+  // there is no category field and no search parameter on this endpoint.
+  const { data, isLoading, isError, refetch } = useNotifications({
+    unreadOnly: activeTab === "unread",
+  });
   const markAllRead = useMarkAllRead();
-
-  // DATA CHECKS
-  // console.log("notifications: ", data)
-
-  const handleSearch = (value) => {
-    setSearchInput(value);
-    setFilters((prev) => ({ ...prev, search: value }));
-  };
-
-  const handleTabChange = (tab) => {
-    setActiveTab(tab);
-    setFilters((prev) => ({ ...prev, category: tab }));
-  };
 
   const handleMarkAllRead = () => {
     markAllRead.mutate();
   };
 
+  // Counts were hardcoded (12, 3, 2, 1, 1) and never moved.
   const tabs = [
-    { id: "all", label: "All Notifications", count: data?.total || 12 },
-    { id: "orders", label: "Orders (Bogat)", count: 3, dotColor: "var(--color-chart-2)" },
-    {
-      id: "enquiries",
-      label: "Enquiries (TBM)",
-      count: 2,
-      dotColor: "var(--color-chart-1)",
-    },
-    { id: "payments", label: "Payments", count: 1, dotColor: "var(--color-success)" },
-    { id: "system", label: "System Alerts", count: 1, dotColor: "var(--color-warning)" },
+    { id: "all", label: "All Notifications", count: data?.total ?? 0 },
+    { id: "unread", label: "Unread" },
   ];
+
+  const isEmpty = !isLoading && !isError && (data?.items?.length ?? 0) === 0;
 
   return (
     <div className="max-w-300 mx-auto bg-background">
@@ -71,11 +53,15 @@ export default function NotificationsPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={handleMarkAllRead}
-              disabled={markAllRead.isLoading}
+              disabled={markAllRead.isPending}
               className="flex items-center gap-2 px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] font-medium text-white hover:bg-white/05 transition-colors disabled:opacity-50"
             >
-              <Check size={16} />
-              Mark all as read
+              {markAllRead.isPending ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <Check size={16} />
+              )}
+              {markAllRead.isPending ? "Marking…" : "Mark all as read"}
             </motion.button>
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -96,11 +82,11 @@ export default function NotificationsPage() {
         className="mb-6 p-4 bg-surface rounded-xl border border-white/08"
       >
         {/* Tabs */}
-        <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-2">
+        <div className="flex items-center gap-2 overflow-x-auto pb-2">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => handleTabChange(tab.id)}
+              onClick={() => setActiveTab(tab.id)}
               className={`
                 flex items-center gap-2 px-4 py-2 rounded-lg font-manrope text-[13px] font-medium
                 whitespace-nowrap transition-colors shrink-0
@@ -111,43 +97,28 @@ export default function NotificationsPage() {
                 }
               `}
             >
-              {tab.dotColor && (
-                <span
-                  className="w-2 h-2 rounded-full"
-                  style={{ backgroundColor: tab.dotColor }}
-                />
-              )}
               {tab.label}
-              <span
-                className={`
-                  px-2 py-0.5 rounded-full text-[11px] font-bold
-                  ${
-                    activeTab === tab.id
-                      ? "bg-white/20 text-white"
-                      : "bg-white/10 text-muted"
-                  }
-                `}
-              >
-                {tab.count}
-              </span>
+              {typeof tab.count === "number" && (
+                <span
+                  className={`
+                    px-2 py-0.5 rounded-full text-[11px] font-bold
+                    ${
+                      activeTab === tab.id
+                        ? "bg-white/20 text-white"
+                        : "bg-white/10 text-muted"
+                    }
+                  `}
+                >
+                  {tab.count}
+                </span>
+              )}
             </button>
           ))}
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search
-            className="absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-            size={18}
-          />
-          <input
-            type="text"
-            placeholder="Search alerts..."
-            value={searchInput}
-            onChange={(e) => handleSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 bg-white/05 border border-white/08 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent"
-          />
-        </div>
+        {/* The search box filtered the fixture in memory; GET
+            /vendor/notifications has no search parameter, so a box that looks
+            like it searches and does not is worse than none. */}
       </motion.div>
 
       {/* Notifications List */}
@@ -158,53 +129,62 @@ export default function NotificationsPage() {
             Loading notifications...
           </p>
         </div>
+      ) : isError ? (
+        <div className="bg-surface rounded-xl border border-white/08 p-12 text-center">
+          <p className="text-white font-manrope text-[15px] mb-2">
+            Could not load notifications
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="mt-2 inline-flex items-center gap-2 px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white hover:bg-white/05 transition-colors"
+          >
+            <RefreshCw size={16} />
+            Try again
+          </button>
+        </div>
+      ) : isEmpty ? (
+        /* The list rendered nothing at all when empty — only the TODAY and
+           YESTERDAY sections existed, and both are hidden at length 0. */
+        <div className="bg-surface rounded-xl border border-white/08 p-12 text-center">
+          <BellOff className="mx-auto mb-3 text-muted" size={28} strokeWidth={1.5} />
+          <p className="text-white font-manrope text-[15px] mb-1">
+            {activeTab === "unread" ? "Nothing unread" : "No notifications yet"}
+          </p>
+          <p className="text-muted font-manrope text-[13px]">
+            Order and payment alerts will appear here.
+          </p>
+        </div>
       ) : (
         <>
-          {/* TODAY Section */}
-          {data?.notifications?.TODAY?.length > 0 && (
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-px flex-1 bg-white/10" />
-                <span className="font-manrope text-[12px] font-bold text-muted uppercase tracking-wider">
-                  TODAY
-                </span>
-                <div className="h-px flex-1 bg-white/10" />
+          {/* EARLIER catches anything older than yesterday — the fixture only
+              ever produced two buckets, so older items had nowhere to render. */}
+          {[
+            ["TODAY", data?.notifications?.TODAY],
+            ["YESTERDAY", data?.notifications?.YESTERDAY],
+            ["EARLIER", data?.notifications?.EARLIER],
+          ]
+            .filter(([, list]) => (list?.length ?? 0) > 0)
+            .map(([heading, list]) => (
+              <div key={heading} className="mb-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="h-px flex-1 bg-white/10" />
+                  <span className="font-manrope text-[12px] font-bold text-muted uppercase tracking-wider">
+                    {heading}
+                  </span>
+                  <div className="h-px flex-1 bg-white/10" />
+                </div>
+                <div className="space-y-4">
+                  {list.map((notification, index) => (
+                    <NotificationCard
+                      key={notification.id ?? index}
+                      notification={notification}
+                      index={index}
+                    />
+                  ))}
+                </div>
               </div>
-              <div className="space-y-6">
-                {data.notifications.TODAY.map((notification, index) => (
-                  <NotificationCard
-                    key={notification.id}
-                    notification={notification}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
+            ))}
 
-          {/* YESTERDAY Section */}
-          {data?.notifications?.YESTERDAY?.length > 0 && (
-            <div className="mb-8">
-              <div className="flex items-center gap-4 mb-4">
-                <div className="h-px flex-1 bg-white/10" />
-                <span className="font-manrope text-[12px] font-bold text-muted uppercase tracking-wider">
-                  YESTERDAY
-                </span>
-                <div className="h-px flex-1 bg-white/10" />
-              </div>
-              <div className="space-y-4">
-                {data.notifications.YESTERDAY.map((notification, index) => (
-                  <NotificationCard
-                    key={notification.id}
-                    notification={notification}
-                    index={index}
-                  />
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Load More */}
           <div className="text-center mt-8">
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -213,7 +193,7 @@ export default function NotificationsPage() {
               className="inline-flex items-center gap-2 px-6 py-3 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] font-medium text-white hover:bg-white/05 transition-colors"
             >
               <RefreshCw size={16} />
-              Load older notifications
+              Refresh
             </motion.button>
           </div>
         </>

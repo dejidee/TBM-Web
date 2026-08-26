@@ -295,10 +295,14 @@ function DiscountRow({ discount, onDeactivate, isDeactivating }) {
           <button
             onClick={() => onDeactivate(discount.id)}
             disabled={isDeactivating}
-            className="flex items-center gap-1 px-3 py-1.5 border border-danger/25 text-danger rounded-lg font-manrope text-[12px] hover:bg-danger/10 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1 px-3 py-1.5 border border-danger/25 text-danger rounded-lg font-manrope text-[12px] hover:bg-danger/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <Trash2 size={12} />
-            Deactivate
+            {isDeactivating ? (
+              <span className="h-3 w-3 animate-spin rounded-full border-2 border-danger/30 border-t-danger" />
+            ) : (
+              <Trash2 size={12} />
+            )}
+            {isDeactivating ? "Deactivating…" : "Deactivate"}
           </button>
         )}
       </td>
@@ -597,7 +601,11 @@ export default function SubscriptionsPage() {
 
   const { mutateAsync: updatePricing } = useUpdateAdminPricing();
   const { mutateAsync: createDiscount } = useCreateAdminDiscount();
-  const { mutate: deleteDiscount, isPending: isDeactivating } = useDeleteAdminDiscount();
+  const {
+    mutate: deleteDiscount,
+    isPending: isDeactivating,
+    variables: deactivatingId,
+  } = useDeleteAdminDiscount();
 
   const pricing = Array.isArray(pricingData) ? pricingData : pricingData?.data ?? [];
   const discounts = Array.isArray(discountsData) ? discountsData : discountsData?.data ?? [];
@@ -793,7 +801,7 @@ export default function SubscriptionsPage() {
                         key={d.id}
                         discount={d}
                         onDeactivate={(id) => deleteDiscount(id)}
-                        isDeactivating={isDeactivating}
+                        isDeactivating={isDeactivating && deactivatingId === d.id}
                       />
                     ))
                   ) : (

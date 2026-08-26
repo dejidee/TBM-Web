@@ -149,7 +149,7 @@ export default function FinancialOverviewPage() {
 
   return (
     <DashboardLayout>
-      <div className="pt-12 md:pt-0 space-y-5 w-full max-w-[700px]">
+      <div className="space-y-5 w-full max-w-[700px]">
         {/* Back */}
         <button
           onClick={() => router.push(`/dashboard/projects/${id}`)}

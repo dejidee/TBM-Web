@@ -90,7 +90,7 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                 <button
                   onClick={handleClose}
                   disabled={cancel.isPending}
-                  className="w-7 h-7 rounded-full flex items-center justify-center text-white/30 hover:bg-white/05 transition-colors"
+                  className="w-11 h-11 rounded-full flex items-center justify-center text-white/30 hover:bg-white/05 transition-colors"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -116,14 +116,14 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                     <div className="flex gap-3 mt-6">
                       <button
                         onClick={() => setStep(2)}
-                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-900/20 transition-colors"
+                        className="flex-1 min-h-11 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-900/20 transition-colors"
                         style={{ border: "1px solid rgba(239,68,68,0.25)" }}
                       >
                         Continue to Cancel
                       </button>
                       <button
                         onClick={handleClose}
-                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-black hover:opacity-90 transition-opacity"
+                        className="flex-1 min-h-11 py-2.5 rounded-xl text-sm font-semibold text-black hover:opacity-90 transition-opacity"
                         style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
                       >
                         Keep My Plan
@@ -144,7 +144,7 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                         <button
                           key={r}
                           onClick={() => setReason(r === reason ? "" : r)}
-                          className="text-left px-3 py-2 rounded-lg text-sm transition-colors"
+                          className="text-left min-h-11 px-3 py-2 rounded-lg text-sm transition-colors"
                           style={
                             reason === r
                               ? {
@@ -174,21 +174,21 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                     <div className="flex gap-3 mt-4">
                       <button
                         onClick={() => setStep(1)}
-                        className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:bg-white/05 transition-colors"
+                        className="min-h-11 px-4 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:bg-white/05 transition-colors"
                         style={{ border: "1px solid rgba(255,255,255,0.08)" }}
                       >
                         Back
                       </button>
                       <button
                         onClick={() => setStep(3)}
-                        className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-900/20 transition-colors"
+                        className="flex-1 min-h-11 py-2.5 rounded-xl text-sm font-semibold text-red-400 hover:bg-red-900/20 transition-colors"
                         style={{ border: "1px solid rgba(239,68,68,0.25)" }}
                       >
                         Next
                       </button>
                       <button
                         onClick={() => { setReason(""); setFeedback(""); setStep(3); }}
-                        className="px-4 py-2.5 text-white/30 text-sm hover:text-white/50 transition-colors"
+                        className="min-h-11 px-4 py-2.5 text-white/30 text-sm hover:text-white/50 transition-colors"
                       >
                         Skip
                       </button>
@@ -231,7 +231,7 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                           <button
                             onClick={() => setStep(2)}
                             disabled={cancel.isPending}
-                            className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:bg-white/05 transition-colors disabled:opacity-50"
+                            className="min-h-11 px-4 py-2.5 rounded-xl text-sm font-medium text-white/50 hover:bg-white/05 transition-colors disabled:opacity-50"
                             style={{ border: "1px solid rgba(255,255,255,0.08)" }}
                           >
                             Back
@@ -239,7 +239,7 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                           <button
                             onClick={handleConfirmCancel}
                             disabled={cancel.isPending}
-                            className="flex-1 flex items-center justify-center gap-2 py-2.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
+                            className="flex-1 min-h-11 flex items-center justify-center gap-2 py-2.5 bg-red-600 text-white rounded-xl text-sm font-semibold hover:bg-red-700 transition-colors disabled:opacity-50"
                           >
                             {cancel.isPending && <Loader2 className="w-4 h-4 animate-spin" />}
                             Yes, Cancel Subscription
@@ -247,7 +247,7 @@ export default function CancelModal({ isOpen, onClose, accessUntil }) {
                           <button
                             onClick={handleClose}
                             disabled={cancel.isPending}
-                            className="px-4 py-2.5 rounded-xl text-sm font-semibold text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+                            className="min-h-11 px-4 py-2.5 rounded-xl text-sm font-semibold text-black hover:opacity-90 transition-opacity disabled:opacity-50"
                             style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
                           >
                             Keep Plan

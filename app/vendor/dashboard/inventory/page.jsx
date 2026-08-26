@@ -113,9 +113,9 @@ function InventoryContent() {
       // console.log("payload form formik: ", productData)
       await addProduct.mutateAsync(apiPayload);
       handleCloseModal();
-    } catch (error) {
-      console.error("❌ Error adding product:", error);
-      // You can add toast notification here
+    } catch {
+      // useAddProduct's onError already shows a toast; the modal just stays
+      // open so the vendor can fix the input and retry.
     }
   };
 

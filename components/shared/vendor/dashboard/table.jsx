@@ -2,37 +2,36 @@
 
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { Hammer, ShoppingBag } from "lucide-react";
+import { Package } from "lucide-react";
 
-const typeIcons = {
-  renovation: Hammer,
-  ecommerce: ShoppingBag,
-};
+// Deterministic, not random — the same customer always gets the same
+// initial/colour. Real fields: no avatar colour or icon-per-type exists on
+// the API (lib/api/schemas/orders.ts, GET /vendor/orders), so this used to
+// read `order.customer.bgColor/textColor/initials` and `order.typeIcon` —
+// none of which the backend has ever sent.
+const AVATAR_PALETTE = [
+  { bg: "#D4AF3733", text: "#D4AF37" },
+  { bg: "#60A5FA33", text: "#60A5FA" },
+  { bg: "#34D39933", text: "#34D399" },
+  { bg: "#F8717133", text: "#F87171" },
+  { bg: "#A78BFA33", text: "#A78BFA" },
+];
 
-const statusStyles = {
-  success: {
-    bg: "bg-success/10",
-    text: "text-success",
-    dot: "bg-success-solid",
-  },
-  info: {
-    bg: "bg-info/10",
-    text: "text-info",
-    dot: "bg-info",
-  },
-  warning: {
-    bg: "bg-warning/10",
-    text: "text-warning",
-    dot: "bg-warning",
-  },
-  neutral: {
-    bg: "bg-white/08",
-    text: "text-muted",
-    dot: "bg-muted",
-  },
-};
+function avatarFor(name) {
+  const clean = (name || "?").trim();
+  const code = clean.charCodeAt(0) || 0;
+  return { initial: clean[0]?.toUpperCase() ?? "?", ...AVATAR_PALETTE[code % AVATAR_PALETTE.length] };
+}
 
-export default function OrdersTable({ orders, isLoading }) {
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? "—"
+    : d.toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" });
+}
+
+export default function OrdersTable({ orders, isLoading, isError }) {
   const router = useRouter();
 
   if (isLoading) {
@@ -44,6 +43,22 @@ export default function OrdersTable({ orders, isLoading }) {
             Loading orders...
           </p>
         </div>
+      </div>
+    );
+  }
+
+  // GET /vendor/orders 500s (NullReferenceException) once pagination crosses
+  // past the first ~6 orders for a vendor — confirmed live 2026-08-12,
+  // BACKLOG.md. Without this, that response's `data?.items === undefined`
+  // fell into the empty-state branch below and silently claimed "No orders
+  // found" for a vendor who very much has orders.
+  if (isError) {
+    return (
+      <div className="bg-surface rounded-xl border border-white/08 p-12 text-center">
+        <p className="text-muted font-manrope text-[14px]">
+          Couldn&rsquo;t load orders. Your orders are safe — this is a problem
+          reaching them. Try again in a moment.
+        </p>
       </div>
     );
   }
@@ -91,8 +106,13 @@ export default function OrdersTable({ orders, isLoading }) {
         {/* Table Body */}
         <div className="divide-y divide-white/08 overflow-x-auto">
           {orders.map((order, index) => {
-            const TypeIcon = typeIcons[order.typeIcon];
-            const statusStyle = statusStyles[order.statusColor];
+            const avatar = avatarFor(order.customerName);
+            // No `statusName` on this list row (unlike the Order detail
+            // response) — status is a bare 0-7 integer the spec doesn't name.
+            // Render it honestly rather than inventing a label/colour for a
+            // number this app has never decoded.
+            const statusLabel =
+              typeof order.status === "string" ? order.status : `Status ${order.status}`;
 
             return (
               <motion.div
@@ -103,35 +123,32 @@ export default function OrdersTable({ orders, isLoading }) {
                 className="px-6 py-4 hover:bg-white/05 transition-colors min-w-255"
               >
                 <div className="grid grid-cols-[140px_240px_120px_140px_120px_140px_120px] gap-4 justify-between items-center">
-                  {/* Order ID */}
+                  {/* Order Number */}
                   <span className="font-manrope text-[14px] font-bold text-white">
-                    #{order.id}
+                    #{order.orderNumber}
                   </span>
 
                   {/* Customer */}
                   <div className="flex items-center gap-3">
                     <div
                       className="w-9 h-9 rounded-lg flex items-center justify-center font-manrope text-[13px] font-bold shrink-0"
-                      style={{
-                        backgroundColor: order.customer.bgColor,
-                        color: order.customer.textColor,
-                      }}
+                      style={{ backgroundColor: avatar.bg, color: avatar.text }}
                     >
-                      {order.customer.initials}
+                      {avatar.initial}
                     </div>
                     <span className="font-manrope text-[14px] text-white truncate">
-                      {order.customer.name}
+                      {order.customerName}
                     </span>
                   </div>
 
                   {/* Date */}
                   <span className="font-manrope text-[13px] text-muted">
-                    {order.date}
+                    {formatDate(order.createdAt)}
                   </span>
 
                   {/* Type */}
                   <div className="flex items-center gap-2">
-                    <TypeIcon size={16} className="text-warning" />
+                    <Package size={16} className="text-warning" />
                     <span className="font-manrope text-[13px] text-white">
                       {order.type}
                     </span>
@@ -139,21 +156,15 @@ export default function OrdersTable({ orders, isLoading }) {
 
                   {/* Total */}
                   <span className="font-manrope text-[14px] font-bold text-white">
-                    ${order.total.toFixed(2)}
+                    ₦{order.total.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                   </span>
 
                   {/* Status */}
                   <div className="flex items-center gap-2">
                     <span
-                      className={`w-2 h-2 rounded-full ${statusStyle.dot}`}
-                    />
-                    <span
-                      className={`
-                      px-3 py-1 rounded-full font-manrope text-[11px] font-bold
-                      ${statusStyle.bg} ${statusStyle.text}
-                    `}
+                      className="px-3 py-1 rounded-full bg-white/08 text-muted font-manrope text-[11px] font-bold"
                     >
-                      {order.status}
+                      {statusLabel}
                     </span>
                   </div>
 

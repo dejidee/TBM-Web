@@ -10,6 +10,7 @@ export default function AddUserModal({
   onCreateUser,
   editUser = null,
   onUpdateUser,
+  isSubmitting = false,
 }) {
   const isEditMode = !!editUser;
 
@@ -76,6 +77,11 @@ export default function AddUserModal({
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // The parent closes the modal from the mutation's onSuccess, not here — it
+    // used to close unconditionally on submit, so a failed create/update
+    // looked identical to a successful one and lost the entered data. Because
+    // this component is unmounted by `{isOpen && (...)}` below, form state
+    // resets on its own the next time it opens; nothing to reset here.
     if (isEditMode && onUpdateUser) {
       // For edit mode, send only changed data
       const updateData = {
@@ -93,26 +99,9 @@ export default function AddUserModal({
     } else if (onCreateUser) {
       onCreateUser(formData);
     }
-    // Reset form
-    setFormData({
-      fullName: "",
-      email: "",
-      role: "",
-      isActive: true,
-      password: "",
-    });
-    onClose();
   };
 
   const handleCancel = () => {
-    // Reset form
-    setFormData({
-      fullName: "",
-      email: "",
-      role: "",
-      isActive: true,
-      password: "",
-    });
     onClose();
   };
 
@@ -125,7 +114,7 @@ export default function AddUserModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={onClose}
+            onClick={isSubmitting ? undefined : onClose}
             className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
           >
             {/* Modal */}
@@ -152,7 +141,8 @@ export default function AddUserModal({
                   </div>
                   <button
                     onClick={onClose}
-                    className="text-white/30 hover:text-white/60 transition-colors"
+                    disabled={isSubmitting}
+                    className="text-white/30 hover:text-white/60 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     <X size={24} />
                   </button>
@@ -298,20 +288,31 @@ export default function AddUserModal({
                   <motion.button
                     type="button"
                     onClick={handleCancel}
+                    disabled={isSubmitting}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-6 py-2.5 border border-white/10 rounded-lg font-manrope text-[14px] font-medium text-white/60 hover:bg-white/05 transition-colors"
+                    className="px-6 py-2.5 border border-white/10 rounded-lg font-manrope text-[14px] font-medium text-white/60 hover:bg-white/05 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Cancel
                   </motion.button>
                   <motion.button
                     type="submit"
+                    disabled={isSubmitting}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="px-6 py-2.5 rounded-lg font-manrope text-[14px] font-medium text-white transition-opacity"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-lg font-manrope text-[14px] font-medium text-white transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     style={{ background: "linear-gradient(135deg, var(--color-accent-solid) 0%, var(--color-accent-solid-dim) 100%)" }}
                   >
-                    {isEditMode ? "Update User" : "Create User"}
+                    {isSubmitting && (
+                      <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                    )}
+                    {isSubmitting
+                      ? isEditMode
+                        ? "Updating…"
+                        : "Creating…"
+                      : isEditMode
+                        ? "Update User"
+                        : "Create User"}
                   </motion.button>
                 </div>
               </form>

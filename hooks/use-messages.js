@@ -1,52 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { messagesAPI } from "@/lib/mock/messages";
 import { vendorMessagesAPI } from "@/lib/api/vendor/messages";
+import { showToast } from "@/components/shared/toast";
 
-// Query keys
+// Query keys.
+//
+// `useConversations`, `useMessages` and `useSendMessage` used to sit above the
+// vendor hooks, backed by lib/mock/messages.js and unused by any page. They also
+// declared `MESSAGES_QUERY_KEYS.messages(id)` — the same key
+// `useVendorConversationMessages` uses, with a different queryFn. One key, two
+// fetchers, whichever mounted first winning. Deleted with the fixture.
 export const MESSAGES_QUERY_KEYS = {
   conversations: (filters) => ["messages", "conversations", filters],
   messages: (conversationId) => ["messages", "conversation", conversationId],
   vendorMessages: (filters) => ["vendor", "messages", filters],
 };
-
-// Hook to fetch conversations
-export function useConversations(filters = {}) {
-  const { filter = "active", search = "" } = filters;
-
-  return useQuery({
-    queryKey: MESSAGES_QUERY_KEYS.conversations({ filter, search }),
-    queryFn: () => messagesAPI.getConversations({ filter, search }),
-    staleTime: 30 * 1000, // 30 seconds
-  });
-}
-
-// Hook to fetch messages for a conversation
-export function useMessages(conversationId) {
-  return useQuery({
-    queryKey: MESSAGES_QUERY_KEYS.messages(conversationId),
-    queryFn: () => messagesAPI.getMessages(conversationId),
-    enabled: !!conversationId,
-    staleTime: 10 * 1000, // 10 seconds
-  });
-}
-
-// Hook to send a message
-export function useSendMessage() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ conversationId, message }) =>
-      messagesAPI.sendMessage(conversationId, message),
-    onSuccess: (_data, variables) => {
-      queryClient.invalidateQueries({
-        queryKey: MESSAGES_QUERY_KEYS.messages(variables.conversationId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["messages", "conversations"],
-      });
-    },
-  });
-}
 
 // ===== Vendor Messages API Hooks (Real Backend) =====
 
@@ -279,6 +246,8 @@ export function useSendVendorMessage() {
         queryKey: ["messages", "conversations"],
       });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to send message"),
   });
 }
 
@@ -310,5 +279,7 @@ export function useSendConversationMessage() {
         queryKey: ["messages", "conversations"],
       });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to send message"),
   });
 }

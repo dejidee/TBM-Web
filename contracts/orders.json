@@ -1,0 +1,141 @@
+{
+  "recordedAt": "2026-08-11",
+  "note": "Shapes only, no values. Recorded by scripts/record-order-shape.mjs, which places one order and cancels it — the dev backend has no other orders.",
+  "operations": {
+    "POST /api/v1/orders": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string",
+        "orderNumber": "string",
+        "userId": "string",
+        "designSessionId": "null",
+        "guestEmail": "null",
+        "guestPhone": "null",
+        "isGuestOrder": "boolean",
+        "userEmail": "string",
+        "userFullName": "string",
+        "status": "number",
+        "statusName": "string",
+        "paymentStatus": "number",
+        "paymentStatusName": "string",
+        "paymentMethod": "null",
+        "paymentMethodName": "null",
+        "subTotal": "number",
+        "shippingCost": "number",
+        "tax": "number",
+        "discount": "number",
+        "total": "number",
+        "shippingFullName": "string",
+        "shippingPhone": "string",
+        "shippingAddress": "string",
+        "shippingCity": "string",
+        "shippingState": "string",
+        "shippingNotes": "null",
+        "paymentReference": "null",
+        "paidAt": "null",
+        "trackingNumber": "null",
+        "shippedAt": "null",
+        "deliveredAt": "null",
+        "cancelledAt": "null",
+        "cancellationReason": "null",
+        "customerNotes": "string",
+        "adminNotes": "null",
+        "items": [
+          {
+            "id": "string",
+            "productId": "string",
+            "productName": "string",
+            "productSKU": "null",
+            "productImageUrl": "null",
+            "quantity": "number",
+            "unitPrice": "number",
+            "subTotal": "number"
+          }
+        ],
+        "createdAt": "string",
+        "updatedAt": "string"
+      },
+      "errors": "null"
+    },
+    "GET /api/v1/orders/{orderId}": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string",
+        "orderNumber": "string",
+        "userId": "string",
+        "designSessionId": "null",
+        "guestEmail": "null",
+        "guestPhone": "null",
+        "isGuestOrder": "boolean",
+        "userEmail": "string",
+        "userFullName": "string",
+        "status": "number",
+        "statusName": "string",
+        "paymentStatus": "number",
+        "paymentStatusName": "string",
+        "paymentMethod": "null",
+        "paymentMethodName": "null",
+        "subTotal": "number",
+        "shippingCost": "number",
+        "tax": "number",
+        "discount": "number",
+        "total": "number",
+        "shippingFullName": "string",
+        "shippingPhone": "string",
+        "shippingAddress": "string",
+        "shippingCity": "string",
+        "shippingState": "string",
+        "shippingNotes": "null",
+        "paymentReference": "null",
+        "paidAt": "null",
+        "trackingNumber": "null",
+        "shippedAt": "null",
+        "deliveredAt": "null",
+        "cancelledAt": "null",
+        "cancellationReason": "null",
+        "customerNotes": "string",
+        "adminNotes": "null",
+        "items": [
+          {
+            "id": "string",
+            "productId": "string",
+            "productName": "string",
+            "productSKU": "null",
+            "productImageUrl": "null",
+            "quantity": "number",
+            "unitPrice": "number",
+            "subTotal": "number"
+          }
+        ],
+        "createdAt": "string",
+        "updatedAt": "string"
+      },
+      "errors": "null"
+    },
+    "GET /api/v1/vendor/orders/{orderId}": {
+      "error": "string"
+    },
+    "GET /api/v1/vendor/orders": {
+      "items": [
+        {
+          "id": "string",
+          "orderNumber": "string",
+          "customerName": "string",
+          "type": "string",
+          "status": "number",
+          "paymentStatus": "number",
+          "total": "number",
+          "createdAt": "string",
+          "matchingItems": "number",
+          "deliveryAgentName": "null",
+          "deliveryAgentPhone": "null"
+        }
+      ],
+      "total": "number",
+      "page": "number",
+      "pageSize": "number"
+    }
+  }
+}

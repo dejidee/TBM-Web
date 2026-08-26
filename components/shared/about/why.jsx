@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 const features = [
   {
     feature: "Design Visualization",
-    tbm: "Instant AI Rendering",
+    tbm: "AI-Assisted Rendering",
     traditional: "Slow, manual sketches",
   },
   {
@@ -14,7 +14,7 @@ const features = [
   },
   {
     feature: "Cost Transparency",
-    tbm: "Real-time Quotes",
+    tbm: "Clear, Upfront Quotes",
     traditional: "Estimates & hidden fees",
   },
   {

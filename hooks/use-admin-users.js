@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { adminUsersAPI } from "@/lib/api/admin";
+import { showToast } from "@/components/shared/toast";
 
 export const ADMIN_USERS_QUERY_KEYS = {
   all: ["admin", "users"],
@@ -33,6 +34,7 @@ export function useCreateUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
     },
+    onError: (error) => showToast.error(error.message || "Failed to create user"),
   });
 }
 
@@ -44,6 +46,8 @@ export function useUpdateUserStatus() {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
       queryClient.setQueryData(ADMIN_USERS_QUERY_KEYS.detail(variables.id), data);
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to update user status"),
   });
 }
 
@@ -55,6 +59,8 @@ export function useUpdateUserRole() {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
       queryClient.setQueryData(ADMIN_USERS_QUERY_KEYS.detail(variables.id), data);
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to update user role"),
   });
 }
 
@@ -65,6 +71,7 @@ export function useSuspendUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
     },
+    onError: (error) => showToast.error(error.message || "Failed to suspend user"),
   });
 }
 
@@ -75,6 +82,8 @@ export function useReactivateUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to reactivate user"),
   });
 }
 
@@ -85,6 +94,7 @@ export function useDeleteUser() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ADMIN_USERS_QUERY_KEYS.all });
     },
+    onError: (error) => showToast.error(error.message || "Failed to delete user"),
   });
 }
 

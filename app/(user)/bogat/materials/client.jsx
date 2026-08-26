@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
@@ -34,11 +34,14 @@ async function fetchProducts(filters, page, pageSize = 12) {
   params.set("pageNumber", String(page));
   params.set("pageSize", String(pageSize));
   params.set("ActiveOnly", "true");
+  // This page is Bogat's own shop — it must never show TBM's general
+  // product catalogue. The sidebar here uses the "collections" variant,
+  // which has no brand toggle, so filters.brandTypes is always empty;
+  // brandType is forced rather than left to depend on that being set.
+  params.set("brandType", String(BOGAT_BRAND_TYPE));
 
   if (filters.categoryIds?.length === 1)
     params.set("categoryId", filters.categoryIds[0]);
-  if (filters.brandTypes?.length === 1)
-    params.set("brandType", String(filters.brandTypes[0]));
   if (filters.productTypes?.length === 1)
     params.set("productType", String(filters.productTypes[0]));
   if (filters.searchTerm) params.set("searchTerm", filters.searchTerm);
@@ -146,6 +149,7 @@ export default function BogatMaterialsClient({ initialData }) {
         .filter((c) => c.parentCategoryId != null)
         .map((c) => ({
           id: c.id,
+          slug: c.slug,
           name: c.name,
           count: c.productCount ?? 0,
           displayOrder: c.displayOrder ?? 0,
@@ -153,6 +157,27 @@ export default function BogatMaterialsClient({ initialData }) {
         .sort((a, b) => a.displayOrder - b.displayOrder),
     [bogatCategories],
   );
+
+  // The Bogat landing page links to a collection by slug (?category=<slug>),
+  // a stable, human-readable value it can hardcode. Categories only carry
+  // their real id once bogatCategories has loaded, so this resolves the slug
+  // to an id and applies it once, the same way `search` is read from the URL
+  // above. Runs once per slug — a category slug removed from the URL later
+  // (e.g. the user clears the filter) does not re-trigger it.
+  const categoryParam = searchParams.get("category");
+  const appliedCategoryParam = useRef(null);
+  useEffect(() => {
+    if (!categoryParam || categoryParam === appliedCategoryParam.current) return;
+    const match = categories.find((c) => c.slug === categoryParam);
+    if (!match) return;
+    appliedCategoryParam.current = categoryParam;
+    setActiveFilters((prev) =>
+      prev.categoryIds.includes(match.id)
+        ? prev
+        : { ...prev, categoryIds: [match.id] },
+    );
+    setCurrentPage(1);
+  }, [categoryParam, categories]);
 
   const handleFilterChange = useCallback((newFilters) => {
     setActiveFilters(newFilters);
@@ -273,7 +298,7 @@ export default function BogatMaterialsClient({ initialData }) {
                   onClick={() =>
                     handleFilterChange({ ...activeFilters, categoryIds: [] })
                   }
-                  className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-sm text-[12px] font-medium tracking-wide transition-colors ${
+                  className={`shrink-0 whitespace-nowrap min-h-11 flex items-center px-4 rounded-sm text-[12px] font-medium tracking-wide transition-colors ${
                     (activeFilters.categoryIds?.length ?? 0) === 0
                       ? "bg-[#D4AF37] text-black"
                       : "border border-white/12 text-white/60 hover:border-white/30 hover:text-white"
@@ -292,7 +317,7 @@ export default function BogatMaterialsClient({ initialData }) {
                           categoryIds: [cat.id],
                         })
                       }
-                      className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-sm text-[12px] font-medium tracking-wide transition-colors ${
+                      className={`shrink-0 whitespace-nowrap min-h-11 flex items-center px-4 rounded-sm text-[12px] font-medium tracking-wide transition-colors ${
                         active
                           ? "bg-[#D4AF37] text-black"
                           : "border border-white/12 text-white/60 hover:border-white/30 hover:text-white"
@@ -385,7 +410,7 @@ export default function BogatMaterialsClient({ initialData }) {
                 <div className="flex items-center gap-px border border-white/10 p-1">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-1.5 transition-colors ${viewMode === "grid" ? "bg-white/10" : "hover:bg-white/05"}`}
+                    className={`min-w-11 min-h-11 flex items-center justify-center transition-colors ${viewMode === "grid" ? "bg-white/10" : "hover:bg-white/05"}`}
                   >
                     <svg className="w-5 h-5 text-white/60" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -393,7 +418,7 @@ export default function BogatMaterialsClient({ initialData }) {
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-1.5 transition-colors ${viewMode === "list" ? "bg-white/10" : "hover:bg-white/05"}`}
+                    className={`min-w-11 min-h-11 flex items-center justify-center transition-colors ${viewMode === "list" ? "bg-white/10" : "hover:bg-white/05"}`}
                   >
                     <svg className="w-5 h-5 text-white/60" fill="currentColor" viewBox="0 0 20 20">
                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />

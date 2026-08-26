@@ -21,6 +21,7 @@ import {
   ShoppingCart,
   PackageSearch,
   BookOpen,
+  Sparkles,
 } from "lucide-react";
 import Reveal from "@/components/common/reveal";
 
@@ -28,53 +29,66 @@ import Reveal from "@/components/common/reveal";
 
 const TRUST_CHIPS = [
   { Icon: Diamond, label: "Premium Quality" },
-  { Icon: Shield, label: "100% Authentic" },
-  { Icon: Truck, label: "On-Time Delivery" },
+  { Icon: Shield, label: "Verified Authentic" },
+  { Icon: Truck, label: "Reliable Delivery" },
   { Icon: Headphones, label: "Expert Advice" },
 ];
 
+// Bogat's real signature collections — all bathroom vanity/stone, matching
+// the client audit's required positioning. Sourced from the live category
+// data (parent "Bathroom", 7 children); hrefs use each collection's real
+// slug, which app/(user)/bogat/materials/client.jsx resolves to a category
+// id and applies as a filter. Do not add categories that don't exist in the
+// live catalogue (Bogat has no separate tiles/doors/general-materials line).
 const CATEGORIES = [
   {
-    Icon: Layers,
-    label: "Tiles & Stone",
-    href: "/bogat/materials?category=tiles",
-    image: "/matte.png",
-    description: "Large format tiles, porcelain, ceramic & more.",
-  },
-  {
-    Icon: Droplets,
-    label: "Bathroom Fittings",
-    href: "/bogat/materials?category=bathroom",
-    image: "/brass.png",
-    description: "Premium taps, showers, mixers & accessories.",
-  },
-  {
-    Icon: Bath,
-    label: "Sanitary Ware",
-    href: "/bogat/materials?category=sanitary",
-    image: "/pendant.png",
-    description: "Elegant, durable and hygienic solutions.",
-  },
-  {
-    Icon: DoorOpen,
-    label: "Doors & Hardware",
-    href: "/bogat/materials?category=doors",
-    image: "/oak.png",
-    description: "Security, style and durability in every detail.",
+    Icon: Diamond,
+    label: "Eclat Atelier",
+    href: "/bogat/materials?category=eclat-atelier",
+    image: "/site-images/web/bathroom-2-after.jpg",
+    description: "Complete luxury vanity systems.",
   },
   {
     Icon: Gem,
-    label: "Accessories",
-    href: "/bogat/materials?category=accessories",
-    image: "/chair.png",
-    description: "Complements that define your space.",
+    label: "Joaillerie Stone",
+    href: "/bogat/materials?category=joaillerie-stone",
+    image: "/site-images/web/bathroom-1-after.jpg",
+    description: "Stone & cabinet editions.",
   },
   {
-    Icon: Diamond,
-    label: "Marble & Quartz",
-    href: "/bogat/materials?category=marble",
-    image: "/geo.png",
-    description: "Natural stone, engineered for perfection.",
+    Icon: Layers,
+    label: "Monolithe Prive",
+    href: "/bogat/materials?category=monolithe-prive",
+    image: "/site-images/web/staircase-after.jpg",
+    description: "Illuminated stone vanities.",
+  },
+  {
+    Icon: Droplets,
+    label: "Levitation Royale",
+    href: "/bogat/materials?category=levitation-royale",
+    image: "/site-images/web/kitchen-island.jpg",
+    description: "Light floating basins.",
+  },
+  {
+    Icon: Bath,
+    label: "Maison Sculptee",
+    href: "/bogat/materials?category=maison-sculptee",
+    image: "/site-images/web/interior-finished.jpg",
+    description: "Vessel & double vanity collection.",
+  },
+  {
+    Icon: DoorOpen,
+    label: "Terra Sculpte",
+    href: "/bogat/materials?category=terra-sculpte",
+    image: "/site-images/web/patio-after.jpg",
+    description: "Organic & artisan stone forms.",
+  },
+  {
+    Icon: Sparkles,
+    label: "Symphonie Deux",
+    href: "/bogat/materials?category=symphonie-deux",
+    image: "/site-images/web/villa-modern-after.jpg",
+    description: "Statement stone collection.",
   },
 ];
 
@@ -158,17 +172,18 @@ export default function BogatClient() {
           HERO
       ═══════════════════════════════════════════════════════════════════ */}
       <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Desktop — right image column */}
-        <div className="hidden lg:block absolute inset-y-0 right-0 w-[48%]">
+        {/* Desktop — full-bleed image, text emerges from the gradient rather
+            than sitting beside a hard-edged image column */}
+        <div className="hidden lg:block absolute inset-0">
           <div className="relative h-full w-full">
             <Image
-              src="/hero/re-imagine.png"
+              src="/hero/bogat-hero.png"
               alt="Bogat premium materials showroom"
               fill
               priority
               className="object-cover object-center"
             />
-            <div className="absolute inset-y-0 left-0 w-48 bg-linear-to-r from-black to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-r from-black via-black/85 to-black/40" />
             <div className="absolute inset-0 bg-black/30" />
             <div className="absolute bottom-0 inset-x-0 h-28 bg-linear-to-t from-black to-transparent" />
           </div>
@@ -177,7 +192,7 @@ export default function BogatClient() {
         {/* Mobile — background image */}
         <div className="lg:hidden absolute inset-0">
           <Image
-            src="/hero/re-imagine.png"
+            src="/hero/bogat-hero.png"
             alt="Bogat premium materials"
             fill
             priority
@@ -221,9 +236,8 @@ export default function BogatClient() {
               transition={{ duration: 0.5, delay: 0.16 }}
               className="text-white/50 text-[14px] sm:text-[17px] leading-relaxed mb-8 max-w-[85%]"
             >
-              We supply premium tiles, fittings, sanitary ware, marble, doors,
-              and accessories for luxury homes and commercial spaces across
-              Nigeria.
+              TBM&apos;s premium bathroom vanity, sanitaryware, and finishing
+              brand — for luxury homes and commercial spaces across Nigeria.
             </motion.p>
 
             <motion.div
@@ -289,7 +303,7 @@ export default function BogatClient() {
         className="border-y border-white/[0.08]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-3 md:grid-cols-6 divide-x divide-white/[0.08]">
+          <div className="grid grid-cols-3 md:grid-cols-7 divide-x divide-white/[0.08]">
             {CATEGORIES.map(({ Icon, label, href }) => (
               <Link
                 key={label}

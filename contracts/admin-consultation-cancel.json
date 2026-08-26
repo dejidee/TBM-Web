@@ -1,0 +1,38 @@
+{
+  "recordedAt": "2026-08-22",
+  "endpoint": "/admin/consultations/{id}/cancel",
+  "method": "PUT",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "note": "Shapes only, no values. Recorded manually: booked a free guest consultation, then cancelled it as admin. Enveloped bare ConsultationDto — identical to the user-side cancel (contracts/consultation-reschedule-cancel.json). The cancellation policy is carried in `message` (\"Free consultation cancelled.\" here; paid bookings describe refund handling), not a field.",
+  "shape": {
+    "success": "boolean",
+    "message": "string",
+    "data": {
+      "id": "string",
+      "projectId": "null",
+      "typeKey": "string",
+      "typeName": "string",
+      "format": "string",
+      "durationMinutes": "number",
+      "fee": "number",
+      "scheduledStart": "string",
+      "scheduledEnd": "string",
+      "status": "string",
+      "paymentVerified": "boolean",
+      "paymentReference": "null",
+      "contactName": "string",
+      "contactEmail": "string",
+      "contactPhone": "string",
+      "propertyType": "string",
+      "siteAddress": "null",
+      "siteCity": "null",
+      "siteState": "null",
+      "notes": "null",
+      "cancelledAtUtc": "string",
+      "cancellationReason": "string",
+      "cancellationRequiresManualRefundReview": "boolean"
+    },
+    "errors": "null"
+  }
+}

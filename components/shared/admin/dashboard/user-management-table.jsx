@@ -66,6 +66,12 @@ export default function UserManagementTable({
     updateStatus.mutate({ id: userId, isActive: !currentStatus });
   };
 
+  // One mutation instance backs every row's switch — scope pending to the row
+  // actually mutating, or one slow toggle disables every user's switch.
+  const pendingUserId = updateStatus.isPending
+    ? updateStatus.variables?.id
+    : null;
+
   const handleDeleteUser = (userId, userName) => {
     setUserToDelete({ id: userId, name: userName });
     setDeleteModalOpen(true);
@@ -299,15 +305,20 @@ export default function UserManagementTable({
                         aria-checked={isActive}
                         aria-label={`${isActive ? "Deactivate" : "Activate"} ${user?.fullName || user?.name || "user"}`}
                         onClick={() => handleToggleStatus(user?.id, isActive)}
-                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent/60 focus:ring-offset-surface ${
+                        disabled={pendingUserId === user?.id}
+                        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent/60 focus:ring-offset-surface disabled:opacity-50 disabled:cursor-not-allowed ${
                           isActive ? "bg-success-solid" : "bg-track-off"
                         }`}
                       >
-                        <span
-                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                            isActive ? "translate-x-6" : "translate-x-1"
-                          }`}
-                        />
+                        {pendingUserId === user?.id ? (
+                          <span className="mx-auto h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        ) : (
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                              isActive ? "translate-x-6" : "translate-x-1"
+                            }`}
+                          />
+                        )}
                       </button>
                     </td>
 
@@ -378,15 +389,20 @@ export default function UserManagementTable({
                     aria-checked={isActive}
                     aria-label={`${isActive ? "Deactivate" : "Activate"} ${user?.fullName || user?.name || "user"}`}
                     onClick={() => handleToggleStatus(user?.id, isActive)}
-                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent/60 focus:ring-offset-surface ${
+                    disabled={pendingUserId === user?.id}
+                    className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent/60 focus:ring-offset-surface disabled:opacity-50 disabled:cursor-not-allowed ${
                       isActive ? "bg-success-solid" : "bg-track-off"
                     }`}
                   >
-                    <span
-                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                        isActive ? "translate-x-6" : "translate-x-1"
-                      }`}
-                    />
+                    {pendingUserId === user?.id ? (
+                      <span className="mx-auto h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                    ) : (
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          isActive ? "translate-x-6" : "translate-x-1"
+                        }`}
+                      />
+                    )}
                   </button>
                 </div>
 

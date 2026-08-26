@@ -31,9 +31,9 @@ import ProjectCard from "@/components/shared/materials/details/card";
 import SimilarStyles from "@/components/shared/materials/details/similar";
 import ProductTabs from "@/components/shared/materials/details/tabs";
 import ProductGallery from "@/components/shared/materials/details/product-gallery";
+import ProductReviews from "@/components/shared/materials/details/product-reviews";
 
-const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=800&h=600&fit=crop";
+const PLACEHOLDER = "/product-placeholder.svg";
 
 // Variants carry a raw price number, not a formatted string. Match the shape of
 // the backend's product-level `priceDisplay` ("₦850,000.00").
@@ -386,7 +386,7 @@ export default function MaterialDetailClient({
                   whileTap={{ scale: savedLoading ? 1 : 0.9 }}
                   onClick={handleToggleSave}
                   disabled={savedLoading || toggleSave.isPending}
-                  className="shrink-0 w-10 h-10 flex items-center justify-center transition-colors disabled:opacity-50"
+                  className="shrink-0 w-11 h-11 flex items-center justify-center transition-colors disabled:opacity-50"
                   aria-label={isSaved ? "Remove from saved" : "Save product"}
                 >
                   <Heart
@@ -542,7 +542,7 @@ export default function MaterialDetailClient({
                     <div className="flex items-center border border-white/10 rounded-sm overflow-hidden">
                       <button
                         onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                        className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/05 transition-colors text-lg font-medium"
+                        className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/05 transition-colors text-lg font-medium"
                       >
                         −
                       </button>
@@ -557,7 +557,7 @@ export default function MaterialDetailClient({
                               : q + 1,
                           )
                         }
-                        className="w-10 h-10 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/05 transition-colors text-lg font-medium"
+                        className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white hover:bg-white/05 transition-colors text-lg font-medium"
                       >
                         +
                       </button>
@@ -635,7 +635,7 @@ export default function MaterialDetailClient({
                 )}
               </div>
 
-              {/* ── AI Visualizer & Project Card ──────────────────────── */}
+              {/* ── Design with Ziora & Project Card ──────────────────────── */}
               {/* <div className="space-y-3">
                 <AIVisualizer />
                 <ProjectCard
@@ -748,7 +748,7 @@ export default function MaterialDetailClient({
                             src={mat.image}
                             alt={mat.label}
                             fill
-                            className="object-cover"
+                            className="object-contain"
                             sizes="(max-width: 768px) 33vw, 15vw"
                           />
                         </div>
@@ -796,7 +796,7 @@ export default function MaterialDetailClient({
                             src={comp.image}
                             alt={comp.label}
                             fill
-                            className="object-cover"
+                            className="object-contain"
                             sizes="(max-width: 768px) 50vw, 20vw"
                           />
                         </div>
@@ -840,7 +840,7 @@ export default function MaterialDetailClient({
                 </h2>
               </div>
               <Link
-                href="/contact?type=consultation"
+                href="/consultation"
                 className="group inline-flex items-center gap-2 text-[13px] font-medium text-[#D4AF37] transition-opacity hover:opacity-80 shrink-0"
               >
                 Speak to a design consultant
@@ -892,7 +892,9 @@ export default function MaterialDetailClient({
       {product.showPrice && product.inStock && (
         <section
           className="border-y border-[#D4AF37]/20"
-          style={{ background: "linear-gradient(180deg, #100d09 0%, #0a0908 100%)" }}
+          style={{
+            background: "linear-gradient(180deg, #100d09 0%, #0a0908 100%)",
+          }}
         >
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
             <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
@@ -906,8 +908,8 @@ export default function MaterialDetailClient({
                 {isMadeToOrder && (
                   <p className="mt-4 text-[14.5px] text-white/50 leading-relaxed">
                     Reserve your size and finish today. Our design team confirms
-                    your quote, stone selection and 8–12 week timeline before any
-                    payment is taken.
+                    your quote, stone selection and 8–12 week timeline before
+                    any payment is taken.
                   </p>
                 )}
               </div>
@@ -927,10 +929,13 @@ export default function MaterialDetailClient({
                   whileHover={{ scale: 1.01, y: -1 }}
                   whileTap={{ scale: 0.99 }}
                   onClick={handleBuyNow}
-                  disabled={buyingNow || addToCart.isPending || !product.inStock}
+                  disabled={
+                    buyingNow || addToCart.isPending || !product.inStock
+                  }
                   className="w-full py-4 rounded-sm text-white font-manrope font-bold text-[11px] tracking-[0.25em] uppercase flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed transition-opacity"
                   style={{
-                    background: "linear-gradient(180deg, #E8C230 0%, #B8940A 100%)",
+                    background:
+                      "linear-gradient(180deg, #E8C230 0%, #B8940A 100%)",
                     boxShadow:
                       "inset 0 1px 0 rgba(255,255,255,0.22), inset 0 -1px 0 rgba(0,0,0,0.18), 0 0 0 1px rgba(184,148,10,0.6), 0 0 22px rgba(212,175,55,0.32)",
                     textShadow: "0 1px 2px rgba(0,0,0,0.45)",
@@ -943,7 +948,7 @@ export default function MaterialDetailClient({
                       : "Buy Now"}
                 </motion.button>
                 <Link
-                  href="/contact?type=consultation"
+                  href="/consultation"
                   className="w-full py-3.5 rounded-sm border border-white/15 text-center text-white/80 font-manrope font-semibold text-[11px] tracking-[0.25em] uppercase transition-colors hover:border-[#D4AF37]/40 hover:text-[#D4AF37]"
                 >
                   Book a consultation
@@ -954,14 +959,20 @@ export default function MaterialDetailClient({
         </section>
       )}
 
-      {/* Reviews intentionally omitted: there is no endpoint for verified
-          purchasers to leave a review, so a ratings block would be fabricated.
-          Restore this section once a reviews API exists. */}
-
-      {/* ── Similar products ──────────────────────────────────────────────── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
-        <SimilarStyles materials={normalisedSimilar} />
+      {/* GET/POST /products/{productId}/reviews exists now — reviews API
+          delivered 2026-08-12, BACKLOG.md. */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <ProductReviews productId={product.id} />
       </div>
+
+      {/* ── Similar products ───────────────────────────────────────────────
+          Guarded so the padded wrapper does not leave a gap on the many
+          products that have no siblings in their category. */}
+      {normalisedSimilar.length > 0 && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+          <SimilarStyles materials={normalisedSimilar} />
+        </div>
+      )}
     </div>
   );
 }

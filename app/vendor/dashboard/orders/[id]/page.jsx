@@ -5,530 +5,443 @@ import { useParams, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
-  Printer,
-  ChevronDown,
-  Edit2,
-  MessageSquare,
-  MapPin,
-  Copy,
-  CheckCircle2,
-  Circle,
   Calendar,
+  Copy,
+  MapPin,
+  MessageSquare,
+  Package,
 } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
-import { orderDetailsAPI } from "@/lib/mock/order-details";
+import { useOrder, useAddOrderNote } from "@/hooks/use-orders";
+import { showToast } from "@/components/shared/toast";
+
+/**
+ * Vendor order detail — GET /api/v1/vendor/orders/{orderId}.
+ *
+ * This page used to render `lib/mock/order-details.js`: a fabricated order with
+ * invented line items, a VISA card with an expiry, a "member type", a carrier
+ * status, a Google Maps placeholder and a hand-written activity timeline. None
+ * of it came from the backend and none of those fields exist anywhere in its
+ * surface — so those panels are gone rather than re-pointed at fields that do
+ * not exist.
+ *
+ * What is left maps to things the API actually has: the order itself, its line
+ * items, the shipping fields of CreateOrderDto, the delivery agent of
+ * VendorOrderAssignmentRequest, and POST /vendor/orders/{id}/notes.
+ *
+ * Update, 2026-08-11: `POST /api/v1/orders` (the SQL sequence defect,
+ * BACKLOG.md item 7) is fixed and the *Order* shape — id, orderNumber, status/
+ * statusName, items[], shippingFullName/Phone/Address/City/State, subTotal/
+ * shippingCost/tax/discount/total, customerNotes, createdAt — is confirmed
+ * live (`GET /orders/{orderId}`, contracts/orders.json, lib/api/schemas/orders.ts).
+ * `pick()` below is *kept*, not removed: it already tries the correct field
+ * names first for every one of those, so it was silently correct the whole
+ * time the shape was unknown. What is genuinely still unverified is whether
+ * *this vendor-scoped detail endpoint* returns that same Order shape — the
+ * only response seen from it is a 403 scope error
+ * (`"Order is outside this vendor scope"`, confirmed live), because the order
+ * placed to record the shape wasn't owned by the vendor account used to read
+ * it. `pick()` staying defensive here is deliberate, not leftover caution.
+ */
+
+/** First present, non-null value among `keys`. */
+function pick(obj, ...keys) {
+  if (!obj) return undefined;
+  for (const k of keys) {
+    const v = obj[k];
+    if (v !== undefined && v !== null && v !== "") return v;
+  }
+  return undefined;
+}
+
+const DASH = "—";
+
+/** Money is naira here — the mock rendered `$` on a catalogue priced in ₦. */
+function money(value) {
+  return typeof value === "number"
+    ? `₦${value.toLocaleString("en-NG", { minimumFractionDigits: 2 })}`
+    : DASH;
+}
+
+function date(value) {
+  if (!value) return DASH;
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? String(value)
+    : d.toLocaleDateString("en-NG", { day: "numeric", month: "long", year: "numeric" });
+}
+
+/**
+ * OrderStatus is an integer enum whose names the spec does not publish
+ * (CLAUDE.md: "0–7 without names"). Render the string when the backend sends
+ * one, and the raw value otherwise — inventing labels for 0–7 is how a vendor
+ * ends up reading "Delivered" off an order that is not.
+ */
+function StatusChip({ status }) {
+  if (status === undefined || status === null) return null;
+  const label = typeof status === "string" ? status : `Status ${status}`;
+  return (
+    <span className="px-3 py-1.5 rounded-lg bg-white/08 text-white font-manrope text-[12px] font-bold">
+      {label}
+    </span>
+  );
+}
+
+function Panel({ title, action, children, delay = 0 }) {
+  return (
+    <motion.section
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay }}
+      className="bg-surface rounded-xl border border-white/08 p-6"
+    >
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="font-manrope text-[16px] font-bold text-white">{title}</h2>
+        {action}
+      </div>
+      {children}
+    </motion.section>
+  );
+}
+
+function Row({ label, children }) {
+  return (
+    <div className="flex items-start justify-between gap-4">
+      <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider shrink-0">
+        {label}
+      </span>
+      <span className="font-manrope text-[13px] text-white text-right wrap-break-word min-w-0">
+        {children ?? DASH}
+      </span>
+    </div>
+  );
+}
 
 export default function OrderDetailPage() {
   const params = useParams();
   const router = useRouter();
   const orderId = params?.id;
 
-  const [notes, setNotes] = useState("");
-  const [isSavingNotes, setIsSavingNotes] = useState(false);
+  const [note, setNote] = useState("");
+  const { data: order, isLoading, isError, error } = useOrder(orderId);
+  const addNote = useAddOrderNote();
 
-  const { data: order, isLoading } = useQuery({
-    queryKey: ["order", orderId],
-    queryFn: () => orderDetailsAPI.getOrderDetails(orderId),
-    enabled: !!orderId,
-  });
+  const items = Array.isArray(pick(order, "items", "orderItems", "lineItems"))
+    ? pick(order, "items", "orderItems", "lineItems")
+    : [];
 
-  const handleSaveNotes = async () => {
-    setIsSavingNotes(true);
-    await orderDetailsAPI.saveOrderNotes(orderId, notes);
-    setIsSavingNotes(false);
-  };
+  const trackingNumber = pick(order, "trackingNumber");
 
-  const handleCopyTracking = () => {
-    if (order?.delivery?.trackingNumber !== "Pending") {
-      navigator.clipboard.writeText(order.delivery.trackingNumber);
-    }
-  };
+  function handleSaveNote() {
+    const trimmed = note.trim();
+    if (!trimmed) return;
+    addNote.mutate(
+      { orderId, note: trimmed },
+      {
+        onSuccess: () => {
+          setNote("");
+          showToast.success("Note added");
+        },
+        onError: (err) => showToast.error("Could not add note", err.message),
+      },
+    );
+  }
+
+  function handleCopyTracking() {
+    if (!trackingNumber) return;
+    navigator.clipboard.writeText(String(trackingNumber));
+    showToast.success("Tracking number copied");
+  }
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh] bg-background">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-white/08 border-t-accent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted font-manrope text-[14px]">
-            Loading order details...
-          </p>
+      <div className="max-w-360 mx-auto space-y-6">
+        <div className="h-8 w-40 animate-pulse rounded bg-white/05" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 h-96 animate-pulse rounded-xl bg-white/05" />
+          <div className="space-y-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="h-44 animate-pulse rounded-xl bg-white/05" />
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  if (!order) {
+  if (isError || !order) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted font-manrope text-[14px]">
-          Order not found
+      <div className="max-w-360 mx-auto py-16 text-center">
+        <p className="font-manrope text-[15px] text-white mb-2">
+          {isError ? "Could not load this order" : "Order not found"}
         </p>
+        <p className="font-manrope text-[13px] text-muted mb-6">
+          {isError
+            ? error?.message
+            : "It may have been cancelled, or belong to another vendor."}
+        </p>
+        <button
+          onClick={() => router.push("/vendor/dashboard/orders")}
+          className="px-4 py-2.5 rounded-lg border border-white/10 font-manrope text-[13px] text-white hover:bg-white/05 transition-colors"
+        >
+          Back to Orders
+        </button>
       </div>
     );
   }
 
-  const statusColors = {
-    Processing: "bg-info/10 text-info",
-    Shipped: "bg-info/10 text-info",
-    Delivered: "bg-success/10 text-success",
-    "Pending Approval": "bg-warning/10 text-warning",
-    Cancelled: "bg-white/08 text-muted",
-  };
-
   return (
     <div className="max-w-360 mx-auto bg-background">
-      {/* Back Button */}
-      <motion.button
-        initial={{ opacity: 0, x: -10 }}
-        animate={{ opacity: 1, x: 0 }}
+      <button
         onClick={() => router.back()}
         className="flex items-center gap-2 text-muted hover:text-white font-manrope text-[14px] font-medium mb-6 transition-colors"
       >
         <ArrowLeft size={18} />
         Back to Orders
-      </motion.button>
+      </button>
 
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="flex items-center justify-between mb-8"
-      >
-        <div className="flex items-center gap-4">
-          <h1 className="font-manrope text-[28px] font-bold text-white">
-            Order #{order.orderNumber}
-          </h1>
-          <span
-            className={`px-3 py-1.5 rounded-lg font-manrope text-[12px] font-bold ${
-              statusColors[order.status]
-            }`}
-          >
-            {order.status}
-          </span>
-        </div>
+      <div className="flex flex-wrap items-center gap-4 mb-4">
+        <h1 className="font-manrope text-[28px] font-bold text-white">
+          Order #{pick(order, "orderNumber", "number") ?? orderId}
+        </h1>
+        <StatusChip status={pick(order, "statusName", "status")} />
+      </div>
 
-        <div className="flex items-center gap-3">
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] font-medium text-white hover:bg-white/05 transition-colors"
-          >
-            <Printer size={16} />
-            Print Invoice
-          </motion.button>
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="flex items-center gap-2 px-4 py-2.5 bg-accent-solid text-white rounded-lg font-manrope text-[13px] font-medium hover:bg-white/10 transition-colors"
-          >
-            Update Status
-            <ChevronDown size={16} />
-          </motion.button>
-        </div>
-      </motion.div>
-
-      {/* Placed Date */}
       <p className="flex items-center gap-2 text-white font-semibold font-manrope text-[13px] mb-8">
         <span className="w-6 h-6 bg-white/08 rounded flex items-center justify-center">
-          <Calendar className="text-white " strokeWidth={2} size={30} />
+          <Calendar className="text-white" strokeWidth={2} size={14} />
         </span>
-        Placed on {order.placedAt}
+        Placed on {date(pick(order, "placedAt", "createdAt", "orderDate"))}
       </p>
 
-      {/* Main Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left Column - Items & Activity */}
+        {/* ── Items ─────────────────────────────────────────────────────── */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Items Ordered */}
-          <motion.div
+          <motion.section
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="bg-surface rounded-xl border border-white/08 overflow-hidden"
           >
-            <div className="px-6 py-3 border-b border-white/08 flex items-center justify-between">
+            <div className="px-6 py-3 border-b border-white/08">
               <h2 className="font-manrope text-[16px] font-bold text-white">
-                Items Ordered ({order.items.length})
+                Items Ordered{items.length ? ` (${items.length})` : ""}
               </h2>
-              <button className="text-info font-manrope text-[13px] font-medium hover:underline cursor-pointer">
-                Edit Order
-              </button>
             </div>
 
-            {/* Table Header */}
-            <div className="px-6 py-3 bg-white/05 border-b border-white/08">
-              <div className="grid grid-cols-[1fr_100px_80px_100px] gap-4">
-                <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-                  PRODUCT
-                </span>
-                <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider text-right">
-                  PRICE
-                </span>
-                <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider text-center">
-                  QTY
-                </span>
-                <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider text-right">
-                  TOTAL
-                </span>
-              </div>
-            </div>
-
-            {/* Items */}
-            <div className="divide-y divide-white/08">
-              {order.items.map((item, index) => (
-                <motion.div
-                  key={item.id}
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="p-6"
-                >
-                  <div className="grid grid-cols-[1fr_100px_80px_100px] gap-4 items-center">
-                    <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 bg-white/08 rounded-lg flex items-center justify-center shrink-0">
-                        <span className="text-[24px]">📦</span>
-                      </div>
-                      <div>
-                        <h3 className="font-manrope text-[14px] font-medium text-white mb-1">
-                          {item.name}
-                        </h3>
-                        <p className="font-manrope text-[12px] text-white">
-                          {item.sku}
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-manrope text-[14px] text-white text-right">
-                      ${item.price.toFixed(2)}
-                    </span>
-                    <span className="font-manrope text-[14px] text-white text-center">
-                      {item.quantity}
-                    </span>
-                    <span className="font-manrope text-[14px] font-bold text-white text-right">
-                      ${item.total.toFixed(2)}
-                    </span>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Totals */}
-            <div className="p-6 bg-white/05 border-t border-white/08">
-              <div className="space-y-3 max-w-md ml-auto">
-                <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[13px] text-muted">
-                    Subtotal
-                  </span>
-                  <span className="font-manrope text-[14px] text-white">
-                    ${order.subtotal.toFixed(2)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[13px] text-muted">
-                    Shipping ({order.shippingType})
-                  </span>
-                  <span className="font-manrope text-[14px] text-white">
-                    ${order.shipping.toFixed(2)}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[13px] text-muted">
-                    Tax ({order.taxRate}%)
-                  </span>
-                  <span className="font-manrope text-[14px] text-white">
-                    ${order.tax.toFixed(2)}
-                  </span>
-                </div>
-                <div className="pt-3 border-t border-white/08 flex items-center justify-between">
-                  <span className="font-manrope text-[16px] font-bold text-white">
-                    Total
-                  </span>
-                  <span className="font-manrope text-[18px] font-bold text-white">
-                    ${order.total.toFixed(2)}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Order Activity */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-surface rounded-xl border border-white/08 p-6"
-          >
-            <h2 className="font-manrope text-[16px] font-bold text-white mb-6">
-              Order Activity
-            </h2>
-
-            <div className="space-y-6">
-              {order.activity.map((activity, index) => (
-                <div key={activity.id} className="flex gap-4">
-                  <div className="flex flex-col items-center">
-                    {activity.completed ? (
-                      <CheckCircle2
-                        size={20}
-                        className="text-success flex-shrink-0"
-                      />
-                    ) : (
-                      <Circle
-                        size={20}
-                        className="text-muted flex-shrink-0"
-                      />
-                    )}
-                    {index < order.activity.length - 1 && (
-                      <div
-                        className={`w-0.5 flex-1 mt-2 ${
-                          activity.completed ? "bg-success-solid" : "bg-white/10"
-                        }`}
-                        style={{ minHeight: "32px" }}
-                      />
-                    )}
-                  </div>
-                  <div className="flex-1 pb-2">
-                    <h3 className="font-manrope text-[14px] font-bold text-white mb-1">
-                      {activity.status}
-                    </h3>
-                    <p className="font-manrope text-[12px] text-muted mb-1">
-                      {activity.timestamp}
-                    </p>
-                    {activity.description && (
-                      <p className="font-manrope text-[13px] text-muted">
-                        {activity.description}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-
-        {/* Right Column - Customer, Delivery, Payment, Notes */}
-        <div className="space-y-6">
-          {/* Customer Details */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.15 }}
-            className="bg-surface rounded-xl border border-white/08 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-manrope text-[16px] font-bold text-white">
-                Customer Details
-              </h2>
-              <button className="text-muted hover:text-white">
-                <Edit2 size={16} />
-              </button>
-            </div>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 bg-chart-1/10 rounded-full flex items-center justify-center text-chart-1 font-manrope text-[14px] font-bold">
-                {order.customer.name
-                  .split(" ")
-                  .map((n) => n[0])
-                  .join("")}
-              </div>
-              <div>
-                <h3 className="font-manrope text-[14px] font-bold text-white">
-                  {order.customer.name}
-                </h3>
-                <p className="font-manrope text-[12px] text-muted">
-                  {order.customer.memberType}
+            {items.length === 0 ? (
+              <div className="px-6 py-12 text-center">
+                <Package className="mx-auto mb-3 text-muted" size={28} strokeWidth={1.5} />
+                <p className="font-manrope text-[13px] text-muted">
+                  No line items on this order.
                 </p>
               </div>
-            </div>
+            ) : (
+              <>
+                {/* Desktop table */}
+                <div className="hidden md:block">
+                  <div className="px-6 py-3 bg-white/05 border-b border-white/08 grid grid-cols-[1fr_110px_70px_110px] gap-4">
+                    {["Product", "Price", "Qty", "Total"].map((h, i) => (
+                      <span
+                        key={h}
+                        className={`font-manrope text-[11px] font-bold text-muted uppercase tracking-wider ${
+                          i === 0 ? "" : i === 2 ? "text-center" : "text-right"
+                        }`}
+                      >
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="divide-y divide-white/08">
+                    {items.map((item, index) => {
+                      const price = pick(item, "unitPrice", "price");
+                      const qty = pick(item, "quantity", "qty") ?? 0;
+                      return (
+                        <div
+                          key={pick(item, "id", "productId") ?? index}
+                          className="px-6 py-5 grid grid-cols-[1fr_110px_70px_110px] gap-4 items-center"
+                        >
+                          <div>
+                            <h3 className="font-manrope text-[14px] font-medium text-white">
+                              {pick(item, "productName", "name") ?? DASH}
+                            </h3>
+                            <p className="font-manrope text-[12px] text-muted">
+                              {pick(item, "sku", "productSku") ?? DASH}
+                            </p>
+                          </div>
+                          <span className="font-manrope text-[14px] text-white text-right">
+                            {money(price)}
+                          </span>
+                          <span className="font-manrope text-[14px] text-white text-center">
+                            {qty}
+                          </span>
+                          <span className="font-manrope text-[14px] font-bold text-white text-right">
+                            {money(
+                              pick(item, "total", "lineTotal", "subtotal") ??
+                                (typeof price === "number" ? price * qty : undefined),
+                            )}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
 
+                {/* Mobile cards — a 4-column table does not survive a phone. */}
+                <div className="md:hidden divide-y divide-white/08">
+                  {items.map((item, index) => {
+                    const price = pick(item, "unitPrice", "price");
+                    const qty = pick(item, "quantity", "qty") ?? 0;
+                    return (
+                      <div key={pick(item, "id", "productId") ?? index} className="p-5 space-y-3">
+                        <div>
+                          <h3 className="font-manrope text-[14px] font-medium text-white">
+                            {pick(item, "productName", "name") ?? DASH}
+                          </h3>
+                          <p className="font-manrope text-[12px] text-muted">
+                            {pick(item, "sku", "productSku") ?? DASH}
+                          </p>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="font-manrope text-[13px] text-muted">
+                            {money(price)} × {qty}
+                          </span>
+                          <span className="font-manrope text-[14px] font-bold text-white">
+                            {money(
+                              pick(item, "total", "lineTotal", "subtotal") ??
+                                (typeof price === "number" ? price * qty : undefined),
+                            )}
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            <div className="p-6 bg-white/05 border-t border-white/08">
+              <div className="space-y-3 max-w-md ml-auto">
+                {[
+                  ["Subtotal", pick(order, "subtotal", "subTotal")],
+                  ["Shipping", pick(order, "shippingCost", "shipping")],
+                  ["Tax", pick(order, "tax", "taxAmount")],
+                  ["Discount", pick(order, "discount", "discountAmount")],
+                ]
+                  // A line that is absent is not the same as a line that is zero;
+                  // only the ones the backend sent are shown.
+                  .filter(([, value]) => typeof value === "number")
+                  .map(([label, value]) => (
+                    <div key={label} className="flex items-center justify-between">
+                      <span className="font-manrope text-[13px] text-muted">{label}</span>
+                      <span className="font-manrope text-[14px] text-white">{money(value)}</span>
+                    </div>
+                  ))}
+                <div className="pt-3 border-t border-white/08 flex items-center justify-between">
+                  <span className="font-manrope text-[16px] font-bold text-white">Total</span>
+                  <span className="font-manrope text-[18px] font-bold text-white">
+                    {money(pick(order, "total", "totalAmount", "grandTotal"))}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.section>
+        </div>
+
+        {/* ── Customer, delivery, notes ─────────────────────────────────── */}
+        <div className="space-y-6">
+          <Panel title="Customer" delay={0.1}>
             <div className="space-y-3">
-              <div className="flex items-start gap-3">
-                <span className="text-[16px] mt-0.5">📧</span>
-                <div>
-                  <p className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-1">
-                    EMAIL
-                  </p>
-                  <p className="font-manrope text-[13px] text-white">
-                    {order.customer.email}
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <span className="text-[16px] mt-0.5">📱</span>
-                <div>
-                  <p className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-1">
-                    PHONE
-                  </p>
-                  <p className="font-manrope text-[13px] text-white">
-                    {order.customer.phone}
-                  </p>
-                </div>
-              </div>
+              <Row label="Name">
+                {pick(order, "userFullName", "customerName", "shippingFullName", "guestName")}
+              </Row>
+              <Row label="Email">{pick(order, "userEmail", "customerEmail", "guestEmail")}</Row>
+              <Row label="Phone">
+                {pick(order, "customerPhone", "shippingPhone", "guestPhone")}
+              </Row>
             </div>
-
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
+            <button
+              type="button"
+              onClick={() => router.push("/vendor/dashboard/messages")}
               className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 bg-white/05 border border-white/08 rounded-lg font-manrope text-[13px] font-medium text-white hover:bg-white/08 transition-colors"
             >
               <MessageSquare size={16} />
               Message Customer
-            </motion.button>
-          </motion.div>
+            </button>
+          </Panel>
 
-          {/* Delivery Address */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="bg-surface rounded-xl border border-white/08 overflow-hidden"
+          {/* The map was a grey box captioned "Google Maps" — no map was ever
+              loaded. Dropped in favour of the address the order carries. */}
+          <Panel
+            title="Delivery"
+            delay={0.15}
+            action={<MapPin size={16} className="text-muted" />}
           >
-            {/* Map Placeholder */}
-            <div className="h-[180px] bg-white/10 relative">
-              <div className="absolute inset-0 flex items-center justify-center text-muted">
-                <MapPin size={48} />
-              </div>
-              <div className="absolute bottom-3 right-3 px-2 py-1 bg-surface rounded text-[16px] font-manrope font-medium text-muted">
-                Google Maps
-              </div>
-            </div>
-
-            <div className="p-6">
-              <h2 className="font-manrope text-[16px] font-bold text-white mb-4">
-                Delivery Address
-              </h2>
-
-              <div className="space-y-1 mb-4">
-                <p className="font-manrope text-[14px] text-white">
-                  {order.delivery.address}
-                </p>
-                <p className="font-manrope text-[14px] text-white">
-                  {order.delivery.suite}
-                </p>
-                <p className="font-manrope text-[14px] text-white">
-                  {order.delivery.city}
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-white/08 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-                    CARRIER
-                  </span>
-                  <span className="font-manrope text-[13px] text-white">
-                    {order.delivery.carrier}
-                  </span>
-                  <span className="px-2 py-1 bg-success/10 text-success rounded text-[11px] font-manrope font-bold">
-                    {order.delivery.carrierStatus}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-                    TRACKING NUMBER
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-manrope text-[13px] text-muted">
-                      {order.delivery.trackingNumber}
-                    </span>
+            <div className="space-y-3">
+              <Row label="Address">{pick(order, "shippingAddress", "address")}</Row>
+              <Row label="City">{pick(order, "shippingCity", "city")}</Row>
+              <Row label="State">{pick(order, "shippingState", "state")}</Row>
+              <Row label="Agent">{pick(order, "deliveryAgentName")}</Row>
+              <Row label="Agent phone">{pick(order, "deliveryAgentPhone")}</Row>
+              <Row label="Tracking">
+                {trackingNumber ? (
+                  <span className="inline-flex items-center gap-2">
+                    {trackingNumber}
                     <button
+                      type="button"
                       onClick={handleCopyTracking}
-                      disabled={order.delivery.trackingNumber === "Pending"}
-                      className="text-muted hover:text-white disabled:opacity-30"
+                      aria-label="Copy tracking number"
+                      className="text-muted hover:text-white"
                     >
                       <Copy size={14} />
                     </button>
-                  </div>
-                </div>
-              </div>
-
-              <motion.button
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-                className="w-full mt-4 px-4 py-2.5 bg-accent-solid text-white rounded-lg font-manrope text-[13px] font-medium hover:bg-white/10 transition-colors"
-              >
-                Assign Delivery
-              </motion.button>
+                  </span>
+                ) : undefined}
+              </Row>
+              {pick(order, "shippingNotes") && (
+                <Row label="Notes">{pick(order, "shippingNotes")}</Row>
+              )}
             </div>
-          </motion.div>
+          </Panel>
 
-          {/* Payment Status */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.25 }}
-            className="bg-surface rounded-xl border border-white/08 p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-manrope text-[16px] font-bold text-white">
-                Payment Status
-              </h2>
-              <span className="px-3 py-1 bg-success/10 text-success rounded-full text-[11px] font-manrope font-bold flex items-center gap-1.5">
-                <CheckCircle2 size={12} />
-                {order.payment.status}
-              </span>
-            </div>
-
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-8 bg-[#1A1F71] rounded flex items-center justify-center text-white text-[16px] font-bold">
-                VISA
+          {/* Payment was a hardcoded VISA badge with a card expiry the backend
+              has no field for. Only what the order carries is shown. */}
+          {(pick(order, "paymentStatus", "paymentStatusName") ||
+            pick(order, "paymentReference", "transactionId") ||
+            pick(order, "paymentMethod")) && (
+            <Panel title="Payment" delay={0.2}>
+              <div className="space-y-3">
+                <Row label="Status">{pick(order, "paymentStatusName", "paymentStatus")}</Row>
+                <Row label="Method">{pick(order, "paymentMethod")}</Row>
+                <Row label="Reference">
+                  {pick(order, "paymentReference", "transactionId")}
+                </Row>
               </div>
-              <div>
-                <p className="font-manrope text-[14px] font-medium text-white">
-                  {order.payment.method}
-                </p>
-                <p className="font-manrope text-[12px] text-muted">
-                  {order.payment.expiry}
-                </p>
-              </div>
-            </div>
+            </Panel>
+          )}
 
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-manrope text-[13px] text-muted">
-                  Transaction ID
+          <Panel title="Internal Notes" delay={0.25}>
+            {pick(order, "customerNotes") && (
+              <p className="mb-4 font-manrope text-[13px] text-muted">
+                <span className="block text-[11px] font-bold uppercase tracking-wider mb-1">
+                  From the customer
                 </span>
-                <span className="font-manrope text-[13px] font-medium text-white">
-                  {order.payment.transactionId}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="font-manrope text-[13px] text-muted">
-                  Payment Date
-                </span>
-                <span className="font-manrope text-[13px] font-medium text-white">
-                  {order.payment.paymentDate}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-
-          {/* Internal Notes */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="bg-surface rounded-xl border border-white/08 px-6 py-3"
-          >
-            <h2 className="font-manrope text-[16px] font-bold text-white mb-4">
-              Internal Notes
-            </h2>
-
+                {pick(order, "customerNotes")}
+              </p>
+            )}
             <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add a note for the operations team..."
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Add a note for the operations team…"
               className="w-full h-24 px-4 py-3 bg-white/10 border border-white/08 rounded-lg font-manrope text-[13px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent resize-none"
             />
-
-            <motion.button
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.99 }}
-              onClick={handleSaveNotes}
-              disabled={isSavingNotes}
+            <button
+              type="button"
+              onClick={handleSaveNote}
+              disabled={addNote.isPending || !note.trim()}
               className="w-full mt-3 px-4 py-2.5 bg-white/05 border border-white/08 rounded-lg font-manrope text-[13px] font-medium text-white hover:bg-white/10 transition-colors disabled:opacity-50"
             >
-              {isSavingNotes ? "Saving..." : "SAVE NOTE"}
-            </motion.button>
-          </motion.div>
+              {addNote.isPending ? "Saving…" : "Save note"}
+            </button>
+          </Panel>
         </div>
       </div>
     </div>

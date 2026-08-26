@@ -1,4 +1,3 @@
-import UnderConstruction from "@/components/shared/under-construction";
 import HeroSection from "@/components/shared/home/hero";
 import StatsStrip from "@/components/shared/home/trust-strip";
 import ZioraSection from "@/components/shared/home/ziora-teaser";
@@ -8,7 +7,7 @@ import ServicesSection from "@/components/shared/home/services";
 import PortfolioSection from "@/components/shared/home/featured-projects";
 import MaterialsBogatSection from "@/components/shared/home/materials-bogat";
 import WhyChooseTBM from "@/components/shared/home/why-choose-tbm";
-import AppDownloadBanner from "@/components/shared/home/app-download";
+import CTASection from "@/components/shared/home/cta";
 
 export const metadata = {
   title: "TBM Building Services – Luxury Renovation & Smart Construction",
@@ -41,40 +40,39 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="bg-black min-h-screen">
-      {/* ── PUBLIC GATE ──
-          Shows UnderConstruction unless NEXT_PUBLIC_SITE_LIVE === "true".
-          Prod: leave the var unset → gate shows. Launch = set it to "true".
-          Staging/local: set NEXT_PUBLIC_SITE_LIVE=true to view the real site. */}
-      {process.env.NEXT_PUBLIC_SITE_LIVE !== "true" && <UnderConstruction />}
       {/* 1. Hero — split layout */}
       <HeroSection />
 
-      {/* 2. Stats — 4-stat horizontal bar */}
+      {/* 2. Stats — trust indicators */}
       <StatsStrip />
 
-      {/* 3. Ziora AI — 3-panel app mockup */}
-      <ZioraSection />
-
-      {/* 4. Before & After — 4-across transformation gallery */}
+      {/* 3. Before & After — 4-across transformation gallery (real project proof) */}
       <TransformationSection />
       <div className="bg-white/35 h-[0.35px] w-[80%] mx-auto"></div>
-      {/* 5. The TBM × Ziora System — 4-step process */}
+      {/* 4. How TBM Works — 4-step process */}
       <ProcessSection />
       <div className="bg-white/35 h-[0.35px] w-[80%] mx-auto"></div>
-      {/* 6. Our Services — 6 image cards */}
+      {/* 5. Our Services — 6 image cards */}
       <ServicesSection />
 
-      {/* 7. Explore Our Work — filterable portfolio */}
+      {/* 6. Explore Our Work — filterable portfolio */}
       {/* <PortfolioSection /> */}
 
-      {/* 8. Bogat Marketplace — product showcase */}
-      <MaterialsBogatSection />
-
-      {/* 9. Why Choose TBM + Testimonials + Final CTA */}
+      {/* 7. Why Choose TBM + Final CTA — trust signals */}
       <WhyChooseTBM />
 
-      {/* 10. App Download */}
-      {/* <AppDownloadBanner /> */}
+      {/* 8. Ziora AI — supporting technology, introduced only after TBM's
+          services, project proof, process, and trust signals (per the
+          client audit: Ziora must never compete with or precede TBM's
+          core offer) */}
+      <ZioraSection />
+
+      {/* 9. Bogat Marketplace — product showcase */}
+      <MaterialsBogatSection />
+
+      {/* 10. Final conversion section — repeats the booking CTA at the very
+          bottom of the page, per the audit's homepage hierarchy (row 8) */}
+      <CTASection />
     </main>
   );
 }

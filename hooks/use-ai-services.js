@@ -8,7 +8,10 @@ import {
   aiUsageApi,
   aiAssistantApi,
   aiStylesApi,
+  aiRenovationApi,
 } from "@/lib/api/ai-services";
+import { showToast } from "@/components/shared/toast";
+import { useSession } from "@/hooks/use-session";
 
 // ─── Query key factory ────────────────────────────────────────────────────────
 export const aiKeys = {
@@ -16,6 +19,8 @@ export const aiKeys = {
   project: (id) => ["ai", "project", id],
   styles: () => ["ai", "styles"],
   usageSummary: () => ["ai", "usage", "summary"],
+  renovationEstimates: () => ["ai", "renovation-estimates"],
+  renovationEstimate: (id) => ["ai", "renovation-estimate", id],
   creditBalance: () => ["ai", "credits", "balance"],
   toolAction: (id) => ["ai", "tool-action", id],
 };
@@ -34,6 +39,43 @@ export function useAIStyles() {
     staleTime: 30 * 60 * 1000,
     gcTime: 60 * 60 * 1000,
     select: (res) => (Array.isArray(res) ? res : (res?.data ?? [])),
+  });
+}
+
+// ─── AI Renovation Estimator ────────────────────────────────────────────────
+
+/**
+ * POST /ai/renovation/estimate — no query key, since a "get estimate" run
+ * isn't a resource to cache or refetch; each submission is its own mutation.
+ */
+export function useCreateRenovationEstimate() {
+  return useMutation({
+    mutationFn: (data) => aiRenovationApi.createEstimate(data),
+    onError: (error) =>
+      showToast.error(error.message || "Failed to generate estimate"),
+  });
+}
+
+/** GET /ai/renovation/estimates — the "My Estimates" / BOQ history list. */
+export function useRenovationEstimates() {
+  const { isAuthenticated } = useSession();
+  return useQuery({
+    queryKey: aiKeys.renovationEstimates(),
+    queryFn: aiRenovationApi.getEstimates,
+    enabled: isAuthenticated,
+    staleTime: 2 * 60 * 1000,
+    select: (res) => (Array.isArray(res?.estimates) ? res.estimates : []),
+  });
+}
+
+/** GET /ai/renovation/estimates/{id} — the same full shape POST returns. */
+export function useRenovationEstimate(estimateId) {
+  const { isAuthenticated } = useSession();
+  return useQuery({
+    queryKey: aiKeys.renovationEstimate(estimateId),
+    queryFn: () => aiRenovationApi.getEstimate(estimateId),
+    enabled: isAuthenticated && !!estimateId,
+    staleTime: 5 * 60 * 1000,
   });
 }
 

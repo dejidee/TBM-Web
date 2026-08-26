@@ -19,7 +19,7 @@ export default function ProjectDetailPage() {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 pt-12 md:pt-0 w-full">
+      <div className="space-y-6 w-full">
         {/* Back link */}
         <button
           onClick={() => router.push("/dashboard/projects")}

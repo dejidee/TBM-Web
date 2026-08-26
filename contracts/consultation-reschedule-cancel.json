@@ -1,0 +1,36 @@
+{
+  "recordedAt": "2026-08-12",
+  "note": "Shapes only, no values. Recorded manually: booked a free consultation, rescheduled it, then cancelled it — same enveloped bare ConsultationDto both times, matching GET /consultations/{id}.",
+  "operations": {
+    "PUT /api/v1/consultations/{id}/reschedule": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string", "projectId": "null", "typeKey": "string", "typeName": "string",
+        "format": "string", "durationMinutes": "number", "fee": "number",
+        "scheduledStart": "string", "scheduledEnd": "string", "status": "string",
+        "paymentVerified": "boolean", "paymentReference": "null",
+        "contactName": "string", "contactEmail": "string", "contactPhone": "string",
+        "propertyType": "string", "siteAddress": "string", "siteCity": "string", "siteState": "string",
+        "notes": "string", "cancelledAtUtc": "null", "cancellationReason": "null",
+        "cancellationRequiresManualRefundReview": "boolean"
+      },
+      "errors": "null"
+    },
+    "POST /api/v1/consultations/{id}/cancel": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string", "projectId": "null", "typeKey": "string", "typeName": "string",
+        "format": "string", "durationMinutes": "number", "fee": "number",
+        "scheduledStart": "string", "scheduledEnd": "string", "status": "string",
+        "paymentVerified": "boolean", "paymentReference": "null",
+        "contactName": "string", "contactEmail": "string", "contactPhone": "string",
+        "propertyType": "string", "siteAddress": "string", "siteCity": "string", "siteState": "string",
+        "notes": "string", "cancelledAtUtc": "string", "cancellationReason": "string",
+        "cancellationRequiresManualRefundReview": "boolean"
+      },
+      "errors": "null"
+    }
+  }
+}

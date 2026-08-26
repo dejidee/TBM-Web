@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { vendorInventoryAPI } from "@/lib/api/vendor/inventory";
+import { showToast } from "@/components/shared/toast";
 
 // Query keys
 export const INVENTORY_QUERY_KEYS = {
@@ -55,6 +56,9 @@ export function useAddProduct() {
       queryClient.invalidateQueries({ queryKey: INVENTORY_QUERY_KEYS.stats });
       queryClient.invalidateQueries({ queryKey: ["inventory", "products"] });
     },
+    onError: (error) => {
+      showToast.error(error.message || "Failed to add product");
+    },
   });
 }
 
@@ -69,6 +73,9 @@ export function useUpdateProduct() {
       // Invalidate both stats and products queries
       queryClient.invalidateQueries({ queryKey: INVENTORY_QUERY_KEYS.stats });
       queryClient.invalidateQueries({ queryKey: ["inventory", "products"] });
+    },
+    onError: (error) => {
+      showToast.error(error.message || "Failed to update product");
     },
   });
 }
@@ -85,6 +92,9 @@ export function useUpdateProductQuantity() {
       queryClient.invalidateQueries({ queryKey: INVENTORY_QUERY_KEYS.stats });
       queryClient.invalidateQueries({ queryKey: ["inventory", "products"] });
     },
+    onError: (error) => {
+      showToast.error(error.message || "Failed to update quantity");
+    },
   });
 }
 
@@ -97,6 +107,9 @@ export function useDeleteProduct() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: INVENTORY_QUERY_KEYS.stats });
       queryClient.invalidateQueries({ queryKey: ["inventory", "products"] });
+    },
+    onError: (error) => {
+      showToast.error(error.message || "Failed to delete product");
     },
   });
 }

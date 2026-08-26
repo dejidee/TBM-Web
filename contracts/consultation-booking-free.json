@@ -1,0 +1,101 @@
+{
+  "recordedAt": "2026-08-12",
+  "note": "Shapes only, no values. Recorded by scripts/record-consultation-shape.mjs, which books one free consultation and cancels it.",
+  "operations": {
+    "POST /api/v1/consultations": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "consultation": {
+          "id": "string",
+          "projectId": "null",
+          "typeKey": "string",
+          "typeName": "string",
+          "format": "string",
+          "durationMinutes": "number",
+          "fee": "number",
+          "scheduledStart": "string",
+          "scheduledEnd": "string",
+          "status": "string",
+          "paymentVerified": "boolean",
+          "paymentReference": "null",
+          "contactName": "string",
+          "contactEmail": "string",
+          "contactPhone": "string",
+          "propertyType": "string",
+          "siteAddress": "string",
+          "siteCity": "string",
+          "siteState": "string",
+          "notes": "string",
+          "cancelledAtUtc": "null",
+          "cancellationReason": "null",
+          "cancellationRequiresManualRefundReview": "boolean"
+        },
+        "managementToken": "null"
+      },
+      "errors": "null"
+    },
+    "GET /api/v1/consultations/{id}": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "id": "string",
+        "projectId": "null",
+        "typeKey": "string",
+        "typeName": "string",
+        "format": "string",
+        "durationMinutes": "number",
+        "fee": "number",
+        "scheduledStart": "string",
+        "scheduledEnd": "string",
+        "status": "string",
+        "paymentVerified": "boolean",
+        "paymentReference": "null",
+        "contactName": "string",
+        "contactEmail": "string",
+        "contactPhone": "string",
+        "propertyType": "string",
+        "siteAddress": "string",
+        "siteCity": "string",
+        "siteState": "string",
+        "notes": "string",
+        "cancelledAtUtc": "null",
+        "cancellationReason": "null",
+        "cancellationRequiresManualRefundReview": "boolean"
+      },
+      "errors": "null"
+    },
+    "GET /api/v1/consultations/mine": {
+      "success": "boolean",
+      "message": "string",
+      "data": [
+        {
+          "id": "string",
+          "projectId": "null",
+          "typeKey": "string",
+          "typeName": "string",
+          "format": "string",
+          "durationMinutes": "number",
+          "fee": "number",
+          "scheduledStart": "string",
+          "scheduledEnd": "string",
+          "status": "string",
+          "paymentVerified": "boolean",
+          "paymentReference": "null",
+          "contactName": "string",
+          "contactEmail": "string",
+          "contactPhone": "string",
+          "propertyType": "string",
+          "siteAddress": "string",
+          "siteCity": "string",
+          "siteState": "string",
+          "notes": "string",
+          "cancelledAtUtc": "null",
+          "cancellationReason": "null",
+          "cancellationRequiresManualRefundReview": "boolean"
+        }
+      ],
+      "errors": "null"
+    }
+  }
+}

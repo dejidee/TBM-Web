@@ -180,8 +180,12 @@ export default function FinancialReportPage() {
                 background: "linear-gradient(135deg, var(--color-accent-solid) 0%, var(--color-accent-solid-dim) 100%)",
               }}
             >
-              <Download size={16} />
-              Export Report
+              {isExporting ? (
+                <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+              ) : (
+                <Download size={16} />
+              )}
+              {isExporting ? "Exporting…" : "Export Report"}
             </motion.button>
           </div>
         </div>

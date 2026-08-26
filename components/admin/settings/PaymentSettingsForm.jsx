@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import Image from "next/image";
 import { ChevronDown } from "lucide-react";
 import { paymentSettingsSchema } from "@/lib/validations/admin-settings";
-import { currencyOptions } from "@/lib/mock/settings";
+import { currencyOptions } from "@/lib/data/currencies";
 import percentageIcon from "@/public/icons/settings/percentage.svg";
 import dollarIcon from "@/public/icons/settings/dollar.svg";
 
@@ -36,7 +36,7 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
               {/* Base Platform Fee */}
               <div>
                 <label
-                  htmlFor="baseFee"
+                  htmlFor="basePlatformFee"
                   className="block font-inter text-[14px] font-medium text-white/70 mb-2"
                 >
                   Base Platform Fee (%)
@@ -48,12 +48,12 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
                     className="absolute left-4 top-1/2 -translate-y-1/2 h-[16px] w-[16px] z-10 pointer-events-none"
                   />
                   <Field
-                    id="baseFee"
-                    name="baseFee"
+                    id="basePlatformFee"
+                    name="basePlatformFee"
                     type="number"
                     step="0.1"
                     className={`w-full pl-12 pr-12 py-2.5 bg-surface-raised border rounded-lg font-inter text-[14px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
-                      errors.baseFee && touched.baseFee
+                      errors.basePlatformFee && touched.basePlatformFee
                         ? "border-danger/50 focus:ring-danger/30"
                         : "border-white/10 focus:ring-accent/30"
                     }`}
@@ -63,11 +63,11 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
                   </span>
                 </div>
                 <ErrorMessage
-                  name="baseFee"
+                  name="basePlatformFee"
                   component="p"
                   className="font-inter text-[12px] text-danger mt-1"
                 />
-                {!errors.baseFee && (
+                {!errors.basePlatformFee && (
                   <p className="font-inter text-[12px] text-white/30 mt-1">
                     Applied to all incoming transactions.
                   </p>
@@ -77,7 +77,7 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
               {/* Fixed Fee */}
               <div>
                 <label
-                  htmlFor="fixedFee"
+                  htmlFor="fixedFeePerTransaction"
                   className="block font-inter text-[14px] font-medium text-white/70 mb-2"
                 >
                   Fixed Fee Per Transaction
@@ -89,23 +89,23 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
                     className="absolute left-4 top-1/2 -translate-y-1/2 h-[16px] w-[16px] z-10 pointer-events-none"
                   />
                   <Field
-                    id="fixedFee"
-                    name="fixedFee"
+                    id="fixedFeePerTransaction"
+                    name="fixedFeePerTransaction"
                     type="number"
                     step="0.01"
                     className={`w-full pl-12 pr-4 py-2.5 bg-surface-raised border rounded-lg font-inter text-[14px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
-                      errors.fixedFee && touched.fixedFee
+                      errors.fixedFeePerTransaction && touched.fixedFeePerTransaction
                         ? "border-danger/50 focus:ring-danger/30"
                         : "border-white/10 focus:ring-accent/30"
                     }`}
                   />
                 </div>
                 <ErrorMessage
-                  name="fixedFee"
+                  name="fixedFeePerTransaction"
                   component="p"
                   className="font-inter text-[12px] text-danger mt-1"
                 />
-                {!errors.fixedFee && (
+                {!errors.fixedFeePerTransaction && (
                   <p className="font-inter text-[12px] text-white/30 mt-1">
                     Additional flat rate charge.
                   </p>
@@ -116,7 +116,7 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
             {/* Default Currency */}
             <div className="mb-6">
               <label
-                htmlFor="currency"
+                htmlFor="defaultCurrency"
                 className="block font-inter text-[14px] font-medium text-white/70 mb-2"
               >
                 Default Currency
@@ -124,10 +124,10 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
               <div className="relative">
                 <Field
                   as="select"
-                  id="currency"
-                  name="currency"
+                  id="defaultCurrency"
+                  name="defaultCurrency"
                   className={`appearance-none w-full px-4 py-2.5 bg-surface-raised border rounded-lg font-inter text-[14px] text-white focus:outline-none focus:ring-2 focus:border-transparent transition-all ${
-                    errors.currency && touched.currency
+                    errors.defaultCurrency && touched.defaultCurrency
                       ? "border-danger/50 focus:ring-danger/30"
                       : "border-white/10 focus:ring-accent/30"
                   }`}
@@ -144,7 +144,7 @@ export default function PaymentSettingsForm({ initialValues, onSubmit, onCancel,
                 />
               </div>
               <ErrorMessage
-                name="currency"
+                name="defaultCurrency"
                 component="p"
                 className="font-inter text-[12px] text-danger mt-1"
               />

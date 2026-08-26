@@ -53,19 +53,19 @@ export default function FinalCTA() {
               className="flex flex-col sm:flex-row items-center justify-center gap-3"
             >
               <Link
-                href="/contact?type=consultation"
+                href="/consultation"
                 className="inline-flex items-center justify-center rounded-xl px-8 py-4 text-black font-semibold text-[11px] tracking-[0.2em] uppercase hover:opacity-90 transition-opacity w-full sm:w-auto"
                 style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
               >
                 Start Your Project
               </Link>
               <Link
-                href="/contact"
+                href="/consultation"
                 className="relative inline-flex rounded-xl p-px w-full sm:w-auto hover:opacity-90 transition-opacity"
                 style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
               >
                 <span className="inline-flex items-center justify-center rounded-[11px] bg-[#0d0b08] px-8 py-4 text-[#D4AF37] font-semibold text-[11px] tracking-[0.2em] uppercase w-full">
-                  Book a Free Consultation
+                  Book a Paid Site Inspection
                 </span>
               </Link>
             </motion.div>

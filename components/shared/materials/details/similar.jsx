@@ -6,21 +6,21 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
+/**
+ * Renders nothing when the API returns no siblings.
+ *
+ * This used to fall back to four hardcoded marble tiles with /mock/*.svg
+ * images. A product with no siblings in its category — which is most of the
+ * catalogue — showed a shopper four items that do not exist, each linking
+ * nowhere. An absent section is the honest answer.
+ */
 export default function SimilarStyles({ materials = [] }) {
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollContainerRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
 
-  const products =
-    materials.length > 0
-      ? materials
-      : [
-          { id: 1, name: "Calacatta Gold 12x24", subtitle: "Italian Marble", price: 12.5, image: "/mock/1.svg" },
-          { id: 2, name: "Statuary White 12x24", subtitle: "Premium Porcelain", price: 6.99, image: "/mock/2.svg" },
-          { id: 3, name: "Emperador Dark 12x24", subtitle: "Spanish Marble", price: 9.25, image: "/mock/3.svg" },
-          { id: 4, name: "Travertine Beige 12x24", subtitle: "Natural Stone", price: 5.5, image: "/mock/4.svg" },
-        ];
+  const products = materials;
 
   const updateScrollButtons = () => {
     if (scrollContainerRef.current) {
@@ -51,6 +51,8 @@ export default function SimilarStyles({ materials = [] }) {
     }
   };
 
+  if (products.length === 0) return null;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -69,7 +71,7 @@ export default function SimilarStyles({ materials = [] }) {
             whileTap={{ scale: 0.9 }}
             onClick={() => scroll("left")}
             disabled={!canScrollLeft}
-            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-colors ${
+            className={`w-11 h-11 flex items-center justify-center rounded-full border-2 transition-colors ${
               canScrollLeft
                 ? "border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
                 : "border-white/10 text-white/20 cursor-not-allowed"
@@ -83,7 +85,7 @@ export default function SimilarStyles({ materials = [] }) {
             whileTap={{ scale: 0.9 }}
             onClick={() => scroll("right")}
             disabled={!canScrollRight}
-            className={`w-10 h-10 flex items-center justify-center rounded-full border-2 transition-colors ${
+            className={`w-11 h-11 flex items-center justify-center rounded-full border-2 transition-colors ${
               canScrollRight
                 ? "border-[#D4AF37] text-[#D4AF37] hover:bg-[#D4AF37] hover:text-black"
                 : "border-white/10 text-white/20 cursor-not-allowed"
@@ -107,7 +109,13 @@ export default function SimilarStyles({ materials = [] }) {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
           >
-            <Link href={`/materials/${product.id}`} className="group block w-70 shrink-0">
+            {/* The backend resolves /materials/{idOrSlug}, so an id URL works
+                — but it puts a second address on every product. Prefer the
+                slug and keep one canonical URL per product. */}
+            <Link
+              href={`/materials/${product.slug ?? product.id}`}
+              className="group block w-70 shrink-0"
+            >
               <div
                 className="rounded-lg overflow-hidden border border-white/08 hover:border-white/20 transition-all"
                 style={{ background: "#0d0b08" }}
@@ -118,7 +126,7 @@ export default function SimilarStyles({ materials = [] }) {
                     src={product.image}
                     alt={product.name}
                     fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="object-contain group-hover:scale-105 transition-transform duration-300"
                     sizes="280px"
                   />
                 </div>
@@ -131,10 +139,15 @@ export default function SimilarStyles({ materials = [] }) {
                   <p className="text-sm text-white/40 mb-3">{product.subtitle}</p>
 
                   <div className="flex items-center justify-between">
+                    {/* priceDisplay is always a string, and is already
+                        "Request Price" on quote-only products — so "From" is
+                        only correct when there is a number behind it. */}
                     <div className="flex items-baseline gap-1">
-                      <span className="text-[11px] text-white/40 mr-1">From</span>
+                      {typeof product.price === "number" && (
+                        <span className="text-[11px] text-white/40 mr-1">From</span>
+                      )}
                       <span className="text-lg font-bold text-white">
-                        {product.priceDisplay ||
+                        {product.priceDisplay ??
                           (typeof product.price === "number"
                             ? product.price.toLocaleString("en-NG", {
                                 style: "currency",

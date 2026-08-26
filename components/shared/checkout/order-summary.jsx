@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Lock, ArrowRight, Loader2 } from "lucide-react";
 
 const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=200&h=200&fit=crop";
+  "/product-placeholder.svg";
 
 function SkeletonLine({ w = "w-full", h = "h-3" }) {
   return <div className={`${w} ${h} rounded bg-white/06 animate-pulse`} />;
@@ -58,7 +58,7 @@ export default function OrderSummary({
                   src={item.image || PLACEHOLDER}
                   alt={item.name}
                   fill
-                  className="object-cover"
+                  className="object-contain"
                   sizes="64px"
                 />
               </div>

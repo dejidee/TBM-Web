@@ -1,0 +1,348 @@
+{
+  "endpoint": "/portfolio",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "success": "boolean",
+    "message": "string",
+    "data": {
+      "items": {
+        "type": "array",
+        "length": 17,
+        "of": [
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 5,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          },
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 4,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          },
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 3,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "null",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          },
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 7,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          },
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 6,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          },
+          {
+            "id": "string",
+            "vendorId": "string",
+            "vendorName": "string",
+            "title": "string",
+            "location": "string",
+            "category": "string",
+            "budgetMin": "null",
+            "budgetMax": "null",
+            "budgetDisplay": "string",
+            "durationMinDays": "null",
+            "durationMaxDays": "null",
+            "durationDisplay": "string",
+            "description": "string",
+            "scopeOfWork": {
+              "type": "array",
+              "length": 5,
+              "of": "string"
+            },
+            "status": "string",
+            "rejectionReason": "null",
+            "publishedAt": "string",
+            "createdAt": "string",
+            "beforeImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "afterImages": {
+              "type": "array",
+              "length": 1,
+              "of": {
+                "id": "string",
+                "imageUrl": "string",
+                "caption": "string",
+                "sortOrder": "number"
+              }
+            },
+            "referenceImages": {
+              "type": "array",
+              "length": 0,
+              "of": "unknown"
+            },
+            "thumbnailUrl": "string"
+          }
+        ]
+      },
+      "totalCount": "number",
+      "page": "number",
+      "pageSize": "number",
+      "totalPages": "number",
+      "hasMore": "boolean"
+    },
+    "errors": "null"
+  },
+  "itemFieldTypes": {
+    "id": "string",
+    "vendorId": "string",
+    "vendorName": "string",
+    "title": "string",
+    "location": "string",
+    "category": "string",
+    "budgetMin": "null",
+    "budgetMax": "null",
+    "budgetDisplay": "string",
+    "durationMinDays": "null",
+    "durationMaxDays": "null",
+    "durationDisplay": "string",
+    "description": "string",
+    "scopeOfWork": "array",
+    "status": "string",
+    "rejectionReason": "null",
+    "publishedAt": "string",
+    "createdAt": "string",
+    "beforeImages": "array",
+    "afterImages": "array",
+    "referenceImages": "array",
+    "thumbnailUrl": "string"
+  },
+  "sampleSize": 17
+}

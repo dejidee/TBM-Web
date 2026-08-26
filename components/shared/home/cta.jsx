@@ -10,7 +10,7 @@ const ACTIONS = [
     icon: CalendarCheck,
     label: "Book Consultation",
     desc: "Talk to a renovation expert",
-    href: "/contact?type=consultation",
+    href: "/consultation",
   },
   {
     icon: Calculator,
@@ -74,7 +74,7 @@ export default function CTASection() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.25 }}
               >
-                <Link href="/contact?type=consultation">
+                <Link href="/consultation">
                   <motion.button
                     whileHover={{ scale: 1.02, y: -2 }}
                     whileTap={{ scale: 0.97 }}

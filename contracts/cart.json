@@ -7,8 +7,8 @@
     "message": "string",
     "data": {
       "id": "string",
-      "userId": "null",
-      "guestSessionId": "string",
+      "userId": "string",
+      "guestSessionId": "null",
       "items": {
         "type": "array",
         "length": 0,

@@ -2,87 +2,59 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Edit2, Package, MoreVertical } from "lucide-react";
+import { Check, X, Pencil } from "lucide-react";
+import { useOrderStatuses } from "@/hooks/use-lookups";
 import { useUpdateDeliveryAssignment } from "@/hooks/use-delivery";
 
-const statusStyles = {
-  warning: {
-    bg: "bg-warning/10",
-    text: "text-warning",
-    icon: "⏱",
-  },
-  info: {
-    bg: "bg-info/10",
-    text: "text-info",
-    icon: "★",
-  },
-  success: {
-    bg: "bg-success/10",
-    text: "text-success",
-    icon: "●",
-  },
-  error: {
-    bg: "bg-danger/10",
-    text: "text-danger",
-    icon: "⚠",
-  },
-  purple: {
-    bg: "bg-chart-1/10",
-    text: "text-chart-1",
-    icon: "★",
-  },
-};
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? "—"
+    : d.toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" });
+}
 
-const deliveryPartners = [
-  "DHL Express",
-  "FedEx",
-  "UPS Ground",
-  "USPS Priority",
-  "Amazon Logistics",
-];
-
-export default function DeliveryAssignmentsTable({ assignments, isLoading }) {
-  const [selectedAssignments, setSelectedAssignments] = useState([]);
-  const [editingRow, setEditingRow] = useState(null);
-  const [editData, setEditData] = useState({});
-
+/**
+ * GET /vendor/deliveries returns `{ id, orderId, orderNumber, status,
+ * trackingNumber, deliveryPartner, deliveryAgentName, deliveryAgentPhone,
+ * assignmentNote, updatedAtUtc }` — confirmed live 2026-08-12. This used to
+ * render `assignment.customer.{name,address}`, `.expectedDate`, `.isOverdue`,
+ * and a string `.status` ("Picked Up"/"Urgent"/…) — none of which exist on
+ * the real response. `assignment.customer.name` would have thrown
+ * (`customer` is undefined) the first time a real vendor loaded this page.
+ *
+ * `status` is a bare number — the same OrderStatus enum GET /vendor/orders
+ * uses (`GET /lookups/order-statuses`, hooks/use-lookups.js), not a
+ * delivery-specific one; rendered by lookup with a graceful numeric fallback
+ * if a value this app hasn't seen shows up.
+ */
+export default function DeliveryAssignmentsTable({ assignments, isLoading, isError }) {
+  const { data: orderStatuses } = useOrderStatuses();
   const updateAssignment = useUpdateDeliveryAssignment();
+  const [editingId, setEditingId] = useState(null);
+  const [draft, setDraft] = useState({ deliveryPartner: "", trackingNumber: "" });
 
-  const handleSelectAssignment = (assignmentId) => {
-    setSelectedAssignments((prev) =>
-      prev.includes(assignmentId)
-        ? prev.filter((id) => id !== assignmentId)
-        : [...prev, assignmentId],
-    );
-  };
+  const statusLabel = (status) =>
+    orderStatuses?.find((s) => s.value === status)?.name ?? `Status ${status}`;
 
-  const handleSelectAll = () => {
-    if (selectedAssignments.length === assignments?.length) {
-      setSelectedAssignments([]);
-    } else {
-      setSelectedAssignments(assignments?.map((a) => a.id) || []);
-    }
-  };
-
-  const handleEdit = (assignment) => {
-    setEditingRow(assignment.id);
-    setEditData({
+  const startEdit = (assignment) => {
+    setEditingId(assignment.id);
+    setDraft({
       deliveryPartner: assignment.deliveryPartner || "",
       trackingNumber: assignment.trackingNumber || "",
     });
   };
 
-  const handleSave = (assignmentId) => {
-    updateAssignment.mutate({
-      id: assignmentId,
-      updates: editData,
-    });
-    setEditingRow(null);
+  const cancelEdit = () => {
+    setEditingId(null);
+    setDraft({ deliveryPartner: "", trackingNumber: "" });
   };
 
-  const handleCancel = () => {
-    setEditingRow(null);
-    setEditData({});
+  const save = (assignment) => {
+    updateAssignment.mutate(
+      { orderId: assignment.orderId, updates: draft },
+      { onSuccess: () => setEditingId(null) },
+    );
   };
 
   if (isLoading) {
@@ -90,10 +62,19 @@ export default function DeliveryAssignmentsTable({ assignments, isLoading }) {
       <div className="bg-surface rounded-xl border border-white/08">
         <div className="p-8 text-center">
           <div className="w-12 h-12 border-4 border-white/08 border-t-accent rounded-full animate-spin mx-auto mb-4" />
-          <p className="text-muted font-manrope text-[14px]">
-            Loading assignments...
-          </p>
+          <p className="text-muted font-manrope text-[14px]">Loading assignments...</p>
         </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="bg-surface rounded-xl border border-white/08 p-12 text-center">
+        <p className="text-muted font-manrope text-[14px]">
+          Couldn&rsquo;t load deliveries. Your data is safe — this is a problem
+          reaching it. Try again in a moment.
+        </p>
       </div>
     );
   }
@@ -101,262 +82,109 @@ export default function DeliveryAssignmentsTable({ assignments, isLoading }) {
   if (!assignments || assignments.length === 0) {
     return (
       <div className="bg-surface rounded-xl border border-white/08 p-12 text-center">
-        <p className="text-muted font-manrope text-[14px]">
-          No assignments found
-        </p>
+        <p className="text-muted font-manrope text-[14px]">No assignments found</p>
       </div>
     );
   }
 
   return (
     <div className="bg-surface rounded-xl border border-white/08 overflow-hidden">
-      {/* Table Header */}
-      <div className="overflow-x-auto table-scroll">
-        <div className="px-6 py-4 bg-white/05 border-b border-white/08 min-w-[1020px]">
-          <div className="grid grid-cols-[40px_100px_140px_260px_120px_180px_180px_100px] gap-4 items-center">
-            <input
-              type="checkbox"
-              checked={selectedAssignments.length === assignments.length}
-              onChange={handleSelectAll}
-              className="w-4 h-4 rounded border-white/08 text-white focus:ring-2 focus:ring-accent/40 cursor-pointer"
-            />
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              STATUS
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              ORDER ID
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              CUSTOMER DETAILS
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              EXP. DATE
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              DELIVERY PARTNER
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              TRACKING #
-            </span>
-            <span className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider">
-              ACTIONS
-            </span>
+      {/* Desktop Table */}
+      <div className="hidden md:block overflow-x-auto table-scroll">
+        <div className="px-6 py-4 bg-white/05 border-b border-white/08 min-w-215">
+          <div className="grid grid-cols-[140px_140px_1fr_1fr_140px] gap-4 items-center">
+            {["ORDER", "STATUS", "DELIVERY PARTNER", "TRACKING #", "ACTIONS"].map((h) => (
+              <span
+                key={h}
+                className="font-manrope text-[11px] font-bold text-muted uppercase tracking-wider"
+              >
+                {h}
+              </span>
+            ))}
           </div>
         </div>
 
-        {/* Table Body */}
-        <div className="divide-y divide-white/08 overflow-x-auto table-scroll">
+        <div className="divide-y divide-white/08">
           {assignments.map((assignment, index) => {
-            const statusStyle = statusStyles[assignment.statusColor];
-            const isSelected = selectedAssignments.includes(assignment.id);
-            const isEditing = editingRow === assignment.id;
-
+            const isEditing = editingId === assignment.id;
             return (
               <motion.div
                 key={assignment.id}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.03 }}
-                className={`px-6 py-4 transition-colors min-w-[1020px] ${
-                  isSelected ? "bg-white/05" : "hover:bg-white/05"
-                }`}
+                className="px-6 py-4 min-w-215 hover:bg-white/05 transition-colors"
               >
-                <div className="grid grid-cols-[40px_100px_140px_260px_120px_180px_180px_100px] gap-4 items-center">
-                  {/* Checkbox */}
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => handleSelectAssignment(assignment.id)}
-                    className="w-4 h-4 rounded border-white/08 text-white focus:ring-2 focus:ring-accent/40 cursor-pointer"
-                  />
-
-                  {/* Status */}
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-[14px]">{statusStyle.icon}</span>
-                    <span
-                      className={`px-2.5 py-1 rounded font-manrope text-[11px] font-bold ${statusStyle.bg} ${statusStyle.text}`}
-                    >
-                      {assignment.status}
-                    </span>
-                  </div>
-
-                  {/* Order ID */}
+                <div className="grid grid-cols-[140px_140px_1fr_1fr_140px] gap-4 items-center">
                   <span className="font-manrope text-[14px] font-bold text-white">
-                    #{assignment.orderId}
+                    #{assignment.orderNumber}
                   </span>
 
-                  {/* Customer Details */}
-                  <div>
-                    <p className="font-manrope text-[14px] font-medium text-white mb-0.5">
-                      {assignment.customer.name}
-                    </p>
-                    <p className="font-manrope text-[12px] text-muted truncate">
-                      {assignment.customer.address}
-                    </p>
-                  </div>
-
-                  {/* Expected Date */}
-                  <span
-                    className={`font-manrope text-[13px] ${
-                      assignment.isOverdue
-                        ? "text-danger font-bold"
-                        : "text-white"
-                    }`}
-                  >
-                    {assignment.expectedDate}
-                    {assignment.isOverdue && " (Overdue)"}
+                  <span className="px-2.5 py-1 rounded bg-white/08 text-muted font-manrope text-[11px] font-bold w-fit">
+                    {statusLabel(assignment.status)}
                   </span>
 
-                  {/* Delivery Partner */}
-                  {isEditing ? (
-                    <select
-                      value={editData.deliveryPartner}
-                      onChange={(e) =>
-                        setEditData((prev) => ({
-                          ...prev,
-                          deliveryPartner: e.target.value,
-                        }))
-                      }
-                      className="px-3 py-2 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 appearance-none cursor-pointer"
-                    >
-                      <option value="">Select Partner</option>
-                      {deliveryPartners.map((partner) => (
-                        <option key={partner} value={partner}>
-                          {partner}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <div className="flex items-center gap-2">
-                      {assignment.deliveryPartner ? (
-                        <>
-                          <span className="w-4 h-4 bg-accent-solid rounded flex items-center justify-center text-white text-[8px] flex-shrink-0">
-                            📦
-                          </span>
-                          <span className="font-manrope text-[13px] text-white truncate">
-                            {assignment.deliveryPartner}
-                          </span>
-                        </>
-                      ) : (
-                        <select
-                          onChange={(e) => {
-                            handleEdit(assignment);
-                            setEditData((prev) => ({
-                              ...prev,
-                              deliveryPartner: e.target.value,
-                            }));
-                          }}
-                          className="w-full px-3 py-2 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-muted focus:outline-none focus:ring-2 focus:ring-accent/40 appearance-none cursor-pointer"
-                        >
-                          <option value="">Select Partner</option>
-                          {deliveryPartners.map((partner) => (
-                            <option key={partner} value={partner}>
-                              {partner}
-                            </option>
-                          ))}
-                        </select>
-                      )}
-                    </div>
-                  )}
-
-                  {/* Tracking Number */}
                   {isEditing ? (
                     <input
                       type="text"
-                      placeholder="Enter Tracking #"
-                      value={editData.trackingNumber}
+                      placeholder="e.g. DHL Express"
+                      value={draft.deliveryPartner}
                       onChange={(e) =>
-                        setEditData((prev) => ({
-                          ...prev,
-                          trackingNumber: e.target.value,
-                        }))
+                        setDraft((prev) => ({ ...prev, deliveryPartner: e.target.value }))
                       }
                       className="px-3 py-2 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
                     />
                   ) : (
-                    <>
-                      {assignment.trackingNumber ? (
-                        <span className="font-manrope text-[13px] text-white font-mono">
-                          {assignment.trackingNumber}
-                        </span>
-                      ) : (
-                        <input
-                          type="text"
-                          placeholder="Enter Tracking #"
-                          onFocus={() => handleEdit(assignment)}
-                          className="px-3 py-2 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-muted placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
-                        />
+                    <span className="font-manrope text-[13px] text-white truncate">
+                      {assignment.deliveryPartner || (
+                        <span className="text-muted/60 italic">Not assigned</span>
                       )}
-                    </>
+                    </span>
                   )}
 
-                  {/* Actions */}
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      placeholder="Enter tracking #"
+                      value={draft.trackingNumber}
+                      onChange={(e) =>
+                        setDraft((prev) => ({ ...prev, trackingNumber: e.target.value }))
+                      }
+                      className="px-3 py-2 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
+                    />
+                  ) : (
+                    <span className="font-manrope text-[13px] text-white font-mono truncate">
+                      {assignment.trackingNumber || <span className="text-muted/60 italic font-sans">—</span>}
+                    </span>
+                  )}
+
                   <div className="flex items-center gap-2">
                     {isEditing ? (
                       <>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleSave(assignment.id)}
-                          className="p-2 text-success hover:bg-success/10 rounded-lg transition-colors"
+                        <button
+                          onClick={() => save(assignment)}
+                          disabled={updateAssignment.isPending}
+                          className="p-2 text-success hover:bg-success/10 rounded-lg transition-colors disabled:opacity-50"
                           title="Save"
                         >
-                          ✓
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={handleCancel}
+                          <Check size={18} />
+                        </button>
+                        <button
+                          onClick={cancelEdit}
                           className="p-2 text-danger hover:bg-danger/10 rounded-lg transition-colors"
                           title="Cancel"
                         >
-                          ✕
-                        </motion.button>
+                          <X size={18} />
+                        </button>
                       </>
                     ) : (
-                      <>
-                        {assignment.status === "Picked Up" && (
-                          <button className="font-manrope text-[13px] text-info hover:underline font-medium">
-                            Track
-                          </button>
-                        )}
-                        {assignment.status === "In Transit" && (
-                          <button className="font-manrope text-[13px] text-info hover:underline font-medium">
-                            Track
-                          </button>
-                        )}
-                        {(assignment.status === "Pending" ||
-                          assignment.status === "Urgent") && (
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(assignment)}
-                            className="p-2 text-muted hover:bg-white/08 rounded-lg transition-colors"
-                            title="Assign"
-                          >
-                            <Package size={18} />
-                          </motion.button>
-                        )}
-                        {assignment.status === "Assigned" && (
-                          <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleEdit(assignment)}
-                            className="p-2 text-muted hover:bg-white/08 rounded-lg transition-colors"
-                            title="Edit"
-                          >
-                            <Edit2 size={18} />
-                          </motion.button>
-                        )}
-                        <motion.button
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          className="p-2 text-muted hover:bg-white/08 rounded-lg transition-colors"
-                          title="More"
-                        >
-                          <MoreVertical size={18} />
-                        </motion.button>
-                      </>
+                      <button
+                        onClick={() => startEdit(assignment)}
+                        className="p-2 text-muted hover:bg-white/08 rounded-lg transition-colors"
+                        title="Edit"
+                      >
+                        <Pencil size={18} />
+                      </button>
                     )}
                   </div>
                 </div>
@@ -364,6 +192,95 @@ export default function DeliveryAssignmentsTable({ assignments, isLoading }) {
             );
           })}
         </div>
+      </div>
+
+      {/* Mobile Cards */}
+      <div className="md:hidden divide-y divide-white/08">
+        {assignments.map((assignment, index) => {
+          const isEditing = editingId === assignment.id;
+          return (
+            <motion.div
+              key={assignment.id}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.03 }}
+              className="p-4"
+            >
+              <div className="flex items-center justify-between mb-3">
+                <span className="font-manrope text-[15px] font-bold text-white">
+                  #{assignment.orderNumber}
+                </span>
+                <span className="px-2.5 py-1 rounded bg-white/08 text-muted font-manrope text-[11px] font-bold">
+                  {statusLabel(assignment.status)}
+                </span>
+              </div>
+
+              {isEditing ? (
+                <div className="space-y-3 mb-3">
+                  <input
+                    type="text"
+                    placeholder="Delivery partner, e.g. DHL Express"
+                    value={draft.deliveryPartner}
+                    onChange={(e) =>
+                      setDraft((prev) => ({ ...prev, deliveryPartner: e.target.value }))
+                    }
+                    className="w-full px-3 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Tracking number"
+                    value={draft.trackingNumber}
+                    onChange={(e) =>
+                      setDraft((prev) => ({ ...prev, trackingNumber: e.target.value }))
+                    }
+                    className="w-full px-3 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => save(assignment)}
+                      disabled={updateAssignment.isPending}
+                      className="flex-1 h-11 flex items-center justify-center gap-2 rounded-lg bg-success/10 text-success font-manrope text-[13px] font-medium disabled:opacity-50"
+                    >
+                      <Check size={16} /> Save
+                    </button>
+                    <button
+                      onClick={cancelEdit}
+                      className="flex-1 h-11 flex items-center justify-center gap-2 rounded-lg bg-danger/10 text-danger font-manrope text-[13px] font-medium"
+                    >
+                      <X size={16} /> Cancel
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-1.5 mb-3">
+                  <p className="font-manrope text-[13px] text-white/70">
+                    Partner:{" "}
+                    <span className="text-white">
+                      {assignment.deliveryPartner || (
+                        <span className="text-muted/60 italic">Not assigned</span>
+                      )}
+                    </span>
+                  </p>
+                  <p className="font-manrope text-[13px] text-white/70">
+                    Tracking:{" "}
+                    <span className="text-white font-mono">
+                      {assignment.trackingNumber || "—"}
+                    </span>
+                  </p>
+                </div>
+              )}
+
+              {!isEditing && (
+                <button
+                  onClick={() => startEdit(assignment)}
+                  className="w-full h-11 flex items-center justify-center gap-2 rounded-lg border border-white/10 text-white font-manrope text-[13px] font-medium hover:bg-white/05 transition-colors"
+                >
+                  <Pencil size={16} /> Edit
+                </button>
+              )}
+            </motion.div>
+          );
+        })}
       </div>
     </div>
   );

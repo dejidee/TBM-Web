@@ -92,7 +92,7 @@ export default function ProductImageStager({ value, onChange }) {
               <img
                 src={img.previewUrl}
                 alt={img.altText || ""}
-                className="h-full w-full object-cover"
+                className="h-full w-full object-contain"
               />
 
               {img.isPrimary && (

@@ -8,10 +8,10 @@ import Image from "next/image";
 import { useState } from "react";
 
 const RECOMMENDED_PROJECTS = [
-  { id: 1, image: "/product-main.svg", title: "Boho Living Room" },
-  { id: 2, image: "/product-main.svg", title: "Eco-Friendly Kitchen" },
-  { id: 3, image: "/product-main.svg", title: "Smart Home Office" },
-  { id: 4, image: "/product-main.svg", title: "Luxury Walk-in Closet" },
+  { id: 1, image: "/site-images/web/patio-after.jpg", title: "Courtyard Lounge" },
+  { id: 2, image: "/site-images/web/kitchen-dark-lux.jpg", title: "Dark Luxury Kitchen" },
+  { id: 3, image: "/site-images/web/interior-finished.jpg", title: "Open-Plan Interior" },
+  { id: 4, image: "/site-images/web/bathroom-2-after.jpg", title: "Marble Bathroom Suite" },
 ];
 
 export default function LoadMoreAndRecommended() {

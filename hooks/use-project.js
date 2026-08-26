@@ -3,6 +3,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { projectsApi } from "@/lib/api/projects";
+import { showToast } from "@/components/shared/toast";
 
 // ── Query keys ─────────────────────────────────────────────────────────────────
 export const projectKeys = {
@@ -15,7 +16,26 @@ export const projectKeys = {
   public: () => ["projects", "public"],
 };
 
-// ── Project list ────────────────────────────────────────────────────────────────
+// ── Create project ─────────────────────────────────────────────────────────────
+
+/**
+ * POST /projects — enveloped (`res.data` is the created Project). Used by the
+ * "make into a project" design-card action; there's no backend link between a
+ * design and a project (BACKLOG.md #5), so this just pre-fills a new one.
+ */
+export function useCreateProject() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (data) => projectsApi.createProject(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: projectKeys.list() });
+    },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to create project"),
+  });
+}
+
+// ── Project list ────────────────────────────────────────────────────────────────────
 export function useProjects() {
   return useQuery({
     queryKey: projectKeys.list(),
@@ -67,6 +87,8 @@ export function useUploadProjectDocument() {
     onSuccess: (_data, { projectId }) => {
       queryClient.invalidateQueries({ queryKey: projectKeys.documents(projectId) });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to upload document"),
   });
 }
 
@@ -89,6 +111,8 @@ export function useUploadGalleryImage() {
     onSuccess: (_data, { projectId }) => {
       queryClient.invalidateQueries({ queryKey: projectKeys.gallery(projectId) });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to upload image"),
   });
 }
 
@@ -108,12 +132,14 @@ export const portfolioKeys = {
   all: ["portfolio"],
   list: (params) => ["portfolio", "list", params],
   detail: (id) => ["portfolio", id],
+  categories: () => ["portfolio", "categories"],
 };
 
-export function usePortfolio(params = {}) {
+export function usePortfolio({ enabled = true, ...params } = {}) {
   return useQuery({
     queryKey: portfolioKeys.list(params),
     queryFn: () => projectsApi.getPortfolio(params),
+    enabled,
     staleTime: 10 * 60 * 1000,
     refetchOnWindowFocus: false,
     select: (res) => ({
@@ -132,5 +158,53 @@ export function usePortfolioItem(id) {
     enabled: !!id,
     staleTime: 10 * 60 * 1000,
     select: (res) => res?.data ?? res,
+  });
+}
+
+/**
+ * The distinct `category` values in use across the published portfolio.
+ *
+ * There is no portfolio-category endpoint — `category` is a free-text string on
+ * `AdminCreatePortfolioProjectDto` — so the option list is derived from what has
+ * actually been published.
+ *
+ * Casing is folded: live data contains both "Bathroom renovation" and "Bathroom
+ * Renovation", and `GET /portfolio?category=` matches exactly, so offering both
+ * as options would let an admin pick the variant the public filter misses. One
+ * option survives per case-insensitive name — the spelling used most often, and
+ * the first published on a tie.
+ */
+export function usePortfolioCategories() {
+  return useQuery({
+    queryKey: portfolioKeys.categories(),
+    // One wide page: the option list must cover the whole portfolio, not the
+    // 12-item first page the grid renders.
+    queryFn: () => projectsApi.getPortfolio({ page: 1, pageSize: 100 }),
+    staleTime: 15 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    select: (res) => {
+      const items = res?.data?.items ?? res?.data ?? res?.items ?? [];
+
+      // Count each exact spelling, in publication order.
+      const spellings = new Map();
+      for (const item of items) {
+        const name = typeof item?.category === "string" ? item.category.trim() : "";
+        if (name) spellings.set(name, (spellings.get(name) ?? 0) + 1);
+      }
+
+      // Fold to one winner per case-insensitive name. Map preserves insertion
+      // order, so a strict `>` leaves the first-published spelling on a tie.
+      const winners = new Map();
+      for (const [name, count] of spellings) {
+        const key = name.toLowerCase();
+        const best = winners.get(key);
+        if (!best || count > best.count) winners.set(key, { name, count });
+      }
+
+      return Array.from(winners.values(), (w) => w.name).sort((a, b) =>
+        a.localeCompare(b),
+      );
+    },
   });
 }

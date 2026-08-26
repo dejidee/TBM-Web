@@ -1,0 +1,73 @@
+{
+  "recordedAt": "2026-08-11",
+  "note": "Shapes only, no values. Recorded by scripts/record-checkout-shape.mjs, which initiates one real (test-mode) Paystack session and cancels the order it creates.",
+  "operations": {
+    "GET /api/v1/Checkout": {
+      "items": [
+        {
+          "productId": "string",
+          "name": "string",
+          "unitPrice": "number",
+          "quantity": "number",
+          "subtotal": "number",
+          "image": "null"
+        }
+      ],
+      "subtotal": "number",
+      "shipping": "number",
+      "tax": "number",
+      "discount": "number",
+      "total": "number",
+      "savedAddresses": [
+        {
+          "id": "string",
+          "fullName": "string",
+          "street": "string",
+          "city": "string",
+          "state": "string",
+          "postalCode": "string",
+          "country": "string",
+          "phone": "string",
+          "deliveryNotes": "string",
+          "isDefault": "boolean"
+        }
+      ],
+      "defaultAddress": {
+        "id": "string",
+        "fullName": "string",
+        "street": "string",
+        "city": "string",
+        "state": "string",
+        "postalCode": "string",
+        "country": "string",
+        "phone": "string",
+        "deliveryNotes": "string",
+        "isDefault": "boolean"
+      }
+    },
+    "POST /api/v1/Checkout/payment": {
+      "success": "boolean",
+      "orderId": "string",
+      "orderNumber": "string",
+      "message": "string",
+      "idempotent": "boolean",
+      "paymentProvider": "string",
+      "paymentReference": "string",
+      "paymentStatus": "string",
+      "authorizationUrl": "string",
+      "accessCode": "string",
+      "publicKey": "string"
+    },
+    "GET /api/v1/Checkout/payment/paystack/verify/{reference}": {
+      "success": "boolean",
+      "orderId": "string",
+      "orderNumber": "string",
+      "message": "string",
+      "idempotent": "boolean",
+      "paymentProvider": "string",
+      "paymentReference": "string",
+      "paymentStatus": "string",
+      "publicKey": "string"
+    }
+  }
+}

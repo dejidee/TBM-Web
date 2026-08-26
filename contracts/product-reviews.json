@@ -1,0 +1,18 @@
+{
+  "recordedAt": "2026-08-13",
+  "note": "Shapes only, no values. GET /products/{productId}/reviews is a templated path — contract:record can't hit it. Recorded manually via curl against a live, unreviewed product; every product checked (100 scanned) has zero reviews, so `items`' element shape is genuinely unknown and is not modelled. POST was checked too (not recorded — a mutation): creating a review on a product with no paid order for the calling user returns 400 `{ success: false, message: \"Only customers with a paid order for this product can leave a review.\" }` — confirms server-side purchase verification, matches the original product ask.",
+  "operations": {
+    "GET /api/v1/products/{productId}/reviews": {
+      "success": "boolean",
+      "message": "string",
+      "data": {
+        "items": [],
+        "totalCount": "number",
+        "page": "number",
+        "pageSize": "number",
+        "averageRating": "number"
+      },
+      "errors": "null"
+    }
+  }
+}

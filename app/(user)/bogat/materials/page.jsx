@@ -3,29 +3,29 @@ import BogatMaterialsClient from "./client";
 import { API_URL } from "@/lib/env";
 
 export const metadata = {
-  title: "Shop Bogat Materials | TBM — Premium Building Materials Nigeria",
+  title: "Shop Bogat Signature Collections | TBM — Luxury Bathroom Vanities Nigeria",
   description:
-    "Browse the full Bogat collection — bathroom fixtures, WCs, basins, faucets, tiles, marble, doors, and more. Fixed pricing and request-quote options. Delivered across Nigeria.",
+    "Browse Bogat's signature stone vanity collections — luxury bathroom vanities, basins, and stone furniture. Fixed pricing and request-quote options. Delivered across Nigeria.",
   keywords:
-    "Bogat materials Nigeria, bathroom fixtures Abuja, building materials Lagos, WC fittings Nigeria, tiles Nigeria, luxury materials",
+    "Bogat bathroom vanity Nigeria, luxury stone vanity Abuja, bathroom sanitaryware Lagos, basins Nigeria, bathroom-ware Nigeria",
   openGraph: {
-    title: "Shop Bogat Materials | TBM Building Services",
+    title: "Shop Bogat Signature Collections | TBM Building Services",
     description:
-      "Browse premium Bogat building & construction materials. Competitive pricing, fast delivery across Nigeria.",
+      "Browse Bogat's premium bathroom vanity and sanitaryware collections. Competitive pricing, fast delivery across Nigeria.",
     type: "website",
     images: [
       {
         url: "/og-materials.jpg",
         width: 1200,
         height: 630,
-        alt: "Bogat Materials by TBM",
+        alt: "Bogat Signature Collections by TBM",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Bogat Materials | TBM",
-    description: "Premium building & construction materials marketplace.",
+    title: "Bogat Signature Collections | TBM",
+    description: "Premium bathroom vanity and sanitaryware collections.",
   },
   alternates: {
     canonical: "/bogat/materials",
@@ -34,8 +34,11 @@ export const metadata = {
 
 async function getInitialProducts() {
   try {
+    // brandType=2 (Bogat) — this is Bogat's own shop and must never
+    // server-render TBM's general product catalogue, even before the
+    // client-side query (which forces the same filter) takes over.
     const res = await fetch(
-      `${API_URL}/products?pageNumber=1&pageSize=12&ActiveOnly=true`,
+      `${API_URL}/products?pageNumber=1&pageSize=12&ActiveOnly=true&brandType=2`,
       { next: { revalidate: 60 } },
     );
     if (!res.ok) return null;

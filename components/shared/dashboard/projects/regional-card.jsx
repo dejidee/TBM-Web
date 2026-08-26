@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 
 export default function RegionalOfficeCard({ office, isLoading }) {
   const name = office?.name ?? "Regional Office: Pacific Northwest";
-  const contact = office?.contact ?? "support@tbmdigital.com";
+  const contact = office?.contact ?? "support@tbmbuilding.com";
   const imageSrc = office?.imageSrc ?? null;
 
   return (

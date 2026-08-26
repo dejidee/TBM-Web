@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { subscriptionApi } from "@/lib/api/subscriptions";
 import { useCurrentUser } from "@/hooks/use-auth";
+import { showToast } from "@/components/shared/toast";
 
 export const subscriptionKeys = {
   all: ["subscription"],
@@ -87,6 +88,8 @@ export function useActivateEconomy() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to activate plan"),
   });
 }
 
@@ -106,6 +109,8 @@ export function useSubscribePaid() {
       }
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to start subscription"),
   });
 }
 
@@ -117,6 +122,8 @@ export function useCancelSubscription() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to cancel subscription"),
   });
 }
 
@@ -132,5 +139,7 @@ export function useRenewSubscription() {
       }
       queryClient.invalidateQueries({ queryKey: subscriptionKeys.all });
     },
+    onError: (error) =>
+      showToast.error(error.message || "Failed to renew subscription"),
   });
 }

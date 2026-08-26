@@ -167,25 +167,28 @@ export default function SubscriptionPanel() {
     );
   }
 
+  // A single row, not a panel. This was a centred, dashed, 200px-tall box with
+  // an icon — it took the top third of the designs page to say that a setting
+  // is unset. Plan state is a status line, and it should never outweigh the
+  // gallery it sits above.
   if (noSubscription) {
     return (
       <motion.div
-        initial={{ opacity: 0, y: 12 }}
+        initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl border-2 border-dashed p-6 text-center"
-        style={{ borderColor: "rgba(255,255,255,0.10)", background: "rgba(255,255,255,0.02)" }}
+        className="flex flex-wrap items-center gap-x-4 gap-y-3 rounded-2xl border border-white/08 px-5 py-4"
+        style={{ background: "#0d0b08" }}
       >
-        <Zap className="w-8 h-8 text-white/20 mx-auto mb-3" />
-        <p className="text-white font-semibold mb-1">No active plan</p>
-        <p className="text-white/40 text-sm mb-4">
-          Activate the free Economy plan or choose a paid tier to start generating.
+        <Zap className="h-4.5 w-4.5 shrink-0 text-white/30" strokeWidth={1.75} />
+        <p className="text-sm text-white/50">
+          <span className="font-semibold text-white">No active plan.</span> Activate the free
+          Economy tier to start generating.
         </p>
         <Link
           href="/ziora#pricing"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-black hover:opacity-90 transition-opacity"
-          style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+          className="ml-auto inline-flex min-h-11 items-center gap-1.5 rounded-xl border border-[#D4AF37]/30 px-4 text-[13px] font-semibold text-[#D4AF37] transition-colors hover:bg-[#D4AF37]/08"
         >
-          View Plans <ArrowUpRight className="w-4 h-4" />
+          View plans <ArrowUpRight className="h-4 w-4" strokeWidth={2} />
         </Link>
       </motion.div>
     );

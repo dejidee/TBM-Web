@@ -1,0 +1,46 @@
+{
+  "recordedAt": "2026-07-31",
+  "note": "Shapes only, no values. Secrets (secretKey/apiKey) are recorded as their type, never their value.",
+  "operations": {
+    "GET /api/v1/admin/settings/general": {
+      "platformName": "string",
+      "supportEmail": "string",
+      "maintenanceMode": "boolean",
+      "apiRateLimit": "number"
+    },
+    "GET /api/v1/admin/settings/payment": {
+      "basePlatformFee": "number",
+      "fixedFeePerTransaction": "number",
+      "defaultCurrency": "string",
+      "gateways": [
+        {
+          "id": "string",
+          "enabled": "boolean",
+          "publicKey": "string",
+          "secretKey": "string"
+        }
+      ]
+    },
+    "GET /api/v1/admin/settings/notifications": {
+      "emailEnabled": "boolean",
+      "smsEnabled": "boolean",
+      "pushEnabled": "boolean",
+      "webhookEnabled": "boolean",
+      "lowStockAlerts": "boolean",
+      "highValueOrderAlerts": "boolean",
+      "paymentFailureAlerts": "boolean"
+    },
+    "GET /api/v1/admin/settings/ai": {
+      "rateLimit": "number",
+      "timeoutSeconds": "number",
+      "models": [
+        {
+          "id": "string",
+          "enabled": "boolean",
+          "apiKey": "string",
+          "maxTokens": "number"
+        }
+      ]
+    }
+  }
+}

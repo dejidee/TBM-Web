@@ -81,9 +81,8 @@ export default function UserManagementPage() {
         onSuccess: () => {
           setIsModalOpen(false);
         },
-        onError: (error) => {
-          console.error("Failed to create user:", error);
-        },
+        // useCreateUser's onError already shows a toast; the modal just stays
+        // open so the admin can fix the input and retry.
       });
     },
     [createUser]
@@ -114,14 +113,14 @@ export default function UserManagementPage() {
         updates.push(updateUserStatus.mutateAsync({ id, isActive }));
       }
 
+      // Each mutation's own onError already shows a toast for its field; this
+      // catch only stops the modal from closing on a rejected Promise.all.
       Promise.all(updates)
         .then(() => {
           setIsModalOpen(false);
           setEditingUser(null);
         })
-        .catch((error) => {
-          console.error("Failed to update user:", error);
-        });
+        .catch(() => {});
     },
     [editingUser, updateUserRole, updateUserStatus]
   );
@@ -229,6 +228,11 @@ export default function UserManagementPage() {
         onCreateUser={handleCreateUser}
         editUser={editingUser}
         onUpdateUser={handleUpdateUser}
+        isSubmitting={
+          createUser.isPending ||
+          updateUserRole.isPending ||
+          updateUserStatus.isPending
+        }
       />
     </div>
   );

@@ -9,7 +9,7 @@ import { useAddToCart } from "@/hooks/use-cart";
 import { ShoppingCart } from "lucide-react";
 
 const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop";
+  "/product-placeholder.svg";
 
 async function fetchFeaturedProducts() {
   const res = await fetch(
@@ -67,7 +67,7 @@ export default function RelatedProducts() {
                   }
                   alt={product.name}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="object-contain group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 />
               </div>

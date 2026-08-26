@@ -10,6 +10,8 @@ import {
   Zap,
   CreditCard,
   Package,
+  Images,
+  CalendarCheck,
   LayoutGrid,
   Users,
   Wallet,
@@ -37,6 +39,16 @@ const navItems = [
     label: "Products",
     icon: Package,
     href: "/admin/dashboard/products",
+  },
+  {
+    label: "Portfolio",
+    icon: Images,
+    href: "/admin/dashboard/portfolio",
+  },
+  {
+    label: "Consultations",
+    icon: CalendarCheck,
+    href: "/admin/dashboard/consultations",
   },
   {
     label: "Financial Report",

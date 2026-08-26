@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { SlidersHorizontal, X, Search } from "lucide-react";
 import ActiveFilterTags from "./active-filter-tabs";
 
@@ -71,7 +72,7 @@ function CollectionsFilter({
     <button
       key={id ?? "all"}
       onClick={() => select(id)}
-      className={`flex w-full items-center justify-between gap-3 rounded-sm px-3 py-2.5 text-left transition-colors ${
+      className={`flex w-full min-h-11 items-center justify-between gap-3 rounded-sm px-3 text-left transition-colors ${
         active
           ? "bg-[#D4AF37]/8 text-white"
           : "text-white/55 hover:bg-white/3 hover:text-white/85"
@@ -121,7 +122,7 @@ function CollectionsFilter({
             onSearchChange?.("");
           }}
           aria-label="Clear search"
-          className="absolute right-2.5 top-1/2 flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full text-white/40 transition-colors hover:bg-white/10 hover:text-white"
+          className="absolute right-0 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-white/40 transition-colors hover:bg-white/10 hover:text-white"
         >
           <X className="h-3.5 w-3.5" />
         </button>
@@ -139,7 +140,7 @@ function CollectionsFilter({
         <div className="mb-4 flex items-center gap-2">
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-sm border border-white/12 px-4 py-2.5 text-sm font-medium text-white/80"
+            className="flex flex-1 min-h-11 items-center justify-center gap-2 rounded-sm border border-white/12 px-4 py-2.5 text-sm font-medium text-white/80"
           >
             <SlidersHorizontal className="h-4 w-4" />
             {selectedId
@@ -181,12 +182,12 @@ function CollectionsFilter({
             Tell us about your space and our design team will recommend the right
             collection.
           </p>
-          <a
-            href="/contact?type=consultation"
+          <Link
+            href="/consultation"
             className="text-sm font-medium text-[#D4AF37]/80 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1 font-manrope"
           >
             Book a consultation →
-          </a>
+          </Link>
         </div>
       </div>
     </div>
@@ -433,12 +434,12 @@ function FullFilterSidebar({
           Tell us about your space and our design team will recommend the right
           collection.
         </p>
-        <a
-          href="/contact?type=consultation"
+        <Link
+          href="/consultation"
           className="text-sm font-medium text-[#D4AF37]/80 hover:text-[#D4AF37] transition-colors inline-flex items-center gap-1 font-manrope"
         >
           Book a consultation →
-        </a>
+        </Link>
       </div>
     </div>
   );

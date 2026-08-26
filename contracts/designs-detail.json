@@ -1,0 +1,32 @@
+{
+  "recordedAt": "2026-08-25",
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "note": "Shapes only, no values. Recorded manually — these paths are templated or mutating, so contract:record cannot replay them. The favourite toggle was applied to the recorder's own design and toggled straight back; the script aborts if the second toggle does not restore the first state.",
+  "operations": {
+    "GET /api/v1/Designs/{id}": {
+      "id": "string",
+      "projectId": "string",
+      "outputUrl": "string",
+      "outputType": "string",
+      "width": "number",
+      "height": "number",
+      "durationSeconds": "null",
+      "prompt": "string",
+      "roomType": "null",
+      "isFavorite": "boolean",
+      "createdAt": "string"
+    },
+    "GET /api/v1/Designs/{id}/download": {
+      "success": "boolean",
+      "downloadUrl": "string"
+    },
+    "GET /api/v1/Designs/{id}/download?quality=high": {
+      "success": "boolean",
+      "downloadUrl": "string"
+    },
+    "POST /api/v1/Designs/{id}/favorite": {
+      "success": "boolean",
+      "isFavorite": "boolean"
+    }
+  }
+}

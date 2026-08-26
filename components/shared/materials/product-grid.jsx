@@ -73,7 +73,7 @@ export default function ProductGrid({
         {onReset && (
           <button
             onClick={onReset}
-            className="mt-5 inline-flex items-center rounded-sm border border-white/15 px-4 py-2 text-[13px] font-medium text-white/70 transition-colors hover:border-[#D4AF37]/40 hover:text-[#D4AF37] font-manrope"
+            className="mt-5 inline-flex min-h-11 items-center rounded-sm border border-white/15 px-4 text-[13px] font-medium text-white/70 transition-colors hover:border-[#D4AF37]/40 hover:text-[#D4AF37] font-manrope"
           >
             {resetLabel}
           </button>

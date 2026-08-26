@@ -8,12 +8,12 @@ import Reveal from "@/components/common/reveal";
 const FILTERS = ["All", "Bathroom", "Kitchens", "Staircase", "Interiors", "Exteriors"];
 
 const PROJECTS = [
-  { src: "/product-1.jpg",   category: "Kitchens",  alt: "Kitchen project" },
-  { src: "/product-2.jpg",   category: "Interiors", alt: "Interior project" },
-  { src: "/product-3.jpg",   category: "Bathroom",  alt: "Bathroom project" },
-  { src: "/product-4.png",   category: "Exteriors", alt: "Exterior project" },
-  { src: "/kitchen.png",     category: "Kitchens",  alt: "Kitchen design" },
-  { src: "/about2.png",      category: "Staircase", alt: "Staircase design" },
+  { src: "/site-images/web/kitchen-lux-after.jpg",  category: "Kitchens",  alt: "Luxury kitchen project" },
+  { src: "/site-images/web/interior-finished.jpg",  category: "Interiors", alt: "Finished interior project" },
+  { src: "/site-images/web/bathroom-2-after.jpg",   category: "Bathroom",  alt: "Marble bathroom project" },
+  { src: "/site-images/web/villa-dusk-after.jpg",   category: "Exteriors", alt: "Completed villa exterior" },
+  { src: "/site-images/web/kitchen-island.jpg",     category: "Kitchens",  alt: "Marble island kitchen" },
+  { src: "/site-images/web/staircase-after.jpg",    category: "Staircase", alt: "Sculptural staircase design" },
 ];
 
 export default function PortfolioSection() {

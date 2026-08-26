@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Hammer,
   Building2,
@@ -15,12 +16,14 @@ import {
   ArrowRight,
   ChevronDown,
 } from "lucide-react";
+import { usePortfolio } from "@/hooks/use-project";
 
 const SERVICES = [
   {
     icon: Hammer,
     title: "Renovation",
     slug: "renovation",
+    portfolioCategory: "Interior Renovation",
     tagline: "Transform existing spaces into premium environments",
     intro:
       "TBM specialises in full-scope renovation projects for homes, apartments, and commercial spaces — from structural upgrades to complete interior overhauls.",
@@ -43,7 +46,7 @@ const SERVICES = [
       },
       {
         q: "Can I supply my own materials?",
-        a: "Yes, but we recommend sourcing through Bogat to ensure quality and warranty coverage.",
+        a: "Yes. For bathroom vanities and sanitaryware specifically, we recommend sourcing through Bogat for quality and warranty coverage.",
       },
     ],
   },
@@ -51,6 +54,7 @@ const SERVICES = [
     icon: Palette,
     title: "Interior Fit-Out",
     slug: "interior-fit-out",
+    portfolioCategory: "Interior Finishing",
     tagline: "Turn a shell into a space that speaks",
     intro:
       "Our interior fit-out service covers everything from partition walls and ceilings to bespoke joinery, feature walls, and lighting design.",
@@ -69,7 +73,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Do you handle FF&E procurement?",
-        a: "Yes — we can coordinate furniture, fixtures, and equipment sourcing through Bogat or third-party suppliers.",
+        a: "Yes — we can coordinate furniture and equipment sourcing through trusted third-party suppliers, and bathroom fixtures through Bogat.",
       },
     ],
   },
@@ -77,6 +81,7 @@ const SERVICES = [
     icon: Bath,
     title: "Bathroom Remodeling",
     slug: "bathroom-remodeling",
+    portfolioCategory: "Bathroom Renovation",
     tagline: "Luxury bathrooms, delivered",
     intro:
       "From simple refreshes to full wet-room transformations, our bathroom team handles waterproofing, tiling, sanitaryware installation, and all plumbing works.",
@@ -125,7 +130,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Do you supply kitchen units?",
-        a: "Yes — we can supply through Bogat or work with your chosen brand.",
+        a: "Yes — we can supply through our trusted kitchen partners or work with your chosen brand.",
       },
     ],
   },
@@ -133,6 +138,7 @@ const SERVICES = [
     icon: Building2,
     title: "Construction",
     slug: "construction",
+    portfolioCategory: "Construction (Shell to Finish)",
     tagline: "Ground up. Done right.",
     intro:
       "TBM manages new-build construction projects from foundation to finishing — residential and light commercial, with full project management and supervision.",
@@ -238,6 +244,15 @@ const SERVICES = [
 function ServiceCard({ service, index }) {
   const [faqOpen, setFaqOpen] = useState(null);
   const Icon = service.icon;
+
+  const { data: sampleData } = usePortfolio({
+    category: service.portfolioCategory,
+    pageSize: 2,
+    enabled: !!service.portfolioCategory,
+  });
+  const sampleProjects = service.portfolioCategory
+    ? (sampleData?.items ?? [])
+    : [];
 
   return (
     <motion.div
@@ -368,7 +383,7 @@ function ServiceCard({ service, index }) {
           </div>
 
           <div className="mt-6 flex flex-col gap-2">
-            <Link href="/contact?type=consultation">
+            <Link href="/consultation">
               <motion.button
                 whileHover={{ scale: 1.01 }}
                 whileTap={{ scale: 0.98 }}
@@ -389,6 +404,55 @@ function ServiceCard({ service, index }) {
             </Link>
           </div>
         </div>
+      </div>
+
+      {/* Sample projects — real portfolio items in this service's category,
+          never fabricated examples. Falls back to a link to the full
+          portfolio when there's no category match or no published work yet. */}
+      <div className="p-6 sm:p-8 border-t border-white/08">
+        <p className="text-[16px] font-manrope font-bold text-white/35 uppercase tracking-[0.2em] mb-4">
+          Sample Projects
+        </p>
+        {sampleProjects.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {sampleProjects.map((p) => (
+              <Link
+                key={p.id}
+                href={`/project/${p.id}`}
+                className="group block overflow-hidden rounded-lg"
+              >
+                <div className="relative aspect-4/3 bg-white/5">
+                  {p.thumbnailUrl && (
+                    <Image
+                      src={p.thumbnailUrl}
+                      alt={p.title}
+                      fill
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    />
+                  )}
+                </div>
+                <p className="mt-2 text-xs font-manrope text-white/60 group-hover:text-white transition-colors line-clamp-1">
+                  {p.title}
+                </p>
+              </Link>
+            ))}
+            <Link
+              href="/project"
+              className="flex items-center justify-center gap-1.5 text-xs font-manrope font-semibold text-[#D4AF37] hover:text-[#D4AF37]/80 transition-colors"
+            >
+              View all our work
+              <ArrowRight className="w-3 h-3" />
+            </Link>
+          </div>
+        ) : (
+          <Link
+            href="/project"
+            className="inline-flex items-center gap-1.5 text-sm font-manrope font-semibold text-[#D4AF37] hover:text-[#D4AF37]/80 transition-colors"
+          >
+            View our completed projects
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        )}
       </div>
     </motion.div>
   );

@@ -28,7 +28,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-white/50 hover:bg-white/05 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-11 h-11 flex items-center justify-center rounded border border-white/10 text-white/50 hover:bg-white/05 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <svg
           className="w-4 h-4"
@@ -62,7 +62,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
           <button
             key={page}
             onClick={() => onPageChange(page)}
-            className={`w-8 h-8 flex items-center justify-center rounded font-medium transition-colors text-sm ${
+            className={`w-11 h-11 flex items-center justify-center rounded font-medium transition-colors text-sm ${
               currentPage === page
                 ? "text-black"
                 : "border border-white/10 text-white/50 hover:bg-white/05"
@@ -82,7 +82,7 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className="w-8 h-8 flex items-center justify-center rounded border border-white/10 text-white/50 hover:bg-white/05 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+        className="w-11 h-11 flex items-center justify-center rounded border border-white/10 text-white/50 hover:bg-white/05 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
       >
         <svg
           className="w-4 h-4"

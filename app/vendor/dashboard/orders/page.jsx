@@ -11,6 +11,7 @@ import {
   X,
 } from "lucide-react";
 import { useOrders, useImportOrders } from "@/hooks/use-orders";
+import { useOrderStatuses } from "@/hooks/use-lookups";
 import OrdersTable from "@/components/shared/vendor/dashboard/table";
 import Pagination from "@/components/shared/vendor/dashboard/pagination";
 
@@ -27,7 +28,8 @@ export default function OrdersPage() {
   const [searchInput, setSearchInput] = useState("");
   const [activeFilters, setActiveFilters] = useState([]);
 
-  const { data, isLoading } = useOrders(filters);
+  const { data, isLoading, isError } = useOrders(filters);
+  const { data: orderStatuses } = useOrderStatuses();
   const importOrders = useImportOrders();
 
   // DATA CHECKS
@@ -51,7 +53,9 @@ export default function OrdersPage() {
         filterType === "type"
           ? `Type: ${value}`
           : filterType === "status"
-            ? `Status: ${value}`
+            ? // `value` is the numeric OrderStatus the dropdown now sends
+              // (GET /lookups/order-statuses) — show the name, not the number.
+              `Status: ${orderStatuses?.find((s) => String(s.value) === String(value))?.name ?? value}`
             : filterType === "dateRange"
               ? `Date: ${value}`
               : value;
@@ -168,11 +172,11 @@ export default function OrdersPage() {
               className="pl-9 pr-8 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 appearance-none cursor-pointer"
             >
               <option value="all">Status: All</option>
-              <option value="processing">Processing</option>
-              <option value="shipped">Shipped</option>
-              <option value="delivered">Delivered</option>
-              <option value="pending approval">Pending Approval</option>
-              <option value="cancelled">Cancelled</option>
+              {orderStatuses?.map((s) => (
+                <option key={s.value} value={s.value}>
+                  {s.name}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -254,13 +258,19 @@ export default function OrdersPage() {
       )}
 
       {/* Orders Table */}
-      <OrdersTable orders={data?.orders} isLoading={isLoading} />
+      {/* GET /vendor/orders answers { items, total, page, pageSize } — no
+          `orders`/`pagination` keys, and no `totalPages` (unlike the enveloped
+          Paged<T> shape other list endpoints use). This read `data?.orders`
+          and `data.pagination.page/totalPages` until 2026-08-11, which was
+          always undefined against the real response — the table silently
+          showed "No orders found" and pagination never rendered, regardless
+          of how many orders actually existed. See lib/api/schemas/orders.ts. */}
+      <OrdersTable orders={data?.items} isLoading={isLoading} isError={isError} />
 
-      {/* Pagination */}
-      {data?.pagination && (
+      {data?.total > (data?.pageSize ?? filters.limit) && (
         <Pagination
-          currentPage={data.pagination.page}
-          totalPages={data.pagination.totalPages}
+          currentPage={data.page}
+          totalPages={Math.ceil(data.total / (data.pageSize || filters.limit))}
           onPageChange={handlePageChange}
         />
       )}

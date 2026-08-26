@@ -9,11 +9,13 @@ import {
   useAIConfiguration,
   useNotificationSettings,
   useGeneralSettings,
-  useSaveSettings,
+  useSavePaymentSettings,
+  useSaveGeneralSettings,
+  useUpdateNotificationSettings,
   useTogglePaymentGateway,
   useToggleAIModel,
 } from "@/hooks/use-settings";
-import { timezoneOptions } from "@/lib/mock/settings";
+import { showToast } from "@/components/shared/toast";
 import PaymentSettingsForm from "@/components/admin/settings/PaymentSettingsForm";
 
 // Import SVG icons
@@ -29,6 +31,32 @@ import quickActionsIcon from "@/public/icons/settings/quickActions.svg";
 import rightArrowIcon from "@/public/icons/settings/rightArrow.svg";
 import shieldIcon from "@/public/icons/settings/shield.svg";
 
+/**
+ * Display names for the ids the API returns.
+ *
+ * GET /admin/settings/payment answers `gateways: [{ id, enabled, publicKey,
+ * secretKey }]` and GET /admin/settings/ai answers `models: [{ id, enabled,
+ * apiKey, maxTokens }]` — an id and nothing human-readable. These are UI copy
+ * keyed by that id, which is a different thing from the `name`, `description`,
+ * `provider`, `purpose` and `costPerRequest` this page used to read off
+ * lib/mock/settings.js: those were invented values presented as configuration.
+ * An unknown id falls through to the id itself rather than to a made-up label.
+ */
+const GATEWAY_LABELS = {
+  paystack: "Paystack",
+  stripe: "Stripe",
+  paypal: "PayPal",
+  flutterwave: "Flutterwave",
+};
+
+const MODEL_LABELS = {
+  replicate: "Replicate",
+  openai: "OpenAI",
+  anthropic: "Anthropic",
+};
+
+const labelFor = (map, id) => map[id] ?? id;
+
 export default function PlatformSettingsPage() {
   const [activeTab, setActiveTab] = useState("payment");
   const [hasChanges, setHasChanges] = useState(false);
@@ -41,30 +69,59 @@ export default function PlatformSettingsPage() {
   const { data: generalSettings, isLoading: generalLoading } =
     useGeneralSettings();
 
-  // Debug logging
-  const { mutate: saveSettings, isPending: isSaving } = useSaveSettings();
-  const { mutate: toggleGateway } = useTogglePaymentGateway();
-  const { mutate: toggleModel } = useToggleAIModel();
+  const { mutate: savePayment, isPending: isSaving } = useSavePaymentSettings();
+  const { mutate: saveGeneral, isPending: isSavingGeneral } = useSaveGeneralSettings();
+  const { mutate: saveNotifications, isPending: isSavingNotifications } =
+    useUpdateNotificationSettings();
+  const {
+    mutate: toggleGateway,
+    isPending: isTogglingGateway,
+    variables: gatewayVariables,
+  } = useTogglePaymentGateway();
+  const {
+    mutate: toggleModel,
+    isPending: isTogglingModel,
+    variables: modelVariables,
+  } = useToggleAIModel();
 
-  // Local state for form values
+  // Each toggle mutation is one instance shared by every row's switch — scope
+  // pending to the row actually mutating, or one slow toggle disables every
+  // switch in the section. Gateway/model requests carry their own id in
+  // `variables`; the notification request sends the whole preferences object,
+  // so the key being changed is tracked separately, set at the same time the
+  // mutation fires.
+  const pendingGatewayId = isTogglingGateway ? gatewayVariables?.gatewayId : null;
+  const pendingModelId = isTogglingModel ? modelVariables?.modelId : null;
+  const [pendingNotificationKey, setPendingNotificationKey] = useState(null);
+
+  // Local state for form values. Field names match the API's, so nothing has to
+  // be renamed on the way out — the old shape (`baseFee`, `fixedFee`,
+  // `currency`) was translated in the mutation and defaulted to USD.
   const [formData, setFormData] = useState({
-    baseFee: 2.5,
-    fixedFee: 0.3,
-    currency: "USD",
+    basePlatformFee: 0,
+    fixedFeePerTransaction: 0,
+    defaultCurrency: "NGN",
     gateways: [],
   });
 
-  // Initialize form data from API when payment settings load
+  // General settings are editable, so they need state — they used to be
+  // `defaultValue` on uncontrolled inputs with no save path at all.
+  const [generalForm, setGeneralForm] = useState(null);
+
   useEffect(() => {
     if (paymentSettings) {
       setFormData({
-        baseFee: paymentSettings.basePlatformFee || 0,
-        fixedFee: paymentSettings.fixedFeePerTransaction || 0,
-        currency: paymentSettings.defaultCurrency || "USD",
-        gateways: paymentSettings.gateways || [],
+        basePlatformFee: paymentSettings.basePlatformFee ?? 0,
+        fixedFeePerTransaction: paymentSettings.fixedFeePerTransaction ?? 0,
+        defaultCurrency: paymentSettings.defaultCurrency ?? "NGN",
+        gateways: paymentSettings.gateways ?? [],
       });
     }
   }, [paymentSettings]);
+
+  useEffect(() => {
+    if (generalSettings) setGeneralForm({ ...generalSettings });
+  }, [generalSettings]);
 
   const isLoading =
     paymentLoading || aiLoading || notificationLoading || generalLoading;
@@ -76,48 +133,78 @@ export default function PlatformSettingsPage() {
     { id: "general", label: "General", icon: generalIcon },
   ];
 
-  // Gateway icon mapping
+  // Gateway icon mapping. Only ids we ship an icon for; everything else falls
+  // back to the generic payment icon.
   const gatewayIconMap = {
     stripe: stripeIcon,
     paypal: paypalIcon,
     crypto: cryptoIcon,
   };
 
-  const handleSave = () => {
-    saveSettings(formData, {
+  const handleSave = (values) => {
+    savePayment(values ?? formData, {
       onSuccess: () => {
         setHasChanges(false);
+        showToast.success("Payment settings saved");
       },
+      onError: (err) => showToast.error("Could not save settings", err.message),
     });
   };
 
   const handleCancel = () => {
-    // Reset to API data
     if (paymentSettings) {
       setFormData({
-        baseFee: paymentSettings.basePlatformFee || 0,
-        fixedFee: paymentSettings.fixedFeePerTransaction || 0,
-        currency: paymentSettings.defaultCurrency || "USD",
-        gateways: paymentSettings.gateways || [],
+        basePlatformFee: paymentSettings.basePlatformFee ?? 0,
+        fixedFeePerTransaction: paymentSettings.fixedFeePerTransaction ?? 0,
+        defaultCurrency: paymentSettings.defaultCurrency ?? "NGN",
+        gateways: paymentSettings.gateways ?? [],
       });
     }
     setHasChanges(false);
   };
 
+  const handleSaveGeneral = () => {
+    if (!generalForm) return;
+    saveGeneral(generalForm, {
+      onSuccess: () => showToast.success("General settings saved"),
+      onError: (err) => showToast.error("Could not save settings", err.message),
+    });
+  };
+
+  /**
+   * The notification toggles were `<button>`s with no onClick — the whole tab
+   * was decorative. Each one now writes the flat boolean the API expects.
+   */
+  const handleToggleNotification = (key) => {
+    if (!notificationSettings) return;
+    setPendingNotificationKey(key);
+    saveNotifications(
+      { ...notificationSettings, [key]: !notificationSettings[key] },
+      {
+        onError: (err) => showToast.error("Could not save settings", err.message),
+        onSettled: () => setPendingNotificationKey(null),
+      },
+    );
+  };
+
   const handleToggleGateway = (gatewayId, currentStatus) => {
-    // Update local form data
     const updatedGateways = formData.gateways.map((gateway) =>
-      gateway.id === gatewayId ? { ...gateway, enabled: !currentStatus } : gateway
+      gateway.id === gatewayId ? { ...gateway, enabled: !currentStatus } : gateway,
     );
     setFormData({ ...formData, gateways: updatedGateways });
 
-    // Call API to toggle gateway
-    toggleGateway({ gatewayId, enabled: !currentStatus });
+    toggleGateway(
+      { gatewayId, enabled: !currentStatus },
+      { onError: (err) => showToast.error("Could not update gateway", err.message) },
+    );
     setHasChanges(true);
   };
 
   const handleToggleModel = (modelId, currentStatus) => {
-    toggleModel({ modelId, enabled: !currentStatus });
+    toggleModel(
+      { modelId, enabled: !currentStatus },
+      { onError: (err) => showToast.error("Could not update model", err.message) },
+    );
     setHasChanges(true);
   };
 
@@ -255,16 +342,22 @@ export default function PlatformSettingsPage() {
                         <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-full flex items-center justify-center flex-shrink-0">
                           <Image
                             src={gatewayIconMap[gateway.id] || paymentIcon}
-                            alt={gateway.name}
+                            alt=""
                             className="h-[18px] w-[18px] sm:h-[20px] sm:w-[20px]"
                           />
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-inter text-[14px] sm:text-[15px] font-bold text-white">
-                            {gateway.name}
+                            {labelFor(GATEWAY_LABELS, gateway.id)}
                           </p>
+                          {/* The API returns publicKey/secretKey, not a blurb.
+                              Whether keys are present is the fact an admin
+                              needs here; the old subtitle was marketing copy
+                              from the fixture. */}
                           <p className="font-inter text-[12px] sm:text-[13px] text-white/40 truncate">
-                            {gateway.description}
+                            {gateway.publicKey || gateway.secretKey
+                              ? "API keys configured"
+                              : "No API keys set"}
                           </p>
                         </div>
                       </div>
@@ -272,18 +365,23 @@ export default function PlatformSettingsPage() {
                         onClick={() =>
                           handleToggleGateway(gateway.id, gateway.enabled)
                         }
-                        className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ml-3"
+                        disabled={pendingGatewayId === gateway.id}
+                        className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ml-3 disabled:opacity-50 disabled:cursor-not-allowed"
                         style={{
                           backgroundColor: gateway.enabled
                             ? "var(--color-success-solid)"
                             : "var(--color-track-off)",
                         }}
                       >
-                        <span
-                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                            gateway.enabled ? "translate-x-6" : "translate-x-1"
-                          }`}
-                        />
+                        {pendingGatewayId === gateway.id ? (
+                          <span className="mx-auto h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        ) : (
+                          <span
+                            className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                              gateway.enabled ? "translate-x-6" : "translate-x-1"
+                            }`}
+                          />
+                        )}
                       </button>
                     </div>
                   ))}
@@ -338,34 +436,42 @@ export default function PlatformSettingsPage() {
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-chart-1 to-accent-solid rounded-full flex items-center justify-center flex-shrink-0">
                         <Image
                           src={aiConfigIcon}
-                          alt={model.name}
+                          alt=""
                           className="h-[18px] w-[18px] sm:h-[20px] sm:w-[20px]"
                         />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-inter text-[14px] sm:text-[15px] font-bold text-white">
-                          {model.name}
+                          {labelFor(MODEL_LABELS, model.id)}
                         </p>
+                        {/* `provider`, `purpose` and a per-request cost were
+                            fixture inventions — the API returns maxTokens and
+                            whether a key is set, so that is what is shown. */}
                         <p className="font-inter text-[12px] sm:text-[13px] text-white/50 truncate">
-                          {model.provider} • {model.purpose}
-                        </p>
-                        <p className="font-inter text-[11px] sm:text-[12px] text-white/30 mt-1">
-                          ${model.costPerRequest} per request
+                          {typeof model.maxTokens === "number"
+                            ? `Max ${model.maxTokens.toLocaleString()} tokens`
+                            : "Token limit not set"}
+                          {model.apiKey ? " • Key configured" : " • No key set"}
                         </p>
                       </div>
                     </div>
                     <button
                       onClick={() => handleToggleModel(model.id, model.enabled)}
-                      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ml-3"
+                      disabled={pendingModelId === model.id}
+                      className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 ml-3 disabled:opacity-50 disabled:cursor-not-allowed"
                       style={{
                         backgroundColor: model.enabled ? "var(--color-success-solid)" : "var(--color-track-off)",
                       }}
                     >
-                      <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                          model.enabled ? "translate-x-6" : "translate-x-1"
-                        }`}
-                      />
+                      {pendingModelId === model.id ? (
+                        <span className="mx-auto h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                      ) : (
+                        <span
+                          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                            model.enabled ? "translate-x-6" : "translate-x-1"
+                          }`}
+                        />
+                      )}
                     </button>
                   </div>
                 ))}
@@ -389,86 +495,91 @@ export default function PlatformSettingsPage() {
                 </h2>
               </div>
 
-              <div className="space-y-5 sm:space-y-6">
-                {/* Email Notifications */}
-                <div>
-                  <h3 className="font-inter text-[14px] sm:text-[15px] font-bold text-white mb-3 sm:mb-4">
-                    Email Notifications
-                  </h3>
-                  <div className="space-y-3">
-                    {Object.entries(notificationSettings.email).map(
-                      ([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between gap-3"
-                        >
-                          <span className="font-inter text-[13px] sm:text-[14px] text-white/50 capitalize flex-1">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
-                          </span>
-                          <button
-                            className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
-                            style={{
-                              backgroundColor: value ? "var(--color-success-solid)" : "var(--color-track-off)",
-                            }}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                value ? "translate-x-6" : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      ),
-                    )}
+              {/* The API answers seven flat booleans, not the nested
+                  email/sms/push groups the fixture had. They are grouped here
+                  for reading; each toggle writes the whole object back. */}
+              <div className="space-y-6">
+                {[
+                  {
+                    heading: "Channels",
+                    keys: [
+                      ["emailEnabled", "Email"],
+                      ["smsEnabled", "SMS"],
+                      ["pushEnabled", "Push"],
+                      ["webhookEnabled", "Webhooks"],
+                    ],
+                  },
+                  {
+                    heading: "Alerts",
+                    keys: [
+                      ["lowStockAlerts", "Low stock"],
+                      ["highValueOrderAlerts", "High-value orders"],
+                      ["paymentFailureAlerts", "Payment failures"],
+                    ],
+                  },
+                ].map((group, gi) => (
+                  <div
+                    key={group.heading}
+                    className={gi > 0 ? "pt-5 sm:pt-6 border-t border-white/08" : ""}
+                  >
+                    <h3 className="font-inter text-[14px] sm:text-[15px] font-bold text-white mb-3 sm:mb-4">
+                      {group.heading}
+                    </h3>
+                    <div className="space-y-3">
+                      {group.keys
+                        .filter(([key]) => key in notificationSettings)
+                        .map(([key, label]) => {
+                          const value = Boolean(notificationSettings[key]);
+                          return (
+                            <div key={key} className="flex items-center justify-between gap-3">
+                              <span className="font-inter text-[13px] sm:text-[14px] text-white/50 flex-1">
+                                {label}
+                              </span>
+                              <button
+                                type="button"
+                                role="switch"
+                                aria-checked={value}
+                                aria-label={label}
+                                onClick={() => handleToggleNotification(key)}
+                                disabled={pendingNotificationKey === key}
+                                className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0 disabled:opacity-50 disabled:cursor-not-allowed"
+                                style={{
+                                  backgroundColor: value
+                                    ? "var(--color-success-solid)"
+                                    : "var(--color-track-off)",
+                                }}
+                              >
+                                {pendingNotificationKey === key ? (
+                                  <span className="mx-auto h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                                ) : (
+                                  <span
+                                    className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                      value ? "translate-x-6" : "translate-x-1"
+                                    }`}
+                                  />
+                                )}
+                              </button>
+                            </div>
+                          );
+                        })}
+                    </div>
                   </div>
-                </div>
-
-                {/* SMS Notifications */}
-                <div className="pt-5 sm:pt-6 border-t border-white/08">
-                  <h3 className="font-inter text-[14px] sm:text-[15px] font-bold text-white mb-3 sm:mb-4">
-                    SMS Notifications
-                  </h3>
-                  <div className="space-y-3">
-                    {Object.entries(notificationSettings.sms).map(
-                      ([key, value]) => (
-                        <div
-                          key={key}
-                          className="flex items-center justify-between gap-3"
-                        >
-                          <span className="font-inter text-[13px] sm:text-[14px] text-white/50 capitalize flex-1">
-                            {key.replace(/([A-Z])/g, " $1").trim()}
-                          </span>
-                          <button
-                            className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
-                            style={{
-                              backgroundColor: value ? "var(--color-success-solid)" : "var(--color-track-off)",
-                            }}
-                          >
-                            <span
-                              className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                value ? "translate-x-6" : "translate-x-1"
-                              }`}
-                            />
-                          </button>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
           )}
 
-          {/* General Tab */}
-          {activeTab === "general" && generalSettings && (
+          {/* General Tab ────────────────────────────────────────────────
+              The API has exactly four general fields. Timezone, date format
+              and session timeout were fixture-only: the picker wrote to
+              nothing, and PUT /admin/settings/general would have dropped them.
+              The inputs were also uncontrolled `defaultValue`s with no save
+              button — editing them did nothing at all. */}
+          {activeTab === "general" && generalForm && (
             <div className="bg-surface rounded-xl border border-white/08 p-4 sm:p-6">
               <div className="flex items-center gap-3 mb-4 sm:mb-6">
                 <div className="w-10 h-10 bg-white/08 rounded-lg flex items-center justify-center shrink-0">
-                  <Image
-                    src={generalIcon}
-                    alt="General Settings"
-                    className="h-[20px] w-[20px]"
-                  />
+                  <Image src={generalIcon} alt="" className="h-[20px] w-[20px]" />
                 </div>
                 <h2 className="font-inter text-[16px] sm:text-[18px] font-bold text-white">
                   General Settings
@@ -477,47 +588,117 @@ export default function PlatformSettingsPage() {
 
               <div className="space-y-5 sm:space-y-6">
                 <div>
-                  <label className="block font-inter text-[14px] font-medium text-white/70 mb-2">
+                  <label
+                    htmlFor="platformName"
+                    className="block font-inter text-[14px] font-medium text-white/70 mb-2"
+                  >
                     Platform Name
                   </label>
                   <input
+                    id="platformName"
                     type="text"
-                    defaultValue={generalSettings.platformName}
+                    value={generalForm.platformName ?? ""}
+                    onChange={(e) =>
+                      setGeneralForm({ ...generalForm, platformName: e.target.value })
+                    }
                     className="w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-inter text-[14px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-inter text-[14px] font-medium text-white/70 mb-2">
+                  <label
+                    htmlFor="supportEmail"
+                    className="block font-inter text-[14px] font-medium text-white/70 mb-2"
+                  >
                     Support Email
                   </label>
                   <input
+                    id="supportEmail"
                     type="email"
-                    defaultValue={generalSettings.supportEmail}
+                    value={generalForm.supportEmail ?? ""}
+                    onChange={(e) =>
+                      setGeneralForm({ ...generalForm, supportEmail: e.target.value })
+                    }
                     className="w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-inter text-[14px] text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-transparent transition-all"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-inter text-[14px] font-medium text-white/70 mb-2">
-                    Timezone
+                  <label
+                    htmlFor="apiRateLimit"
+                    className="block font-inter text-[14px] font-medium text-white/70 mb-2"
+                  >
+                    API Rate Limit
                   </label>
-                  <div className="relative">
-                    <select
-                      defaultValue={generalSettings.timezone}
-                      className="appearance-none w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-inter text-[14px] text-white focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-transparent transition-all"
-                    >
-                      {timezoneOptions.map((tz) => (
-                        <option key={tz.value} value={tz.value}>
-                          {tz.label}
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown
-                      size={16}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 pointer-events-none"
-                    />
+                  <input
+                    id="apiRateLimit"
+                    type="number"
+                    min={0}
+                    value={generalForm.apiRateLimit ?? 0}
+                    onChange={(e) =>
+                      setGeneralForm({
+                        ...generalForm,
+                        apiRateLimit: Number(e.target.value),
+                      })
+                    }
+                    className="w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-inter text-[14px] text-white focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-transparent transition-all"
+                  />
+                  <p className="mt-1.5 font-inter text-[12px] text-white/30">
+                    Requests per hour.
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-between gap-3 pt-1">
+                  <div>
+                    <p className="font-inter text-[14px] font-medium text-white/70">
+                      Maintenance Mode
+                    </p>
+                    <p className="font-inter text-[12px] text-white/30">
+                      Takes the storefront offline for everyone but admins.
+                    </p>
                   </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={Boolean(generalForm.maintenanceMode)}
+                    aria-label="Maintenance mode"
+                    onClick={() =>
+                      setGeneralForm({
+                        ...generalForm,
+                        maintenanceMode: !generalForm.maintenanceMode,
+                      })
+                    }
+                    className="relative inline-flex h-6 w-11 items-center rounded-full transition-colors flex-shrink-0"
+                    style={{
+                      backgroundColor: generalForm.maintenanceMode
+                        ? "var(--color-success-solid)"
+                        : "var(--color-track-off)",
+                    }}
+                  >
+                    <span
+                      className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        generalForm.maintenanceMode ? "translate-x-6" : "translate-x-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                <div className="pt-2 border-t border-white/08 flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={handleSaveGeneral}
+                    disabled={isSavingGeneral}
+                    className="px-5 py-2.5 rounded-lg bg-accent-solid text-white font-inter text-[14px] font-semibold transition-opacity disabled:opacity-50"
+                  >
+                    {isSavingGeneral ? "Saving…" : "Save changes"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setGeneralForm({ ...generalSettings })}
+                    className="px-5 py-2.5 rounded-lg border border-white/15 text-white/70 font-inter text-[14px] hover:text-white transition-colors"
+                  >
+                    Reset
+                  </button>
                 </div>
               </div>
             </div>

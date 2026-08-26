@@ -21,7 +21,7 @@ const LINKS = [
     Icon: CalendarCheck,
     label: "Book a Consultation",
     desc: "Let our team help you find what you need",
-    href: "/contact?type=consultation",
+    href: "/consultation",
   },
 ];
 

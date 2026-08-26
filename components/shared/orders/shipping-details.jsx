@@ -6,12 +6,19 @@ import { MapPin, Copy, Check } from "lucide-react";
 import { useState } from "react";
 import { useCopyTracking } from "@/hooks/use-order-details";
 
-export default function ShippingDetails({ shipping, tracking }) {
+/**
+ * Order shipping fields are flat — `shippingFullName`, `shippingAddress`,
+ * `shippingCity`, `shippingState`, `shippingPhone` — not a nested
+ * `shipping.address.{line1,city,country}` object, and there is no carrier
+ * field anywhere on the response (lib/api/schemas/orders.ts). Only
+ * `trackingNumber` exists, and it was null on every order observed so far.
+ */
+export default function ShippingDetails({ order }) {
   const [copied, setCopied] = useState(false);
   const copyTracking = useCopyTracking();
 
   const handleCopy = () => {
-    copyTracking.mutate(tracking?.trackingNumber, {
+    copyTracking.mutate(order?.trackingNumber, {
       onSuccess: () => {
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
@@ -35,37 +42,43 @@ export default function ShippingDetails({ shipping, tracking }) {
         </div>
 
         <div className="text-[14px] leading-relaxed">
-          <p className="font-semibold text-white mb-1">{shipping?.recipient}</p>
+          <p className="font-semibold text-white mb-1">{order?.shippingFullName}</p>
           <p className="text-white/45">
-            {shipping?.address.line1}<br />
-            {shipping?.address.city}, {shipping?.address.country}
+            {order?.shippingAddress}
+            <br />
+            {order?.shippingCity}, {order?.shippingState}
           </p>
+          {order?.shippingPhone && (
+            <p className="text-white/45 mt-1">{order.shippingPhone}</p>
+          )}
         </div>
       </div>
 
-      {/* Tracking Information */}
-      <div className="pt-6 border-t border-white/06">
-        <h4 className="text-[13px] font-semibold text-white/30 uppercase tracking-widest mb-3">
-          Carrier Tracking
-        </h4>
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-[15px] font-semibold text-white">
-              {tracking?.carrier}: {tracking?.trackingNumber}
-            </p>
+      {/* Tracking Information — only when the backend has actually sent one */}
+      {order?.trackingNumber && (
+        <div className="pt-6 border-t border-white/06">
+          <h4 className="text-[13px] font-semibold text-white/30 uppercase tracking-widest mb-3">
+            Tracking
+          </h4>
+          <div className="flex items-center justify-between">
+            <p className="text-[15px] font-semibold text-white">{order.trackingNumber}</p>
+            <button
+              onClick={handleCopy}
+              className="px-3 py-1.5 text-[13px] font-medium text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-md transition-colors flex items-center gap-1"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-4 h-4" /> Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" /> COPY
+                </>
+              )}
+            </button>
           </div>
-          <button
-            onClick={handleCopy}
-            className="px-3 py-1.5 text-[13px] font-medium text-[#D4AF37] hover:bg-[#D4AF37]/10 rounded-md transition-colors flex items-center gap-1"
-          >
-            {copied ? (
-              <><Check className="w-4 h-4" /> Copied</>
-            ) : (
-              <><Copy className="w-4 h-4" /> COPY</>
-            )}
-          </button>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }

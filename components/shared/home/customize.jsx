@@ -37,13 +37,13 @@ const CustomizeSection = () => {
               </div>
             </div>
 
-            {/* Chair Image - Hidden on mobile, visible on larger screens */}
-            <div className="hidden md:block absolute right-12 lg:right-20 -bottom-10 w-[400px] lg:w-[500px] h-[400px] lg:h-[500px]">
+            {/* Project photo - Hidden on mobile, visible on larger screens */}
+            <div className="hidden md:block absolute right-12 lg:right-20 top-1/2 -translate-y-1/2 w-100 lg:w-125 h-70 lg:h-80 rounded-xl overflow-hidden shadow-2xl">
               <Image
-                src="/chair.png"
-                alt="Modern green chair"
+                src="/site-images/web/exterior-courtyard-dusk.jpg"
+                alt="TBM renovated courtyard at dusk"
                 fill
-                className="object-contain"
+                className="object-cover"
                 priority
               />
             </div>

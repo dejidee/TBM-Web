@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Check,
   Star,
-  Wand2,
   Zap,
   Crown,
   AlertCircle,
@@ -17,7 +16,8 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { usePricing } from "@/hooks/use-pricing";
-import { useCurrentUser } from "@/hooks/use-auth";
+import { enter, RISE } from "@/lib/theme/motion";
+import { useSession } from "@/hooks/use-session";
 import {
   useSubscriptionState,
   useActivateEconomy,
@@ -252,7 +252,7 @@ const TIERS = [
       "50 generations per billing period",
       "Multiple style variations",
       "Style selection control",
-      "Basic cost range estimate",
+      "Basic cost range estimate — Coming Soon",
       "Priority rendering queue",
     ],
   },
@@ -265,10 +265,10 @@ const TIERS = [
     badge: "Full Access",
     features: [
       "Unlimited generations",
-      "Full material mapping (BOQ)",
-      "Detailed cost breakdown",
-      "Start Project with TBM",
-      "Buy Materials via Bogat",
+      "Full material mapping (BOQ) — Coming Soon",
+      "Detailed cost breakdown — Coming Soon",
+      "Start Project with TBM — Coming Soon",
+      "Buy Bathroom Vanities via Bogat — Coming Soon",
       "Execution-ready output",
     ],
   },
@@ -315,18 +315,18 @@ function SwitchPlanModal({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 24, scale: 0.96 }}
               transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full max-w-md overflow-hidden font-manrope border border-white/10"
+              className="w-full max-w-md overflow-hidden font-manrope border border-z-line"
               style={{
-                background: "#0d0b08",
+                background: "var(--color-z-panel)",
                 boxShadow: "0 24px 64px rgba(0,0,0,0.6)",
               }}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="px-6 pt-6 pb-2 border-b border-white/08">
+              <div className="px-6 pt-6 pb-2 border-b border-z-line">
                 <h2 className="text-lg font-bold text-white">
                   Switch to {capitalize(toTier)}?
                 </h2>
-                <p className="text-white/40 text-sm mt-1 mb-4 font-manrope">
+                <p className="text-white/70 text-sm mt-1 mb-4 font-manrope">
                   You currently have an active{" "}
                   <span className="text-white/70 font-semibold">
                     {capitalize(fromTier)}
@@ -347,11 +347,11 @@ function SwitchPlanModal({
                   <p className="font-semibold text-amber-400">
                     What happens when you switch:
                   </p>
-                  <ul className="space-y-1.5 text-white/60">
+                  <ul className="space-y-1.5 text-white/70">
                     <li className="flex items-start gap-2">
                       <span className="text-amber-400 mt-0.5">•</span>
                       Your{" "}
-                      <span className="text-white/80 font-medium">
+                      <span className="text-white font-medium">
                         {capitalize(fromTier)}
                       </span>{" "}
                       plan will be canceled immediately.
@@ -360,7 +360,7 @@ function SwitchPlanModal({
                       <li className="flex items-start gap-2">
                         <span className="text-amber-400 mt-0.5">•</span>
                         You had access until{" "}
-                        <span className="text-white/80 font-medium">
+                        <span className="text-white font-medium">
                           {accessDate}
                         </span>
                         . No refund is issued for unused time.
@@ -369,7 +369,7 @@ function SwitchPlanModal({
                     <li className="flex items-start gap-2">
                       <span className="text-amber-400 mt-0.5">•</span>
                       You&apos;ll be taken to payment to activate{" "}
-                      <span className="text-white/80 font-medium">
+                      <span className="text-white font-medium">
                         {capitalize(toTier)}
                       </span>
                       .
@@ -387,7 +387,7 @@ function SwitchPlanModal({
                   <button
                     onClick={onClose}
                     disabled={isBusy}
-                    className="flex-1 py-3 text-sm font-semibold text-white/50 border border-white/10 hover:bg-white/05 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                    className="flex-1 py-3 text-sm font-semibold text-white/50 border border-z-line hover:bg-white/05 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
                   >
                     Keep My Plan
                   </button>
@@ -429,7 +429,10 @@ export default function PackageTiers({ id, onSubscribed }) {
   const [promoStatus, setPromoStatus] = useState(null); // "applied" | "invalid" | null
 
   const router = useRouter();
-  const { data: user } = useCurrentUser();
+  // Signed-in-ness only — no profile field is read here, so this must come from
+  // the session, not the profile. useCurrentUser() resolves a beat later, and in
+  // that gap a signed-in user who clicks a plan gets bounced to /sign-in.
+  const { isAuthenticated } = useSession();
   const {
     data: pricingData,
     isLoading: priceLoading,
@@ -492,7 +495,7 @@ export default function PackageTiers({ id, onSubscribed }) {
 
   const handleSubscribe = async (tierId) => {
     setCtaError(null);
-    if (!user) {
+    if (!isAuthenticated) {
       router.push(`/sign-in?from=${encodeURIComponent("/ziora#pricing")}`);
       return;
     }
@@ -554,27 +557,30 @@ export default function PackageTiers({ id, onSubscribed }) {
     <>
       <section
         id={id}
-        className="bg-black py-16 sm:py-20 font-manrope scroll-mt-20"
+        className="bg-z-base py-16 sm:py-20 font-manrope scroll-mt-20"
       >
-        <div className="max-w-315 mx-auto px-4 sm:px-6 lg:px-8">
+        {/* max-w-7xl, matching the hero and how-it-works. This was max-w-315
+            (1260px) — 20px narrower than everything above it, which reads as a
+            container that slipped rather than a deliberate step. */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* ── Section header ───────────────────────────────────── */}
           <motion.div
             className="mb-12"
-            initial={{ opacity: 0, y: 24 }}
+            initial={RISE}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
+            transition={enter()}
           >
-            <span className="inline-flex items-center gap-2 text-gold text-xs font-bold uppercase tracking-[0.2em] mb-4">
-              <Wand2 className="w-3 h-3" /> Ziora Intelligence Plans
-            </span>
+            {/* The Wand2 that used to sit here was the only section eyebrow on
+                the page carrying an icon, at 12px beside letterspaced caps. */}
+            <span className="z-eyebrow mb-4">Ziora Intelligence Plans</span>
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 tracking-tight font-primary">
               {currentTier && isActive ? "Your Plan" : "Choose Your Plan"}
             </h2>
-            <p className="text-white/40 text-base max-w-xl font-manrope">
+            <p className="text-white/70 text-base max-w-xl font-manrope">
               {currentTier && isActive
                 ? "You're all set. Manage your subscription or upgrade below."
-                : "Start free and upgrade when you're ready for deeper design power, cost estimates, and full project execution."}
+                : "Start free and upgrade when you're ready for deeper design power and full project execution."}
             </p>
           </motion.div>
 
@@ -590,7 +596,7 @@ export default function PackageTiers({ id, onSubscribed }) {
               <div
                 className="inline-flex items-center gap-0 border p-1"
                 style={{
-                  background: "#0d0b08",
+                  background: "var(--color-z-panel)",
                   borderColor: "rgba(255,255,255,0.10)",
                 }}
               >
@@ -598,7 +604,7 @@ export default function PackageTiers({ id, onSubscribed }) {
                   <button
                     key={cycle}
                     onClick={() => setBilling(cycle)}
-                    className="relative px-5 py-2 text-sm font-semibold transition-colors font-manrope text-black"
+                    className="relative min-h-11 px-5 py-2 text-sm font-semibold transition-colors font-manrope text-black"
                     style={
                       billing === cycle
                         ? {
@@ -627,7 +633,7 @@ export default function PackageTiers({ id, onSubscribed }) {
                 ))}
               </div>
               {isActive && currentTier && currentTier !== "economy" && (
-                <p className="ml-4 text-xs text-white/30">
+                <p className="ml-4 text-xs text-white/50">
                   Billing cycle is locked to your current plan.
                 </p>
               )}
@@ -651,12 +657,12 @@ export default function PackageTiers({ id, onSubscribed }) {
                     onChange={(e) => setPromoInput(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && handleApplyPromo()}
                     placeholder="Promo code"
-                    className="flex-1 px-3 py-2 text-sm bg-white/05 border border-white/10 text-white placeholder-white/30 outline-none focus:border-gold/40 font-manrope"
+                    className="flex-1 px-3 py-2 text-sm bg-white/05 border border-z-line text-white placeholder-white/50 outline-none focus:border-gold/40 font-manrope"
                   />
                   <button
                     onClick={handleApplyPromo}
                     disabled={!promoInput.trim() || priceLoading}
-                    className="px-4 py-2 text-sm font-semibold font-manrope text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
+                    className="min-h-11 px-4 py-2 text-sm font-semibold font-manrope text-white disabled:opacity-40 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
                     style={{
                       background: "linear-gradient(180deg, #E8C230 0%, #B8940A 100%)",
                       boxShadow: "inset 0 1px 0 rgba(255,255,255,0.2), 0 0 14px rgba(212,175,55,0.22)",
@@ -686,13 +692,13 @@ export default function PackageTiers({ id, onSubscribed }) {
                     </span>
                   )}
                   {promoStatus === null && (
-                    <span className="text-xs text-white/40 font-manrope">
+                    <span className="text-xs text-white/50 font-manrope">
                       Checking…
                     </span>
                   )}
                   <button
                     onClick={handleRemovePromo}
-                    className="text-xs text-white/40 hover:text-white/70 underline font-manrope transition-colors"
+                    className="inline-flex items-center min-h-11 text-xs text-white/50 hover:text-white underline font-manrope transition-colors"
                   >
                     Remove
                   </button>
@@ -723,7 +729,7 @@ export default function PackageTiers({ id, onSubscribed }) {
           )}
 
           {/* ── Tier cards ───────────────────────────────────────── */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-black">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-z-line">
             {TIERS.map((tier, i) => {
               const Icon = tier.icon;
               const isHidden =
@@ -755,14 +761,14 @@ export default function PackageTiers({ id, onSubscribed }) {
 
               const isBusy = isSubmitting && pendingTier === tier.id;
 
-              const cardBg = tier.dark ? "rgba(212,175,55,0.04)" : "#0d0b08";
+              const cardBg = tier.dark ? "rgba(212,175,55,0.04)" : "var(--color-z-panel)";
               const cardBorder = tier.dark
                 ? "rgba(212,175,55,0.20)"
                 : "rgba(255,255,255,0.08)";
               const textMain = "text-white";
               const textMuted = "text-white/50";
-              const divider = "border-white/10";
-              const iconBorder = "border-white/10";
+              const divider = "border-z-line";
+              const iconBorder = "border-z-line";
 
               // Outer ring for current plan
               const ringStyle = isCurrentActive
@@ -1024,7 +1030,7 @@ export default function PackageTiers({ id, onSubscribed }) {
 
           {/* ── Footer note ──────────────────────────────────────── */}
           <motion.p
-            className="text-sm text-white/30 mt-10 font-manrope"
+            className="text-sm text-white/50 mt-10 font-manrope"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}

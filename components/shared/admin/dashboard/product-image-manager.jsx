@@ -133,7 +133,7 @@ export default function ProductImageManager({ productId, images: initialImages =
                 alt={img.altText ?? ""}
                 fill
                 sizes="(max-width: 640px) 50vw, 200px"
-                className="object-cover"
+                className="object-contain"
               />
 
               {img.isPrimary && (

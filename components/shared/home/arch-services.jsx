@@ -11,7 +11,7 @@ const PILLARS = [
     desc: "End-to-end project execution — from initial inspection and design through to final handover. We handle homes, apartments, and commercial spaces across Abuja and Lagos.",
     cta: "View Projects",
     href: "/project",
-    src: "/about2.png",
+    src: "/site-images/web/villa-modern-after.jpg",
   },
   {
     label: "Bogat Store",
@@ -19,15 +19,15 @@ const PILLARS = [
     desc: "Browse and order premium construction materials directly — WCs, basins, faucets, tiles, water heaters, and more. Fixed prices and request-quote options available.",
     cta: "Shop Materials",
     href: "/materials",
-    src: "/product-1.jpg",
+    src: "/site-images/web/kitchen-island.jpg",
   },
   {
     label: "Ziora AI",
     tagline: "Before/After · Inspiration · Estimate Guidance",
     desc: "Upload a room photo, pick a style, and see a photorealistic concept in seconds. Use the result to get an estimate, shop matching materials, or book a consultation.",
-    cta: "Try Ziora AI",
+    cta: "Design with Ziora AI",
     href: "/ziora",
-    src: "/product-3.jpg",
+    src: "/site-images/web/interior-finished.jpg",
   },
 ];
 

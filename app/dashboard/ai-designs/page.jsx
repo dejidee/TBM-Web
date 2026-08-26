@@ -4,72 +4,125 @@
 import { motion } from "framer-motion";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Wand2 } from "lucide-react";
+import { Wand2, Calculator } from "lucide-react";
 
 import DashboardLayout from "@/components/shared/dashboard/layout";
 import DesignsFilters from "@/components/shared/dashboard/designs/filters";
 import DesignsGrid from "@/components/shared/dashboard/designs/grid";
-import { useDesigns } from "@/hooks/use-designs";
 import SubscriptionPanel from "@/components/shared/dashboard/designs/subscription-panel";
+import { useDesigns } from "@/hooks/use-designs";
 
-const CREATE_HREF = "/dashboard/ai-designs/new";
+/** The studio lives outside the dashboard shell — see app/ziora/studio/layout.jsx.
+ *  /dashboard/ai-designs/new redirects here for links already in the wild. */
+const CREATE_HREF = "/ziora/studio";
+
+const DEFAULT_FILTERS = {
+  search: "",
+  roomType: "all",
+  sortBy: "newest",
+  view: "grid",
+};
+
+/** Rows per page. Two full rows at the widest (4-column) breakpoint. */
+const PAGE_SIZE = 8;
 
 export default function DesignsPage() {
-  const [filters, setFilters] = useState({
-    search: "",
-    roomType: "all",
-    sortBy: "newest",
-    view: "grid",
-  });
-  const router = useRouter();
+  const [filters, setFiltersState] = useState(DEFAULT_FILTERS);
+  const [page, setPage] = useState(1);
 
-  const { data: designs, isLoading, isError } = useDesigns(filters);
+  // Any filter change restarts at page 1 — page 3 of "all designs" is not a
+  // page of "bathrooms". `view` is purely presentational and keeps the page.
+  const setFilters = (update) => {
+    setFiltersState((prev) => {
+      const next = typeof update === "function" ? update(prev) : update;
+      if (
+        next.roomType !== prev.roomType ||
+        next.search !== prev.search ||
+        next.sortBy !== prev.sortBy
+      ) {
+        setPage(1);
+      }
+      return next;
+    });
+  };
+
+  // `isPending`, not `isLoading`: the query is gated on the session, and while
+  // the session resolves it is pending-but-idle. `isLoading` is false then,
+  // which would flash the "no designs yet" pitch at every signed-in user.
+  const { data, isPending, isError, refetch } = useDesigns({
+    ...filters,
+    page,
+    limit: PAGE_SIZE,
+  });
+  const designs = data?.designs;
+  const pagination = data?.pagination;
+
+  // `sortBy` and `view` reorder or restyle the same set, so they are not
+  // filters — narrowing is what decides whether an empty result is a dead end.
+  const hasActiveFilters = filters.roomType !== "all" || filters.search !== "";
+
+  // Total across all pages, not the length of this one.
+  const count = pagination?.total ?? designs?.length ?? 0;
+
+  // A room-type tab strip and a sort dropdown above a single design is furniture
+  // for a gallery that does not exist yet. Shown once there is something to sort
+  // — or whenever a filter is on, so the user can always undo one.
+  const showFilters = hasActiveFilters || count > 3;
 
   return (
     <DashboardLayout>
-      <div className="space-y-6 pt-12 md:pt-0 w-full">
+      <div className="w-full space-y-6">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: -12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex flex-col py-2 sm:flex-row sm:items-start sm:justify-between gap-4 border-b border-white/08"
+          transition={{ duration: 0.45 }}
+          className="flex flex-col gap-4 border-b border-white/08 pb-6 sm:flex-row sm:items-start sm:justify-between"
         >
           <div>
-            <h1 className="text-[28px] md:text-[32px] font-extrabold text-white leading-tight">
+            <h1 className="text-[28px] font-semibold leading-tight text-white md:text-[32px]">
               My Ziora Designs
             </h1>
-            <p className="text-[15px] text-white/50 font-medium mt-1 max-w-2xl">
-              Browse, edit, and organize your Ziora-generated interior
-              visualizations. All your creative ideas in one place.
+            <p className="mt-1.5 max-w-2xl text-[15px] text-white/45">
+              {count > 0
+                ? `${count} ${count === 1 ? "design" : "designs"} in your gallery.`
+                : "Every space you render with Ziora is saved here."}
             </p>
           </div>
 
-          {/* Create New Design — navigates to the full creation page. */}
-          <Link
-            href={CREATE_HREF}
-            className="relative inline-flex items-center gap-2 px-5 py-3 rounded-xl text-[14px] font-semibold text-black hover:opacity-90 active:scale-[0.98] transition-all self-start sm:self-auto whitespace-nowrap"
-            style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
-          >
-            <Wand2 className="w-4 h-4" />
-            Create New Design
-          </Link>
+          <div className="flex shrink-0 items-center gap-3 self-start sm:self-auto">
+            <Link
+              href="/dashboard/ai-designs/estimates"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl border border-white/15 px-5 text-[14px] font-semibold text-white/70 transition-colors hover:border-white/30 hover:text-white"
+            >
+              <Calculator className="h-4 w-4" strokeWidth={2} />
+              My Estimates
+            </Link>
+            <Link
+              href={CREATE_HREF}
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl px-5 text-[14px] font-semibold text-black transition-all hover:opacity-90 active:scale-[0.98]"
+              style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+            >
+              <Wand2 className="h-4 w-4" strokeWidth={2} />
+              Create New Design
+            </Link>
+          </div>
         </motion.div>
 
-        {/* Subscription status panel */}
         <SubscriptionPanel />
 
-        {/* Filters */}
-        <DesignsFilters filters={filters} setFilters={setFilters} />
+        {showFilters && <DesignsFilters filters={filters} setFilters={setFilters} />}
 
-        {/* Designs Grid */}
         <DesignsGrid
           designs={designs}
-          isLoading={isLoading}
+          pagination={pagination}
+          onPageChange={setPage}
+          isLoading={isPending}
           isError={isError}
           view={filters.view}
-          onOpenModal={() => router.push(CREATE_HREF)}
+          hasActiveFilters={hasActiveFilters}
+          onClearFilters={() => setFilters(DEFAULT_FILTERS)}
+          onRetry={refetch}
         />
       </div>
     </DashboardLayout>

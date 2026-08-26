@@ -2,55 +2,70 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
 import DesignCard from "./card";
-import CreateNewCard from "./create-new-card";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import DesignsEmptyState from "./empty-state";
+import SectionEmpty from "@/components/shared/dashboard/section-empty";
+import SectionError from "@/components/shared/dashboard/section-error";
+import { ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
 
-export default function DesignsGrid({ designs, isLoading, isError, view, onOpenModal }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 8;
-
+/**
+ * The gallery.
+ *
+ * There is no "Create New" tile in the grid any more. The page header already
+ * carries a permanent Create New Design button, so the dashed tile was a second
+ * copy of the same action — and because it was appended to the item list it
+ * also skewed the pagination maths (`designs.length + 1`) and reappeared on
+ * whichever page it happened to land on.
+ *
+ * Pagination is the server's (`pagination` from GET /Designs). It used to be
+ * sliced client-side from a single fetch — which, with the backend's default
+ * page of 10, meant a gallery could never show an eleventh design.
+ */
+export default function DesignsGrid({
+  designs,
+  pagination,
+  onPageChange,
+  isLoading,
+  isError,
+  view,
+  hasActiveFilters,
+  onClearFilters,
+  onRetry,
+}) {
   if (isLoading) return <LoadingSkeleton view={view} />;
 
   if (isError) {
     return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl p-12 border border-white/08 text-center"
-        style={{ background: "#0d0b08" }}
-      >
-        <p className="text-[14px] text-white/30">Failed to load designs. Please try again.</p>
-      </motion.div>
+      <SectionError
+        title="We couldn't load your designs"
+        body="Your renders are safe — this is a problem reaching them. Try again in a moment."
+        onRetry={onRetry}
+      />
     );
   }
 
   if (!designs || designs.length === 0) {
-    return (
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="rounded-2xl p-12 border border-white/08 text-center"
-        style={{ background: "#0d0b08" }}
-      >
-        <p className="text-[16px] font-medium text-white mb-2">No designs yet</p>
-        <p className="text-[14px] text-white/40 mb-6">
-          Start creating AI-generated visualizations for your projects
-        </p>
-        <div className="max-w-sm mx-auto">
-          <CreateNewCard onOpenModal={onOpenModal} />
-        </div>
-      </motion.div>
-    );
+    // Two different empty states. "Nothing matches this filter" is a dead end
+    // the user created and can undo; "no designs at all" is the onboarding
+    // moment. Showing the onboarding pitch to someone who just filtered by
+    // Bathroom would read as though their designs had been deleted.
+    if (hasActiveFilters) {
+      return (
+        <SectionEmpty
+          compact
+          icon={SlidersHorizontal}
+          title="No designs match those filters"
+          body="Try a different room type, or clear the filters to see everything."
+          secondary={{ label: "Clear filters", onClick: onClearFilters }}
+        />
+      );
+    }
+    return <DesignsEmptyState />;
   }
 
-  const totalItems = designs.length + 1;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const displayItems = [...designs, { id: "create-new", isCreateNew: true }];
-  const currentItems = displayItems.slice(startIndex, endIndex);
+  const currentPage = pagination?.page ?? 1;
+  const totalPages = pagination?.totalPages ?? 1;
+  const currentItems = designs;
 
   return (
     <>
@@ -60,27 +75,19 @@ export default function DesignsGrid({ designs, isLoading, isError, view, onOpenM
         transition={{ duration: 0.5, delay: 0.2 }}
       >
         {view === "grid" ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             <AnimatePresence mode="popLayout">
-              {currentItems.map((item, index) =>
-                item.isCreateNew ? (
-                  <CreateNewCard key="create-new" index={index} onOpenModal={onOpenModal} />
-                ) : (
-                  <DesignCard key={item.id} design={item} index={index} />
-                ),
-              )}
+              {currentItems.map((item, index) => (
+                <DesignCard key={item.id} design={item} index={index} />
+              ))}
             </AnimatePresence>
           </div>
         ) : (
           <div className="space-y-4">
             <AnimatePresence mode="popLayout">
-              {currentItems.map((item, index) =>
-                item.isCreateNew ? (
-                  <CreateNewCard key="create-new" index={index} isList onOpenModal={onOpenModal} />
-                ) : (
-                  <DesignCard key={item.id} design={item} index={index} isList />
-                ),
-              )}
+              {currentItems.map((item, index) => (
+                <DesignCard key={item.id} design={item} index={index} isList />
+              ))}
             </AnimatePresence>
           </div>
         )}
@@ -89,7 +96,7 @@ export default function DesignsGrid({ designs, isLoading, isError, view, onOpenM
       {totalPages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-8">
           <button
-            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+            onClick={() => onPageChange(Math.max(1, currentPage - 1))}
             disabled={currentPage === 1}
             className={`p-2 rounded-lg border border-white/10 transition-all ${
               currentPage === 1 ? "text-white/20 cursor-not-allowed" : "text-white/50 hover:bg-white/05"
@@ -102,7 +109,7 @@ export default function DesignsGrid({ designs, isLoading, isError, view, onOpenM
             {[...Array(totalPages)].map((_, i) => (
               <button
                 key={i + 1}
-                onClick={() => setCurrentPage(i + 1)}
+                onClick={() => onPageChange(i + 1)}
                 className="w-10 h-10 rounded-lg text-[14px] font-medium transition-all text-black"
                 style={
                   currentPage === i + 1
@@ -116,7 +123,7 @@ export default function DesignsGrid({ designs, isLoading, isError, view, onOpenM
           </div>
 
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(totalPages, prev + 1))}
+            onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
             disabled={currentPage === totalPages}
             className={`p-2 rounded-lg border border-white/10 transition-all ${
               currentPage === totalPages ? "text-white/20 cursor-not-allowed" : "text-white/50 hover:bg-white/05"

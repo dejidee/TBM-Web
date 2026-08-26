@@ -1,7 +1,7 @@
 export const metadata = {
   title: "About TBM Building Services",
   description:
-    "Learn about TBM Building Services — our mission, the Bogat materials store, Ziora AI visualizer, and our execution teams across Abuja and Lagos.",
+    "Learn about TBM Building Services — our mission, the Bogat materials store, Design with Ziora, and our execution teams across Abuja and Lagos.",
   keywords: [
     "about TBM Building Services",
     "renovation company Abuja",
@@ -23,6 +23,7 @@ import FinalCTA from "@/components/shared/about/final-cta";
 import Hero from "@/components/shared/about/hero";
 import TBMJourney from "@/components/shared/about/journey";
 import MissionVision from "@/components/shared/about/mission";
+import OurStructure from "@/components/shared/about/structure";
 import WhyChooseTBM from "@/components/shared/about/why";
 import React from "react";
 
@@ -31,6 +32,7 @@ const AboutPage = () => {
     <div>
       <Hero />
       <MissionVision />
+      <OurStructure />
       <TBMJourney />
       <CoreValues />
       <WhyChooseTBM />

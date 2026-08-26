@@ -6,6 +6,9 @@
     "success": "boolean",
     "message": "string",
     "data": {
+      "metaTitle": "null",
+      "metaDescription": "null",
+      "metaKeywords": "null",
       "id": "string",
       "name": "string",
       "description": "string",
@@ -27,6 +30,10 @@
       "trackInventory": "boolean",
       "isActive": "boolean",
       "isFeatured": "boolean",
+      "displayOrder": "number",
+      "lowStockThreshold": "number",
+      "averageRating": "number",
+      "reviewCount": "number",
       "tags": "null",
       "aiKeywords": "null",
       "materialType": "null",
@@ -42,6 +49,12 @@
       "installationType": "null",
       "material": "null",
       "color": "null",
+      "size": "null",
+      "variants": {
+        "type": "array",
+        "length": 0,
+        "of": "unknown"
+      },
       "images": {
         "type": "array",
         "length": 0,

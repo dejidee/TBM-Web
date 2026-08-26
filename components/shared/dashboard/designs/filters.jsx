@@ -4,9 +4,12 @@
 import { motion } from "framer-motion";
 import { Grid3x3, List } from "lucide-react";
 
+// `value` is sent as GET /Designs?roomType= and matched (case-insensitively,
+// but exactly) against the backend-derived room, which is lower-case free text
+// with spaces — "living room", never "living-room". See lib/api/schemas/designs.ts.
 const roomTypes = [
   { value: "all", label: "All Designs" },
-  { value: "living-room", label: "Living Room" },
+  { value: "living room", label: "Living Room" },
   { value: "kitchen", label: "Kitchen" },
   { value: "bedroom", label: "Bedroom" },
   { value: "bathroom", label: "Bathroom" },

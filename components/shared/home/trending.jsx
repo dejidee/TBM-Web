@@ -5,7 +5,7 @@ import TrendingClient from "./trending-client";
 import { API_URL } from "@/lib/env";
 
 const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop";
+  "/product-placeholder.svg";
 
 async function getFeaturedProducts() {
   try {

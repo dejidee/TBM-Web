@@ -72,10 +72,11 @@ export default function HeroSection() {
             <span className="block text-white">Experts</span>
           </h1>
 
-          {/* Subtitle */}
+          {/* Subtitle — TBM's core offer only; Ziora is introduced in its
+              own section further down the page, not named here */}
           <p className="text-white/50 text-[14px] sm:text-[18px] font-manrope leading-normal mb-8 max-w-[38ch] hero-sub">
-            We design, visualize, and build premium homes using Ziora — our 3D
-            design and project estimation system.
+            We design, visualize, and build premium homes with precision
+            planning and expert execution.
           </p>
 
           {/* Trust chips */}
@@ -92,19 +93,19 @@ export default function HeroSection() {
             ))}
           </div>
 
-          {/* CTAs */}
+          {/* CTAs — TBM's core offer leads; Ziora supports, it doesn't compete */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 hero-ctas">
             <Link
-              href="/ziora"
+              href="/consultation"
               className="btn-gold px-8 py-3.5"
             >
-              Start with Ziora <ArrowRight size={14} />
+              Book a Paid Site Inspection <ArrowRight size={14} />
             </Link>
             <Link
               href="/project"
               className="btn-outline px-8 py-3.5"
             >
-              View Projects
+              View Our Projects
             </Link>
           </div>
         </div>

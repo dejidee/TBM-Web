@@ -18,15 +18,6 @@ export function useOrders() {
   });
 }
 
-export function useOrderDetails(orderId) {
-  return useQuery({
-    queryKey: dashboardKeys.order(orderId),
-    queryFn: () => dashboardApi.getOrder(orderId),
-    enabled: !!orderId,
-    staleTime: 5 * 60 * 1000,
-  });
-}
-
 /** POST /api/v1/orders — create order directly from cart */
 export function useCreateOrder() {
   const queryClient = useQueryClient();

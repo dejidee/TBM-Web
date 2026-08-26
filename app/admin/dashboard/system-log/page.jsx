@@ -157,9 +157,15 @@ export default function SystemLogPage() {
               background: "linear-gradient(135deg, var(--color-accent-solid) 0%, var(--color-accent-solid-dim) 100%)",
             }}
           >
-            <Download size={14} className="sm:w-4 sm:h-4" />
-            <span className="hidden sm:inline">Export Logs</span>
-            <span className="sm:hidden">Export</span>
+            {isExporting ? (
+              <span className="h-3.5 w-3.5 sm:h-4 sm:w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+            ) : (
+              <Download size={14} className="sm:w-4 sm:h-4" />
+            )}
+            <span className="hidden sm:inline">
+              {isExporting ? "Exporting…" : "Export Logs"}
+            </span>
+            <span className="sm:hidden">{isExporting ? "…" : "Export"}</span>
           </motion.button>
         </div>
       </div>

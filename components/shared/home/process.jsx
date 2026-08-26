@@ -7,7 +7,7 @@ const STEPS = [
   {
     Icon: Box,
     number: "01",
-    title: "Design with Ziora",
+    title: "AI-Assisted Design & Planning",
     description: "3D designs & project estimate",
   },
   {
@@ -74,10 +74,10 @@ export default function ProcessSection() {
     <section className="bg-black py-20 sm:py-24">
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-16">
 
-        {/* Heading */}
+        {/* Heading — TBM-led; Ziora is introduced later on the page, not here */}
         <Reveal direction="up">
           <h2 className="font-poppins font-bold text-xl sm:text-2xl text-white tracking-[0.08em] uppercase mb-14 sm:mb-16">
-            The TBM <span className="text-[#D4AF37]">×</span> Ziora System
+            How TBM Works
           </h2>
         </Reveal>
 

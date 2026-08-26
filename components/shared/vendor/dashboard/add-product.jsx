@@ -7,6 +7,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { showToast } from "@/components/shared/toast";
 import { lookupsAPI } from "@/lib/api/lookups";
+import { useCategories } from "@/hooks/use-products";
 
 // Validation Schema
 const validationSchema = Yup.object({
@@ -45,25 +46,13 @@ export default function AddProductModal({
   isLoading = false,
 }) {
   const [dragActive, setDragActive] = useState(false);
-  const [categories, setCategories] = useState([]);
   const [productTypeEnum, setProductTypeEnum] = useState([]);
   const [brandTypeEnum, setBrandTypeEnum] = useState([]);
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const categoryData = await lookupsAPI.getMaterialTypes();
-
-        setCategories(categoryData?.data || []);
-
-        // console.log("categoryData:", categoryData?.data);
-      } catch (error) {
-        console.error("Failed to fetch categories:", error);
-      }
-    };
-
-    fetchCategories();
-  }, []);
+  // `categoryId` is a uuid from GET /Categories. This was previously filled from
+  // /lookups/material-types, whose values are slugs ("hardwood") — the backend
+  // could never resolve one to a category.
+  const { data: categories, isLoading: categoriesLoading } = useCategories();
 
   useEffect(() => {
     const fetchProductTypes = async () => {
@@ -99,7 +88,6 @@ export default function AddProductModal({
     initialValues: {
       productName: "",
       sku: "",
-      category: "",
       categoryId: "",
       brandType: 0,
       productType: 0,
@@ -120,7 +108,7 @@ export default function AddProductModal({
           name: values.productName,
           description: values.description,
           shortDescription: values.shortDescription,
-          categoryId: values.categoryId || values.category,
+          categoryId: values.categoryId,
           sku: values.sku,
           brandType: values.brandType,
           productType: values.productType,
@@ -381,6 +369,7 @@ export default function AddProductModal({
                           value={formik.values.categoryId}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
+                          disabled={categoriesLoading}
                           className={`w-full px-4 py-2.5 pr-10 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent appearance-none cursor-pointer ${
                             formik.touched.categoryId &&
                             formik.errors.categoryId
@@ -388,10 +377,14 @@ export default function AddProductModal({
                               : "border-white/08"
                           }`}
                         >
-                          <option value="">Select Category</option>
-                          {categories?.map((cat, index) => (
-                            <option key={index} value={cat.value}>
-                              {cat.label}
+                          <option value="">
+                            {categoriesLoading
+                              ? "Loading categories…"
+                              : "Select Category"}
+                          </option>
+                          {(categories ?? []).map((cat) => (
+                            <option key={cat.id} value={cat.id}>
+                              {cat.name}
                             </option>
                           ))}
                         </select>
@@ -751,7 +744,7 @@ export default function AddProductModal({
                           <img
                             src={image.preview}
                             alt={`Preview ${index + 1}`}
-                            className="w-full h-24 object-cover"
+                            className="w-full h-24 object-contain"
                           />
                           <button
                             type="button"

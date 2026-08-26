@@ -1,0 +1,55 @@
+{
+  "endpoint": "/account/me",
+  "status": 200,
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "shape": {
+    "success": "boolean",
+    "data": {
+      "profile": {
+        "id": "string",
+        "email": "string",
+        "firstName": "string",
+        "lastName": "string",
+        "fullName": "string",
+        "phoneNumber": "string",
+        "isActive": "boolean",
+        "emailVerified": "boolean",
+        "avatarUrl": "null"
+      },
+      "addresses": {
+        "type": "array",
+        "length": 1,
+        "of": {
+          "id": "string",
+          "fullName": "string",
+          "street": "string",
+          "city": "string",
+          "state": "string",
+          "postalCode": "string",
+          "country": "string",
+          "phone": "string",
+          "deliveryNotes": "string",
+          "isDefault": "boolean"
+        }
+      },
+      "notifications": {
+        "emailOrderUpdates": "boolean",
+        "emailPromotions": "boolean",
+        "pushOrderUpdates": "boolean",
+        "pushMarketing": "boolean"
+      },
+      "security": {
+        "twoFactorEnabled": "boolean"
+      },
+      "roles": {
+        "type": "array",
+        "length": 4,
+        "of": "string"
+      },
+      "access": {
+        "canUseStore": "boolean",
+        "canUseAdmin": "boolean"
+      }
+    }
+  }
+}

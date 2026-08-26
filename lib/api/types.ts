@@ -41,7 +41,58 @@ import type {
   adminProductImageUploadResponse,
   adminProductUpdateResponse,
 } from "./schemas/admin-products";
-import type { aiStyleSchema, aiStylesResponse } from "./schemas/ai";
+import type {
+  aiStyleSchema,
+  aiStylesResponse,
+  renovationEstimateResponse,
+  renovationEstimateSummarySchema,
+  renovationEstimateListResponse,
+} from "./schemas/ai";
+import type { createProjectResponse, projectSchema } from "./schemas/projects";
+import type {
+  productReviewsDataSchema,
+  productReviewsResponse,
+} from "./schemas/reviews";
+import type {
+  consultationAvailabilityResponse,
+  consultationBookingResponse,
+  consultationListResponse,
+  consultationPaymentInitResponse,
+  consultationResponse,
+  consultationSchema,
+  consultationSlotSchema,
+  consultationTypeSchema,
+  consultationTypesResponse,
+  consultationVerifyPaymentResponse,
+  adminConsultationListResponse,
+  adminConsultationCancelResponse,
+  consultationPricingConfigSchema,
+  adminConsultationPricingResponse,
+  adminConsultationPricingItemResponse,
+} from "./schemas/consultations";
+import type {
+  orderItemSchema,
+  orderListResponse,
+  orderResponse,
+  orderSchema,
+  vendorOrderListItemSchema,
+  vendorOrderListResponse,
+} from "./schemas/orders";
+import type {
+  designDetailSchema,
+  designDownloadResponse,
+  designFavoriteResponse,
+  designListResponse,
+  designResponse,
+  designSchema,
+} from "./schemas/designs";
+import type {
+  checkoutAddressSchema,
+  checkoutDataResponse,
+  checkoutItemSchema,
+  checkoutPaymentResponse,
+  checkoutVerifyResponse,
+} from "./schemas/checkout";
 
 // ── Envelopes ────────────────────────────────────────────────────────────────
 
@@ -120,6 +171,89 @@ export type AdminProductImageUploadResponse = z.infer<typeof adminProductImageUp
 /** GET /ai/styles — a bare array of { id, name }. */
 export type AiStyle = z.infer<typeof aiStyleSchema>;
 export type AiStylesResponse = z.infer<typeof aiStylesResponse>;
+
+/**
+ * GET /products/{productId}/reviews. `items` is `unknown[]` — every product
+ * checked has zero reviews, so the element shape has never been observed.
+ * Widen `productReviewsDataSchema` (lib/api/schemas/reviews.ts) once one has.
+ */
+export type ProductReviewsData = z.infer<typeof productReviewsDataSchema>;
+export type ProductReviewsResponse = z.infer<typeof productReviewsResponse>;
+
+/**
+ * `status` is a real string the backend names itself — observed:
+ * "PendingPayment", "Confirmed", "Cancelled". Render as-is; the full set is
+ * unconfirmed, so don't build a switch that assumes only these three.
+ */
+export type ConsultationType = z.infer<typeof consultationTypeSchema>;
+export type ConsultationSlot = z.infer<typeof consultationSlotSchema>;
+export type Consultation = z.infer<typeof consultationSchema>;
+export type ConsultationTypesResponse = z.infer<typeof consultationTypesResponse>;
+export type ConsultationAvailabilityResponse = z.infer<typeof consultationAvailabilityResponse>;
+export type ConsultationBookingResponse = z.infer<typeof consultationBookingResponse>;
+export type ConsultationResponse = z.infer<typeof consultationResponse>;
+/** GET /consultations/mine — `data` is a bare Consultation[], not `data.items`. */
+export type ConsultationListResponse = z.infer<typeof consultationListResponse>;
+/** POST /consultations/{id}/initialize-payment — enveloped, unlike checkout's equivalent. */
+export type ConsultationPaymentInitResponse = z.infer<typeof consultationPaymentInitResponse>;
+/** POST /consultations/verify-payment — only the failure shape (400) is confirmed. */
+export type ConsultationVerifyPaymentResponse = z.infer<typeof consultationVerifyPaymentResponse>;
+/** GET /admin/consultations — `data.{items,page,pageSize,totalCount}`, no totalPages/hasMore. */
+export type AdminConsultationListResponse = z.infer<typeof adminConsultationListResponse>;
+export type AdminConsultationCancelResponse = z.infer<typeof adminConsultationCancelResponse>;
+/** One per-type fee row; `consultationType` is the display name, not the `typeKey`. */
+export type ConsultationPricingConfig = z.infer<typeof consultationPricingConfigSchema>;
+export type AdminConsultationPricingResponse = z.infer<typeof adminConsultationPricingResponse>;
+export type AdminConsultationPricingItemResponse = z.infer<typeof adminConsultationPricingItemResponse>;
+
+/**
+ * `status`/`paymentStatus` are unnamed integer enums (0-7 for OrderStatus,
+ * per the spec — CLAUDE.md). Read `statusName`/`paymentStatusName` instead of
+ * mapping the number yourself.
+ */
+export type Order = z.infer<typeof orderSchema>;
+export type OrderItem = z.infer<typeof orderItemSchema>;
+export type OrderResponse = z.infer<typeof orderResponse>;
+/** GET /orders/my-orders — `data` is a bare Order[], not `data.items`. */
+export type OrderListResponse = z.infer<typeof orderListResponse>;
+
+/** A row from GET /vendor/orders (list) — not the same shape as Order. */
+export type VendorOrderListItem = z.infer<typeof vendorOrderListItemSchema>;
+export type VendorOrderListResponse = z.infer<typeof vendorOrderListResponse>;
+
+/** GET /Checkout — no envelope. */
+export type CheckoutItem = z.infer<typeof checkoutItemSchema>;
+export type CheckoutAddress = z.infer<typeof checkoutAddressSchema>;
+export type CheckoutDataResponse = z.infer<typeof checkoutDataResponse>;
+/** POST /Checkout/payment — no envelope; creates an order as a side effect. */
+export type CheckoutPaymentResponse = z.infer<typeof checkoutPaymentResponse>;
+/** GET /Checkout/payment/paystack/verify/{reference} — no envelope. */
+export type CheckoutVerifyResponse = z.infer<typeof checkoutVerifyResponse>;
+
+/**
+ * A row from GET /Designs. Heading is `prompt` (there is no name/title);
+ * `roomType` is backend-derived lower-case text or null; `outputType` has only
+ * been observed as "Image".
+ */
+export type Design = z.infer<typeof designSchema>;
+/** GET /Designs — no envelope: `{ designs, pagination }`. `pageSize` is ignored; send `limit`. */
+export type DesignListResponse = z.infer<typeof designListResponse>;
+/** GET /Designs/{id} — no envelope, and the image is `outputUrl`, not `url`. */
+export type DesignDetail = z.infer<typeof designDetailSchema>;
+export type DesignResponse = z.infer<typeof designResponse>;
+/** GET /Designs/{id}/download — no envelope. */
+export type DesignDownloadResponse = z.infer<typeof designDownloadResponse>;
+/** POST /Designs/{id}/favorite — no envelope; `isFavorite` is the state after the toggle. */
+export type DesignFavoriteResponse = z.infer<typeof designFavoriteResponse>;
+
+/** Query params for GET /Designs. Only `newest`/`oldest` are honoured for `sortBy`. */
+export interface DesignListParams {
+  page?: number;
+  limit?: number;
+  roomType?: string;
+  search?: string;
+  sortBy?: "newest" | "oldest";
+}
 
 /** Query params for the image-upload endpoint. The file goes in the body. */
 export interface UploadImageParams {
@@ -224,6 +358,48 @@ export interface UpdateProductDto extends ProductDtoBase {
 
 /** POST /admin/AdminProducts/bulk — a bare array, no envelope. */
 export type BulkCreateProductDto = CreateProductDto[];
+
+/** POST /ai/renovation/estimate — no envelope. Also what GET /ai/renovation/estimates/{id} returns. */
+export type RenovationEstimateResponse = z.infer<typeof renovationEstimateResponse>;
+/** One row from GET /ai/renovation/estimates — a lighter summary than the full estimate. */
+export type RenovationEstimateSummary = z.infer<typeof renovationEstimateSummarySchema>;
+/** GET /ai/renovation/estimates — no envelope, no pagination. */
+export type RenovationEstimateListResponse = z.infer<typeof renovationEstimateListResponse>;
+
+/** Request body for POST /ai/renovation/estimate. `roomDimensions` duplicates the three `*Meters` fields — the backend rejects unknown keys, so send both. */
+export interface CreateRenovationEstimateRequestDto {
+  projectId: string | null;
+  projectName: string | null;
+  roomType: string | null;
+  lengthMeters: number;
+  widthMeters: number;
+  heightMeters: number;
+  finishLevel: string | null;
+  includeFlooring: boolean;
+  includePainting: boolean;
+  includeElectrical: boolean;
+  includePlumbing: boolean;
+  contingencyPercent: number;
+  roomDimensions: { length: number; width: number; height: number };
+}
+
+/**
+ * A project as returned by POST /projects. `designSessionId`/`orderId`/
+ * `bomId`/`vendorId` were null on the only project observed — one created
+ * directly, not derived from a design session or order.
+ */
+export type Project = z.infer<typeof projectSchema>;
+/** POST /projects — enveloped. */
+export type CreateProjectResponse = z.infer<typeof createProjectResponse>;
+
+/** Request body for POST /projects. */
+export interface CreateProjectRequestDto {
+  name?: string | null;
+  description?: string | null;
+  roomType?: string | null;
+  startDate?: string | null;
+  totalBudget?: number | null;
+}
 
 /** Error thrown by the api* helpers. `message` is already user-safe. */
 export interface ApiError extends Error {

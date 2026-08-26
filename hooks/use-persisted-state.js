@@ -78,4 +78,47 @@ export const CHECKOUT_KEYS = {
   promoCode: "tbm_checkout_promo_code",
   promoDiscount: "tbm_checkout_promo_discount",
   form: "tbm_checkout_form", // live (uncommitted) delivery form fields
+  // A payment attempt that has been submitted to the backend but not yet
+  // resolved (paid or definitively failed) — { idempotencyKey, orderId,
+  // orderNumber, reference, createdAt }. Its presence is what stops the
+  // checkout page from starting a second payment for the same cart; only
+  // app/(user)/checkout/verify clears it, and only once it has a terminal
+  // answer. See BACKLOG.md, "Checkout retry could double-charge".
+  //
+  // Deliberately `localStorage`, not `sessionStorage` like the rest of this
+  // namespace: it has to survive the tab closing or the browser crashing
+  // between paying on Paystack and this app confirming it, or the shopper
+  // loses the one thing standing between them and a duplicate charge. Pass
+  // `{ storage: "local" }` wherever this key is read or written.
+  attempt: "tbm_checkout_attempt",
 };
+
+/**
+ * How long an unresolved `attempt` blocks a new checkout submission before
+ * it's treated as abandoned rather than in-flight. Long enough to cover a
+ * slow webhook or a shopper who stepped away mid-payment; short enough that
+ * a genuinely abandoned attempt doesn't lock a shopper out of buying
+ * something else. The order itself is never deleted by this — it just stops
+ * being the reason `/checkout` redirects instead of rendering.
+ */
+export const CHECKOUT_ATTEMPT_TTL_MS = 30 * 60 * 1000; // 30 minutes
+
+/**
+ * Same role as `CHECKOUT_KEYS.attempt`, for consultation booking payment —
+ * `localStorage`, `{ storage: "local" }`. `{ consultationId, createdAt }`.
+ *
+ * The failure mode this guards against is narrower than checkout's:
+ * `BookConsultationRequestDto` has no idempotency key, so a lost response
+ * after `POST /consultations` genuinely cannot be deduped by resubmitting —
+ * only the slot-locking side effect ("That consultation slot has just been
+ * booked") catches an exact resubmit, and it reads as a confusing error, not
+ * a safe no-op. This key's job is narrower and still real: once a
+ * consultation id is known, never call `book()` again for that attempt —
+ * only ever retry `initialize-payment` against the same id, which is safe to
+ * repeat (see lib/api/consultations.js).
+ */
+export const CONSULTATION_KEYS = {
+  attempt: "tbm_consultation_attempt",
+};
+
+export const CONSULTATION_ATTEMPT_TTL_MS = 30 * 60 * 1000; // 30 minutes

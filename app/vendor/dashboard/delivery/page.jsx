@@ -2,30 +2,24 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Search, Calendar, Download, RefreshCw, Package } from "lucide-react";
+import { Download, RefreshCw, Package } from "lucide-react";
 import { useDeliveryAssignments } from "@/hooks/use-delivery";
+import { useOrderStatuses } from "@/hooks/use-lookups";
 import DeliveryAssignmentsTable from "@/components/shared/vendor/dashboard/delivery/table";
 
 export default function DeliveryPage() {
+  // `search` and `dateRange` were sent to GET /vendor/deliveries but the
+  // endpoint only accepts `page`, `pageSize`, `status` — confirmed against
+  // docs/api/tbm-backend-api.md — so those controls never filtered anything.
+  // Removed rather than left looking functional.
   const [filters, setFilters] = useState({
     page: 1,
     limit: 6,
-    search: "",
     status: "all",
-    dateRange: null,
   });
 
-  const [searchInput, setSearchInput] = useState("");
-
-  const { data, isLoading } = useDeliveryAssignments(filters);
-
-  // DATA CHECKS
-  // console.log("delivery assignments: ", data)
-
-  const handleSearch = (value) => {
-    setSearchInput(value);
-    setFilters((prev) => ({ ...prev, search: value, page: 1 }));
-  };
+  const { data, isLoading, isError } = useDeliveryAssignments(filters);
+  const { data: orderStatuses } = useOrderStatuses();
 
   const handlePageChange = (page) => {
     setFilters((prev) => ({ ...prev, page }));
@@ -81,67 +75,30 @@ export default function DeliveryPage() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 p-4 bg-surface rounded-xl border border-white/08"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search */}
-          <div className="relative">
-            <label className="block font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-2">
-              SEARCH
-            </label>
-            <Search
-              className="absolute left-3 bottom-3 text-muted"
-              size={18}
-            />
-            <input
-              type="text"
-              placeholder="Order ID or Customer Name..."
-              value={searchInput}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-transparent"
-            />
-          </div>
-
-          {/* Status Filter */}
-          <div>
-            <label className="block font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-2">
-              STATUS
-            </label>
-            <select
-              value={filters.status}
-              onChange={(e) =>
-                setFilters((prev) => ({
-                  ...prev,
-                  status: e.target.value,
-                  page: 1,
-                }))
-              }
-              className="w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 appearance-none cursor-pointer"
-            >
-              <option value="all">All Statuses</option>
-              <option value="pending">Pending</option>
-              <option value="assigned">Assigned</option>
-              <option value="picked up">Picked Up</option>
-              <option value="in transit">In Transit</option>
-              <option value="urgent">Urgent</option>
-            </select>
-          </div>
-
-          {/* Date Range */}
-          <div>
-            <label className="block font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-2">
-              DATE RANGE
-            </label>
-            <div className="relative">
-              <Calendar
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none"
-                size={18}
-              />
-              <input
-                type="date"
-                className="w-full pl-10 pr-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer"
-                placeholder="mm/dd/yyyy"
-              />
-            </div>
-          </div>
+        <div className="max-w-xs">
+          {/* Status Filter — sourced from GET /lookups/order-statuses, not
+              invented labels; GET /vendor/deliveries filters on this. */}
+          <label className="block font-manrope text-[11px] font-bold text-muted uppercase tracking-wider mb-2">
+            STATUS
+          </label>
+          <select
+            value={filters.status}
+            onChange={(e) =>
+              setFilters((prev) => ({
+                ...prev,
+                status: e.target.value,
+                page: 1,
+              }))
+            }
+            className="w-full px-4 py-2.5 bg-surface-raised border border-white/10 rounded-lg font-manrope text-[13px] text-white focus:outline-none focus:ring-2 focus:ring-accent/40 appearance-none cursor-pointer"
+          >
+            <option value="all">All Statuses</option>
+            {orderStatuses?.map((s) => (
+              <option key={s.value} value={s.value}>
+                {s.name}
+              </option>
+            ))}
+          </select>
         </div>
       </motion.div>
 
@@ -149,6 +106,7 @@ export default function DeliveryPage() {
       <DeliveryAssignmentsTable
         assignments={data?.assignments}
         isLoading={isLoading}
+        isError={isError}
       />
 
       {/* Pagination */}

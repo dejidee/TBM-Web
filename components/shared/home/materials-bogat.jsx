@@ -7,19 +7,41 @@ import { ArrowRight, ShoppingBag, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 
 async function fetchShowcaseProducts() {
-  const params = new URLSearchParams({
-    pageSize: "8",
-    ActiveOnly: "true",
-    isFeatured: "true",
-  });
-  const res = await fetch(`/api/products?${params.toString()}`);
-  if (!res.ok) throw new Error("Failed to fetch products");
-  const json = await res.json();
-  return json.data?.items ?? [];
+  // Showcase only products that have a real photo — placeholder tiles read
+  // as a broken catalogue. Featured products come first; if too few of them
+  // carry an image, backfill from the wider active range.
+  const TARGET = 8;
+  const withImage = (items) => items.filter((p) => p.primaryImageUrl);
+
+  const fetchPage = async (extra = {}) => {
+    const params = new URLSearchParams({
+      pageSize: "24",
+      ActiveOnly: "true",
+      ...extra,
+    });
+    const res = await fetch(`/api/products?${params.toString()}`);
+    if (!res.ok) throw new Error("Failed to fetch products");
+    const json = await res.json();
+    return json.data?.items ?? [];
+  };
+
+  const picks = withImage(await fetchPage({ isFeatured: "true" })).slice(
+    0,
+    TARGET
+  );
+  if (picks.length < TARGET) {
+    const seen = new Set(picks.map((p) => p.id));
+    for (const p of withImage(await fetchPage())) {
+      if (seen.has(p.id)) continue;
+      picks.push(p);
+      if (picks.length >= TARGET) break;
+    }
+  }
+  return picks;
 }
 
 const PLACEHOLDER =
-  "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=600&fit=crop";
+  "/product-placeholder.svg";
 
 function ProductCard({ product, index }) {
   const imageUrl = product.primaryImageUrl || PLACEHOLDER;
@@ -48,7 +70,7 @@ function ProductCard({ product, index }) {
               src={imageUrl}
               alt={product.name}
               fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              className="object-contain transition-transform duration-500 group-hover:scale-105"
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
             />
 
@@ -189,8 +211,8 @@ export default function MaterialsBogatSection() {
               transition={{ delay: 0.12 }}
               className="mt-3 text-white/45 text-sm font-manrope leading-relaxed max-w-md"
             >
-              Premium bathroom fittings, kitchen fixtures, and luxury finishes —
-              sourced, priced, and delivered across Nigeria.
+              TBM&apos;s premium bathroom vanity, sanitaryware and finishing
+              brand — sourced, priced, and delivered across Nigeria.
             </motion.p>
           </div>
 
@@ -212,14 +234,45 @@ export default function MaterialsBogatSection() {
           </motion.div>
         </div>
 
-        {/* ── Product grid ─────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
-          {isLoading
-            ? Array.from({ length: 8 }).map((_, i) => <SkeletonCard key={i} />)
-            : products.map((product, i) => (
-                <ProductCard key={product.id} product={product} index={i} />
-              ))}
-        </div>
+        {/* ── Product grid ───────────────────────────────────────────
+            Three states, not two. Nothing is featured on a fresh catalogue,
+            and an empty grid between the heading and the trust chips reads as
+            a broken page rather than as "none yet". */}
+        {isLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <SkeletonCard key={i} />
+            ))}
+          </div>
+        ) : products.length === 0 ? (
+          <div
+            className="mb-10 px-6 py-14 text-center"
+            style={{
+              background: "#0d0b08",
+              border: "1px solid rgba(255,255,255,0.06)",
+            }}
+          >
+            <p className="font-poppins text-white/70 text-[15px]">
+              New pieces are landing shortly.
+            </p>
+            <p className="mt-2 text-white/35 text-[13px] font-manrope">
+              The full Bogat catalogue is already open to browse.
+            </p>
+            <Link
+              href="/bogat/materials"
+              className="btn-outline mt-6 inline-flex"
+            >
+              Browse All Products
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
+            {products.map((product, i) => (
+              <ProductCard key={product.id} product={product} index={i} />
+            ))}
+          </div>
+        )}
 
         {/* ── Bottom row: trust chips + mobile CTA ─────────────────── */}
         <div
@@ -229,7 +282,7 @@ export default function MaterialsBogatSection() {
           {/* Trust chips */}
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-2">
             {[
-              "100% Authentic",
+              "Authentic Materials",
               "Fast Delivery — Abuja & Lagos",
               "Expert Support",
             ].map((item) => (

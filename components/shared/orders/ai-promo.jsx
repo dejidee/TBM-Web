@@ -6,13 +6,15 @@ import { Wand2 } from "lucide-react";
 import Link from "next/link";
 
 export default function AIVisualizerPromo({ items }) {
-  const hasVisualizableItems = items?.some(
-    (item) =>
-      item.name.toLowerCase().includes("tile") ||
-      item.name.toLowerCase().includes("marble"),
+  // The copy used to name "the Italian Carrara Marble" regardless of what was
+  // ordered — a product from the old mock catalogue that no order can contain.
+  // Name the item the shopper actually bought, or say nothing specific.
+  // Order line items carry `productName`, not `name` (lib/api/schemas/orders.ts).
+  const visualizable = items?.find((item) =>
+    /\b(tile|tiles|marble|granite|stone|flooring)\b/i.test(item.productName ?? ""),
   );
 
-  if (!hasVisualizableItems) return null;
+  if (!visualizable) return null;
 
   return (
     <motion.div
@@ -39,11 +41,12 @@ export default function AIVisualizerPromo({ items }) {
 
         <h3 className="text-[20px] font-bold text-white mb-2">Visualize your space</h3>
         <p className="text-[14px] text-white/60 mb-6 leading-relaxed">
-          While you wait, see how the Italian Carrara Marble looks in your actual kitchen using Ziora.
+          While you wait, see how your {visualizable.productName} looks in your own
+          space using Ziora.
         </p>
 
         <Link
-          href="/visualizer"
+          href="/ai-visualizer"
           className="block w-full text-black text-center py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
           style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
         >

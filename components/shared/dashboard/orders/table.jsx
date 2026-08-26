@@ -3,19 +3,55 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, CreditCard } from "lucide-react";
 import { useState } from "react";
+import { useResumePayment } from "@/hooks/use-checkout";
+import { showToast } from "@/components/shared/toast";
 
+const PLACEHOLDER = "/product-placeholder.svg";
+
+// Keyed by the lowercased `statusName` the backend sends (only "Cancelled"
+// has been observed live so far — OrderStatus is an unnamed 0-7 integer enum,
+// CLAUDE.md). Anything not in this map renders its own label on a neutral
+// badge rather than being mislabelled "Processing".
 const statusConfig = {
-  processing: { bg: "bg-blue-900/30", text: "text-blue-400", label: "Processing" },
-  shipped: { bg: "bg-purple-900/30", text: "text-purple-400", label: "Shipped" },
-  delivered: { bg: "bg-green-900/30", text: "text-green-400", label: "Delivered" },
-  cancelled: { bg: "bg-red-900/20", text: "text-red-400", label: "Cancelled" },
+  pending: { bg: "bg-amber-900/30", text: "text-amber-400" },
+  processing: { bg: "bg-blue-900/30", text: "text-blue-400" },
+  shipped: { bg: "bg-purple-900/30", text: "text-purple-400" },
+  delivered: { bg: "bg-green-900/30", text: "text-green-400" },
+  cancelled: { bg: "bg-red-900/20", text: "text-red-400" },
 };
+
+function formatDate(value) {
+  if (!value) return "—";
+  const d = new Date(value);
+  return Number.isNaN(d.getTime())
+    ? "—"
+    : d.toLocaleDateString("en-NG", { day: "numeric", month: "short", year: "numeric" });
+}
 
 export default function OrdersTable({ orders, isLoading, isError }) {
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
+  const [resumingOrderId, setResumingOrderId] = useState(null);
+  const resumePayment = useResumePayment();
+
+  const handleResumePayment = (order) => {
+    setResumingOrderId(order.id);
+    resumePayment.mutate(order, {
+      onSuccess: (data) => {
+        if (data?.authorizationUrl) window.location.href = data.authorizationUrl;
+        else {
+          setResumingOrderId(null);
+          showToast.error("Could not resume this payment. Try checking out again.");
+        }
+      },
+      onError: (err) => {
+        setResumingOrderId(null);
+        showToast.error(err.message);
+      },
+    });
+  };
 
   if (isLoading) return <LoadingSkeleton />;
 
@@ -56,9 +92,9 @@ export default function OrdersTable({ orders, isLoading, isError }) {
         <table className="w-full">
           <thead>
             <tr className="border-b border-white/08">
-              {["Order ID", "Date", "Items", "Total", "Status"].map((h, i) => (
+              {["Order ID", "Date", "Items", "Total", "Status", ""].map((h, i) => (
                 <th
-                  key={h}
+                  key={h || "actions"}
                   className={`px-6 py-4 text-[12px] font-semibold text-white/30 uppercase tracking-widest ${i === 3 ? "text-right" : "text-left"}`}
                 >
                   {h}
@@ -76,25 +112,28 @@ export default function OrdersTable({ orders, isLoading, isError }) {
                 className="border-b border-white/06 last:border-0 hover:bg-white/02 transition-colors cursor-pointer"
               >
                 <td className="px-6 py-4">
-                  <span className="text-[14px] font-semibold text-white">{order.id}</span>
+                  <span className="text-[14px] font-semibold text-white">{order.orderNumber}</span>
                 </td>
                 <td className="px-6 py-4">
-                  <span className="text-[14px] text-white/40">{order.date}</span>
+                  <span className="text-[14px] text-white/40">{formatDate(order.createdAt)}</span>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="relative w-12 h-12 shrink-0 bg-[#1a1a1a] rounded-lg overflow-hidden">
-                      <Image src={order.items[0].image} alt={order.items[0].name} fill className="object-cover" sizes="48px" />
+                    <div className="relative w-12 h-12 shrink-0 bg-surface-raised rounded-lg overflow-hidden">
+                      <Image
+                        src={order.items[0].productImageUrl || PLACEHOLDER}
+                        alt={order.items[0].productName}
+                        fill
+                        className="object-contain"
+                        sizes="48px"
+                      />
                     </div>
                     <div>
-                      <p className="text-[14px] font-medium text-white line-clamp-1">{order.items[0].name}</p>
+                      <p className="text-[14px] font-medium text-white line-clamp-1">{order.items[0].productName}</p>
                       {order.items.length > 1 && (
                         <p className="text-[12px] text-white/30 mt-0.5">
                           + {order.items.length - 1} other item{order.items.length - 1 > 1 ? "s" : ""}
                         </p>
-                      )}
-                      {order.items[0].details && (
-                        <p className="text-[12px] text-white/30 mt-0.5">{order.items[0].details}</p>
                       )}
                     </div>
                   </div>
@@ -103,7 +142,23 @@ export default function OrdersTable({ orders, isLoading, isError }) {
                   <span className="text-[15px] font-semibold text-white">{fmt(order.total)}</span>
                 </td>
                 <td className="px-6 py-4">
-                  <StatusBadge status={order.status} />
+                  <StatusBadge status={order.statusName} />
+                </td>
+                <td className="px-6 py-4 text-right">
+                  {order.paymentStatusName === "Pending" && order.paymentReference && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleResumePayment(order);
+                      }}
+                      disabled={resumingOrderId === order.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-[12px] font-medium text-black hover:opacity-90 transition-opacity disabled:opacity-50 whitespace-nowrap"
+                      style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+                    >
+                      <CreditCard className="w-3.5 h-3.5" />
+                      {resumingOrderId === order.id ? "Redirecting…" : "Complete Payment"}
+                    </button>
+                  )}
                 </td>
               </motion.tr>
             ))}
@@ -123,18 +178,24 @@ export default function OrdersTable({ orders, isLoading, isError }) {
           >
             <div className="flex items-start justify-between mb-3">
               <div>
-                <span className="text-[15px] font-semibold text-white">{order.id}</span>
-                <p className="text-[13px] text-white/40 mt-0.5">{order.date}</p>
+                <span className="text-[15px] font-semibold text-white">{order.orderNumber}</span>
+                <p className="text-[13px] text-white/40 mt-0.5">{formatDate(order.createdAt)}</p>
               </div>
-              <StatusBadge status={order.status} />
+              <StatusBadge status={order.statusName} />
             </div>
 
             <div className="flex items-center gap-3 mb-3">
-              <div className="relative w-16 h-16 shrink-0 bg-[#1a1a1a] rounded-lg overflow-hidden">
-                <Image src={order.items[0].image} alt={order.items[0].name} fill className="object-cover" sizes="64px" />
+              <div className="relative w-16 h-16 shrink-0 bg-surface-raised rounded-lg overflow-hidden">
+                <Image
+                  src={order.items[0].productImageUrl || PLACEHOLDER}
+                  alt={order.items[0].productName}
+                  fill
+                  className="object-contain"
+                  sizes="64px"
+                />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-[14px] font-medium text-white line-clamp-1">{order.items[0].name}</p>
+                <p className="text-[14px] font-medium text-white line-clamp-1">{order.items[0].productName}</p>
                 {order.items.length > 1 && (
                   <p className="text-[12px] text-white/30 mt-1">
                     + {order.items.length - 1} other item{order.items.length - 1 > 1 ? "s" : ""}
@@ -147,6 +208,21 @@ export default function OrdersTable({ orders, isLoading, isError }) {
               <span className="text-[13px] text-white/40">Total</span>
               <span className="text-[16px] font-semibold text-white">{fmt(order.total)}</span>
             </div>
+
+            {order.paymentStatusName === "Pending" && order.paymentReference && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleResumePayment(order);
+                }}
+                disabled={resumingOrderId === order.id}
+                className="mt-3 w-full inline-flex items-center justify-center gap-2 h-11 rounded-lg text-[14px] font-medium text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+                style={{ background: "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)" }}
+              >
+                <CreditCard className="w-4 h-4" />
+                {resumingOrderId === order.id ? "Redirecting…" : "Complete Payment"}
+              </button>
+            )}
           </motion.div>
         ))}
       </div>
@@ -192,10 +268,13 @@ export default function OrdersTable({ orders, isLoading, isError }) {
 }
 
 function StatusBadge({ status }) {
-  const config = statusConfig[status] || statusConfig.processing;
+  const config = statusConfig[status?.toLowerCase()] || {
+    bg: "bg-white/08",
+    text: "text-white/60",
+  };
   return (
     <span className={`inline-flex items-center px-2.5 py-1 ${config.bg} ${config.text} text-[12px] font-medium rounded-md`}>
-      {config.label}
+      {status || "—"}
     </span>
   );
 }
