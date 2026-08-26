@@ -40,7 +40,7 @@ import { useDashboardShell } from "./shell-context";
 
 const SECTIONS = [
   { href: "/dashboard/orders", label: "Orders" },
-  { href: "/dashboard/ai-designs", label: "AI Designs" },
+  { href: "/dashboard/ai-designs", label: "My Ziora Designs" },
   { href: "/dashboard/projects", label: "Projects" },
   { href: "/dashboard/saved", label: "Saved Items" },
   { href: "/dashboard/profile", label: "Profile" },
@@ -131,7 +131,10 @@ export default function AppBar() {
 
         {/* Breadcrumb — the bar's whole job on the left. Hidden on the smallest
             screens, where the page's own <h1> is already the answer. */}
-        <nav aria-label="Breadcrumb" className="hidden min-w-0 items-center gap-1.5 sm:flex">
+        <nav
+          aria-label="Breadcrumb"
+          className="hidden min-w-0 items-center gap-1.5 sm:flex"
+        >
           <span className="mx-2 h-5 w-px bg-white/10" aria-hidden />
           <Link
             href="/dashboard"
@@ -141,8 +144,13 @@ export default function AppBar() {
           </Link>
           {crumb !== "Overview" && (
             <>
-              <ChevronRight className="h-3.5 w-3.5 shrink-0 text-white/25" strokeWidth={2} />
-              <span className="truncate text-[13px] font-semibold text-white">{crumb}</span>
+              <ChevronRight
+                className="h-3.5 w-3.5 shrink-0 text-white/25"
+                strokeWidth={2}
+              />
+              <span className="truncate text-[13px] font-semibold text-white">
+                {crumb}
+              </span>
             </>
           )}
         </nav>
@@ -201,7 +209,10 @@ export default function AppBar() {
             <AnimatePresence>
               {menuOpen && (
                 <>
-                  <div className="fixed inset-0 z-40" onClick={() => setMenuOpen(false)} />
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setMenuOpen(false)}
+                  />
                   <motion.div
                     role="menu"
                     initial={{ opacity: 0, y: -6, scale: 0.98 }}
@@ -212,9 +223,13 @@ export default function AppBar() {
                     style={{ background: "#111010" }}
                   >
                     <div className="border-b border-white/07 px-4 py-3">
-                      <p className="truncate text-[14px] font-semibold text-white">{displayName}</p>
+                      <p className="truncate text-[14px] font-semibold text-white">
+                        {displayName}
+                      </p>
                       {user?.email && (
-                        <p className="truncate text-[12px] text-white/35">{user.email}</p>
+                        <p className="truncate text-[12px] text-white/35">
+                          {user.email}
+                        </p>
                       )}
                     </div>
                     <Link

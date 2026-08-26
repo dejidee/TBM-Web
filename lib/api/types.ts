@@ -45,6 +45,8 @@ import type {
   aiStyleSchema,
   aiStylesResponse,
   renovationEstimateResponse,
+  renovationEstimateSummarySchema,
+  renovationEstimateListResponse,
 } from "./schemas/ai";
 import type { createProjectResponse, projectSchema } from "./schemas/projects";
 import type {
@@ -357,8 +359,12 @@ export interface UpdateProductDto extends ProductDtoBase {
 /** POST /admin/AdminProducts/bulk — a bare array, no envelope. */
 export type BulkCreateProductDto = CreateProductDto[];
 
-/** POST /ai/renovation/estimate — no envelope. */
+/** POST /ai/renovation/estimate — no envelope. Also what GET /ai/renovation/estimates/{id} returns. */
 export type RenovationEstimateResponse = z.infer<typeof renovationEstimateResponse>;
+/** One row from GET /ai/renovation/estimates — a lighter summary than the full estimate. */
+export type RenovationEstimateSummary = z.infer<typeof renovationEstimateSummarySchema>;
+/** GET /ai/renovation/estimates — no envelope, no pagination. */
+export type RenovationEstimateListResponse = z.infer<typeof renovationEstimateListResponse>;
 
 /** Request body for POST /ai/renovation/estimate. `roomDimensions` duplicates the three `*Meters` fields — the backend rejects unknown keys, so send both. */
 export interface CreateRenovationEstimateRequestDto {

@@ -9,14 +9,17 @@ const STEPS = [
   {
     number: "01",
     action: "Click 'Ziora' in the top navigation bar.",
-    detail: "This opens the Ziora overview page where you can learn about features and pick a plan.",
+    detail:
+      "This opens the Ziora overview page where you can learn about features and pick a plan.",
     fullShot: "/guide/ziora/01-ziora-hero.png",
     fullAlt: "Ziora overview page showing hero section",
   },
   {
     number: "02",
-    action: "Pick a plan — start free with Economy, upgrade whenever you need more.",
-    detail: "Scroll down on the Ziora page and click 'Choose Plan'. The Economy plan is free to start.",
+    action:
+      "Pick a plan — start free with Economy, upgrade whenever you need more.",
+    detail:
+      "Scroll down on the Ziora page and click 'Choose Plan'. The Economy plan is free to start.",
     fullShot: "/guide/ziora/05-pricing-plans.png",
     fullAlt: "Ziora pricing plans page",
   },
@@ -29,45 +32,57 @@ const STEPS = [
   },
   {
     number: "04",
-    action: "Already registered? Enter your email and password, then click 'Sign In'.",
+    action:
+      "Already registered? Enter your email and password, then click 'Sign In'.",
     detail: null,
     fullShot: "/guide/ziora/02-dashboard-ai-designs.png",
     fullAlt: "Sign In page",
   },
   {
     number: "05",
-    action: "Once logged in, click 'AI Designs' in your sidebar, then click 'Create New Design'.",
-    detail: "The gold 'Create New Design' button is at the top right of the page.",
+    action:
+      "Once logged in, click 'My Ziora Designs' in your sidebar, then click 'Create New Design'.",
+    detail:
+      "The gold 'Create New Design' button is at the top right of the page.",
     fullShot: "/guide/ziora/06-dashboard-ai-designs.png",
-    fullAlt: "Dashboard AI Designs page showing the Create New Design button",
+    fullAlt:
+      "Dashboard Ziora Designs page showing the Create New Design button",
   },
   {
     number: "06",
-    action: "Choose 'Still Image' or 'Video Tour', then describe what you want.",
-    detail: "Write in plain English — e.g. 'A modern bedroom with warm wood tones and soft lighting'.",
+    action:
+      "Choose 'Still Image' or 'Video Tour', then describe what you want.",
+    detail:
+      "Write in plain English — e.g. 'A modern bedroom with warm wood tones and soft lighting'.",
     fullShot: "/guide/ziora/07-new-design-modal.png",
-    fullAlt: "Create a New Design modal showing type selection and description field",
+    fullAlt:
+      "Create a New Design modal showing type selection and description field",
   },
   {
     number: "07",
     action: "Select the style tags that match your vision.",
-    detail: "Tap chips like 'Luxury interior', 'Scandinavian style', or 'Bathroom design' to narrow the style.",
+    detail:
+      "Tap chips like 'Luxury interior', 'Scandinavian style', or 'Bathroom design' to narrow the style.",
     fullShot: "/guide/ziora/08-new-design-upload.png",
     fullAlt: "Style tag selection inside the new design modal",
   },
   {
     number: "08",
-    action: "Upload a clear photo of your room, then click 'Generate My Design'.",
-    detail: "Use a JPG or PNG. Avoid dark, blurry or half-cropped photos for best results.",
+    action:
+      "Upload a clear photo of your room, then click 'Generate My Design'.",
+    detail:
+      "Use a JPG or PNG. Avoid dark, blurry or half-cropped photos for best results.",
     fullShot: "/guide/ziora/09-new-design-photo-upload.png",
     fullAlt: "Photo upload area and Generate My Design button",
   },
   {
     number: "09",
-    action: "Your design appears as a card — click '...' to Download, Share, or Edit.",
-    detail: "Use 'Share' to copy a shareable link. Use 'Download' to save the image to your device.",
+    action:
+      "Your design appears as a card — click '...' to Download, Share, or Edit.",
+    detail:
+      "Use 'Share' to copy a shareable link. Use 'Download' to save the image to your device.",
     fullShot: "/guide/ziora/10-design-cards.png",
-    fullAlt: "Generated design cards in the AI Designs dashboard",
+    fullAlt: "Generated design cards in the Ziora Designs dashboard",
     cropShot: "/guide/ziora/11-design-card-menu.png",
     cropLabel: "The '...' menu on your design card",
   },
@@ -165,7 +180,10 @@ function StepSection({ step }) {
             </p>
             <div
               className="overflow-hidden border"
-              style={{ borderColor: "rgba(212,175,55,0.28)", maxWidth: "520px" }}
+              style={{
+                borderColor: "rgba(212,175,55,0.28)",
+                maxWidth: "520px",
+              }}
             >
               <Image
                 src={step.cropShot}
@@ -191,8 +209,10 @@ function StepSection({ step }) {
 
 export default function ZioraGuideClient() {
   return (
-    <div className="min-h-screen font-manrope overflow-x-hidden" style={{ background: "#070604" }}>
-
+    <div
+      className="min-h-screen font-manrope overflow-x-hidden"
+      style={{ background: "#070604" }}
+    >
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section
         className="relative pt-36 pb-20 sm:pt-48 sm:pb-28 overflow-hidden border-b"
@@ -204,12 +224,17 @@ export default function ZioraGuideClient() {
           style={{
             width: "700px",
             height: "380px",
-            background: "radial-gradient(ellipse, rgba(212,175,55,0.08) 0%, transparent 70%)",
+            background:
+              "radial-gradient(ellipse, rgba(212,175,55,0.08) 0%, transparent 70%)",
           }}
         />
         <div
           className="pointer-events-none absolute top-0 left-1/2 -translate-x-1/2 h-px"
-          style={{ width: "700px", background: "linear-gradient(90deg,transparent,rgba(212,175,55,0.45),transparent)" }}
+          style={{
+            width: "700px",
+            background:
+              "linear-gradient(90deg,transparent,rgba(212,175,55,0.45),transparent)",
+          }}
         />
 
         <div className="max-w-5xl mx-auto px-6 sm:px-10">
@@ -227,7 +252,8 @@ export default function ZioraGuideClient() {
             className="font-poppins font-extrabold text-white leading-[1.04] mb-6"
             style={{ fontSize: "clamp(46px, 8vw, 100px)" }}
           >
-            How to Use<br />
+            How to Use
+            <br />
             <span className="text-[#D4AF37]">Ziora AI</span>
           </motion.h1>
           <motion.p
@@ -244,8 +270,15 @@ export default function ZioraGuideClient() {
             transition={{ delay: 0.22 }}
             className="flex flex-wrap gap-x-8 gap-y-3"
           >
-            {["No technical knowledge needed", "Free to start", "Results in minutes"].map((t) => (
-              <span key={t} className="flex items-center gap-2 text-[11px] text-white/30">
+            {[
+              "No technical knowledge needed",
+              "Free to start",
+              "Results in minutes",
+            ].map((t) => (
+              <span
+                key={t}
+                className="flex items-center gap-2 text-[11px] text-white/30"
+              >
                 <span className="w-1 h-1 rounded-full bg-[#D4AF37]/50" />
                 {t}
               </span>
@@ -265,11 +298,18 @@ export default function ZioraGuideClient() {
       <section className="relative py-32 sm:py-40 text-center px-6 overflow-hidden">
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ background: "radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.07) 0%, transparent 60%)" }}
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 100%, rgba(212,175,55,0.07) 0%, transparent 60%)",
+          }}
         />
         <div
           className="pointer-events-none mx-auto h-px mb-20"
-          style={{ maxWidth: "520px", background: "linear-gradient(90deg,transparent,rgba(212,175,55,0.32),transparent)" }}
+          style={{
+            maxWidth: "520px",
+            background:
+              "linear-gradient(90deg,transparent,rgba(212,175,55,0.32),transparent)",
+          }}
         />
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
@@ -278,8 +318,7 @@ export default function ZioraGuideClient() {
           className="font-poppins font-extrabold text-white leading-[1.05] mb-5"
           style={{ fontSize: "clamp(38px, 6.5vw, 80px)" }}
         >
-          Ready?{" "}
-          <span className="text-[#D4AF37]">Start Designing.</span>
+          Ready? <span className="text-[#D4AF37]">Start Designing.</span>
         </motion.h2>
         <motion.p
           initial={{ opacity: 0 }}
@@ -297,21 +336,14 @@ export default function ZioraGuideClient() {
           transition={{ delay: 0.14 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-3"
         >
-          <Link
-            href="/dashboard/ai-designs"
-            className="btn-gold px-10 py-4"
-          >
+          <Link href="/dashboard/ai-designs" className="btn-gold px-10 py-4">
             Open Ziora <ArrowRight className="w-3.5 h-3.5" />
           </Link>
-          <Link
-            href="/ziora"
-            className="btn-outline px-10 py-4"
-          >
+          <Link href="/ziora" className="btn-outline px-10 py-4">
             Ziora Overview
           </Link>
         </motion.div>
       </section>
-
     </div>
   );
 }

@@ -29,12 +29,12 @@ const TIER_LABEL = {
 };
 
 const navItems = [
-  { icon: LayoutGrid, label: "Overview",   href: "/dashboard" },
-  { icon: Package,    label: "Orders",     href: "/dashboard/orders" },
-  { icon: Layers,     label: "AI Designs", href: "/dashboard/ai-designs" },
-  { icon: FolderOpen, label: "Projects",   href: "/dashboard/projects" },
-  { icon: Heart,      label: "Saved Items",href: "/dashboard/saved" },
-  { icon: User,       label: "Profile",    href: "/dashboard/profile" },
+  { icon: LayoutGrid, label: "Overview", href: "/dashboard" },
+  { icon: Package, label: "Orders", href: "/dashboard/orders" },
+  { icon: Layers, label: "My Ziora Designs", href: "/dashboard/ai-designs" },
+  { icon: FolderOpen, label: "Projects", href: "/dashboard/projects" },
+  { icon: Heart, label: "Saved Items", href: "/dashboard/saved" },
+  { icon: User, label: "Profile", href: "/dashboard/profile" },
 ];
 
 export default function Sidebar({ isOpen, onClose }) {
@@ -54,7 +54,10 @@ export default function Sidebar({ isOpen, onClose }) {
     "U";
 
   const sidebarContent = (
-    <div className="h-full flex flex-col font-manrope" style={{ background: "#0d0b08" }}>
+    <div
+      className="h-full flex flex-col font-manrope"
+      style={{ background: "#0d0b08" }}
+    >
       {/* Header */}
       <div className="p-5 border-b border-white/08">
         <div className="flex items-start justify-between">
@@ -87,7 +90,9 @@ export default function Sidebar({ isOpen, onClose }) {
                     {displayName}
                   </p>
                   {planLabel ? (
-                    <p className="mt-0.5 truncate text-[13px] text-white/40">{planLabel}</p>
+                    <p className="mt-0.5 truncate text-[13px] text-white/40">
+                      {planLabel}
+                    </p>
                   ) : (
                     <div className="mt-1.5 h-3 w-20 animate-pulse rounded bg-white/08" />
                   )}
@@ -115,9 +120,10 @@ export default function Sidebar({ isOpen, onClose }) {
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
-          const isActive = item.href === "/dashboard"
-            ? pathname === "/dashboard"
-            : pathname === item.href || pathname.startsWith(item.href + "/");
+          const isActive =
+            item.href === "/dashboard"
+              ? pathname === "/dashboard"
+              : pathname === item.href || pathname.startsWith(item.href + "/");
 
           return (
             <Link
@@ -134,9 +140,7 @@ export default function Sidebar({ isOpen, onClose }) {
                 }
               `}
               style={
-                isActive
-                  ? { background: "rgba(212,175,55,0.10)" }
-                  : undefined
+                isActive ? { background: "rgba(212,175,55,0.10)" } : undefined
               }
             >
               <Icon className="w-5 h-5" />
@@ -167,7 +171,9 @@ export default function Sidebar({ isOpen, onClose }) {
         className="hidden md:block w-56 lg:w-64 shrink-0 border-r border-white/08"
         style={{ background: "#0d0b08" }}
       >
-        <div className="sticky top-16 h-[calc(100vh-4rem)]">{sidebarContent}</div>
+        <div className="sticky top-16 h-[calc(100vh-4rem)]">
+          {sidebarContent}
+        </div>
       </aside>
 
       {/* Mobile Sidebar */}

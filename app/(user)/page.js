@@ -1,4 +1,3 @@
-import UnderConstruction from "@/components/shared/under-construction";
 import HeroSection from "@/components/shared/home/hero";
 import StatsStrip from "@/components/shared/home/trust-strip";
 import ZioraSection from "@/components/shared/home/ziora-teaser";
@@ -41,11 +40,6 @@ export const metadata = {
 export default function Home() {
   return (
     <main className="bg-black min-h-screen">
-      {/* ── PUBLIC GATE ──
-          Shows UnderConstruction unless NEXT_PUBLIC_SITE_LIVE === "true".
-          Prod: leave the var unset → gate shows. Launch = set it to "true".
-          Staging/local: set NEXT_PUBLIC_SITE_LIVE=true to view the real site. */}
-      {process.env.NEXT_PUBLIC_SITE_LIVE !== "true" && <UnderConstruction />}
       {/* 1. Hero — split layout */}
       <HeroSection />
 

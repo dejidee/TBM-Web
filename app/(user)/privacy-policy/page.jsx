@@ -549,7 +549,7 @@ export default function PrivacyPolicyPage() {
             </BodyText>
             <BulletList
               items={[
-                "Room Photos: Images you upload for AI design generation",
+                "Room Photos: Images you upload for Ziora design generation",
                 "Design Preferences: Selected tiers (Luxury/Economic), room types, style preferences",
                 "Project Details: Room dimensions, vision descriptions, context labels",
                 "Generated Content: AI-generated designs, videos, and bills of materials",
@@ -924,7 +924,7 @@ export default function PrivacyPolicyPage() {
               {
                 heading: "8.2 AI Services",
                 items: [
-                  "OpenAI & Replicate: Power our AI design generation features",
+                  "OpenAI & Replicate: Power our Ziora design generation features",
                   "Your uploaded images and prompts are processed by these services",
                   "Subject to their respective privacy policies and data handling practices",
                 ],

@@ -69,6 +69,21 @@ function isExpired(token) {
 export function proxy(request) {
   const { pathname, search } = request.nextUrl;
 
+  // Site-wide lock: when the public gate is down, no route renders — not just
+  // "/". A visitor (or a bot, or a bookmark into /admin/login) gets the same
+  // curtain regardless of what they asked for. This runs before, and takes
+  // priority over, the auth rules below: while the gate is down even a valid
+  // admin session can't reach its own login or dashboard.
+  if (
+    process.env.NEXT_PUBLIC_SITE_LIVE !== "true" &&
+    pathname !== "/site-locked"
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/site-locked";
+    url.search = "";
+    return NextResponse.rewrite(url);
+  }
+
   const rule = RULES.find(
     (r) => pathname === r.prefix || pathname.startsWith(`${r.prefix}/`),
   );
@@ -89,10 +104,8 @@ export function proxy(request) {
 }
 
 export const config = {
-  matcher: [
-    "/admin/:path*",
-    "/vendor/:path*",
-    "/dashboard/:path*",
-    "/ziora/studio/:path*",
-  ],
+  // Broad on purpose: the site-wide lock above has to see every route, not
+  // just the previously-gated prefixes. Excludes only what the /site-locked
+  // page itself needs to render (its JS/CSS chunks) and the favicon.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };

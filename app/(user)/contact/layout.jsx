@@ -12,7 +12,7 @@ export const metadata = {
   openGraph: {
     title: "Contact TBM Building Services",
     description:
-      "Reach our renovation, materials, and AI design teams. Abuja showroom — Mon to Sat, 8am to 6pm.",
+      "Reach our renovation, materials, and Ziora design teams. Abuja showroom — Mon to Sat, 8am to 6pm.",
     type: "website",
   },
 };

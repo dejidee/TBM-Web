@@ -391,6 +391,24 @@
       "itemsAt": null,
       "auth": true,
       "$why": "Mutation, recorded manually 2026-08-25 for the design-card \"get estimate\" action. No envelope. No DELETE endpoint exists for a renovation estimate, so the call left one permanent row in the dev database, name-prefixed \"Contract Recorder Test Estimate\". See contracts/renovation-estimate.json."
+    },
+    {
+      "op": "GET /api/v1/ai/renovation/estimates",
+      "label": "renovation-estimates-list",
+      "sample": "",
+      "schema": "renovationEstimateListResponse",
+      "itemsAt": "estimates",
+      "auth": true,
+      "$why": "Recorded manually 2026-08-25 for the \"My Estimates\" / BOQ history list. No envelope: { estimates: [...] }, a lighter summary per row than the full estimate. GET /ai/renovation-estimates (hyphenated) returns the identical shape for the same resource \u2014 confirmed live; the app calls the nested family for consistency with POST /ai/renovation/estimate. See contracts/renovation-estimates-list.json."
+    },
+    {
+      "op": "GET /api/v1/ai/renovation/estimates/{estimateId}",
+      "label": "renovation-estimate-detail",
+      "sample": "",
+      "schema": "renovationEstimateResponse",
+      "itemsAt": null,
+      "auth": true,
+      "$why": "Templated path \u2014 contract:record can't hit it. Recorded manually 2026-08-25 for the estimate detail page. Same shape as POST /ai/renovation/estimate \u2014 reuses that schema. See contracts/renovation-estimates-list.json."
     }
   ]
 }

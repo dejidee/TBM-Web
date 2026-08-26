@@ -1,0 +1,81 @@
+{
+  "recordedAt": "2026-08-25",
+  "recordedFrom": "tbmdev-001-site1.dtempurl.com",
+  "note": "Shapes only, no values. GET /ai/renovation-estimates and GET /ai/renovation/estimates (hyphenated vs nested path) return identical shapes for the same resource — confirmed live; using the nested family for consistency with POST /ai/renovation/estimate.",
+  "operations": {
+    "GET /api/v1/ai/renovation/estimates": {
+      "estimates": {
+        "type": "array",
+        "length": 2,
+        "of": {
+          "estimateId": "string",
+          "projectId": "null",
+          "projectName": "string",
+          "roomType": "string",
+          "createdAtUtc": "string",
+          "totalEstimate": "number",
+          "currency": "string"
+        }
+      }
+    },
+    "GET /api/v1/ai/renovation/estimates/{estimateId}": {
+      "estimateId": "string",
+      "projectId": "null",
+      "projectName": "string",
+      "roomType": "string",
+      "createdAtUtc": "string",
+      "floorAreaSqm": "number",
+      "wallAreaSqm": "number",
+      "currency": "string",
+      "finishLevel": "string",
+      "materialsSubtotal": "number",
+      "laborSubtotal": "number",
+      "contingencyAmount": "number",
+      "totalEstimate": "number",
+      "summary": "string",
+      "status": "string",
+      "lineItems": {
+        "type": "array",
+        "length": 4,
+        "of": {
+          "group": "string",
+          "name": "string",
+          "quantity": "number",
+          "unit": "string",
+          "unitCost": "number",
+          "totalCost": "number"
+        }
+      },
+      "suggestedProducts": {
+        "type": "array",
+        "length": 6,
+        "of": {
+          "productId": "string",
+          "name": "string",
+          "price": "number",
+          "category": "string",
+          "link": "string"
+        }
+      },
+      "nextSteps": {
+        "type": "array",
+        "length": 3,
+        "of": {
+          "label": "string",
+          "url": "string",
+          "method": "string"
+        }
+      },
+      "paymentPlanOptions": {
+        "type": "array",
+        "length": 3,
+        "of": {
+          "name": "string",
+          "installments": "number",
+          "perInstallment": "number",
+          "description": "string"
+        }
+      }
+    }
+  }
+}

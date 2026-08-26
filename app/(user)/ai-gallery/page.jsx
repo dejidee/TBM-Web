@@ -167,7 +167,7 @@ export default function AIGalleryPage() {
               Community Designs
             </span>
             <h1 className="text-5xl sm:text-6xl md:text-7xl font-primary font-bold text-white leading-tight tracking-tight mb-6">
-              AI Design Gallery
+              Ziora Design Gallery
             </h1>
             <p className="text-base sm:text-lg font-manrope text-white/55 max-w-xl mb-8">
               Real spaces reimagined by real users. Browse AI-generated interior
