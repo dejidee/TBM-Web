@@ -226,16 +226,21 @@ Unverified from here: `gh` is not installed on the dev machine.
   provided. Ask before relying on it for anything server-side.
 - `POST /ai/generate/image`, `POST /ai/generate/video`, and
   `POST /ai/upload-room` now have their own route files
-  (`app/api/proxy/v1/ai/**`) with `maxDuration = 60`, instead of the shared
-  `[...path]` catch-all with no duration set. This is the Vercel **Hobby**
-  plan ceiling — it does not fix the underlying problem:
+  (`app/api/proxy/v1/ai/**`) with `maxDuration` set (120s / 300s / 60s),
+  instead of the shared `[...path]` catch-all with none set. **Correction
+  2026-08-26:** an earlier version of this entry said Hobby caps at 60s even
+  maxed out — wrong, checked against Vercel's current docs instead of memory.
+  Under Fluid Compute (the default since 2026), Hobby's default *and*
+  maximum is 300s (5 min), same ceiling Pro has below the 800s extended
+  tier. So image generation (60-90s) and video ("several minutes", assuming
+  under 5) should both fit on Hobby as configured — **if Fluid Compute is
+  actually on for this project.** Confirm in Settings → Functions; if it's
+  off, the old 60s ceiling applies and image generation is already at risk.
 
-- [ ] **Decide on a Vercel plan upgrade.** The handoff states image
-      generation takes 60-90s and video "several minutes." Hobby caps
-      function duration at 60s even maxed out — image generation is already
-      at risk, video will essentially never finish through this proxy. Pro
-      allows up to 300s (more with Fluid Compute). This is a billing
-      decision, not a code fix.
+- [ ] Confirm Fluid Compute is enabled on the `tbm-web` project (Settings →
+      Functions). If a specific video generation genuinely runs past 5
+      minutes, that's still not covered on Hobby — Pro's 800s tier would be
+      needed, a billing decision, not a code fix.
 - [ ] `GET /ai/projects`'s response shape (used by the new polling fallback)
       has no recorded contract — no `contracts/ai-projects.json`, no
       `lib/api/schemas/ai.ts` entry. `pollProjectStatus()` in
