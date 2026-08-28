@@ -234,13 +234,15 @@ Unverified from here: `gh` is not installed on the dev machine.
   maximum is 300s (5 min), same ceiling Pro has below the 800s extended
   tier. So image generation (60-90s) and video ("several minutes", assuming
   under 5) should both fit on Hobby as configured — **if Fluid Compute is
-  actually on for this project.** Confirm in Settings → Functions; if it's
-  off, the old 60s ceiling applies and image generation is already at risk.
+  actually on for this project.** Confirmed 2026-08-26: Fluid Compute is
+  enabled on `tbm-web`, so the 300s ceiling applies as configured — image
+  and video generation are covered without a plan upgrade, unless a
+  specific video run genuinely exceeds 5 minutes.
 
-- [ ] Confirm Fluid Compute is enabled on the `tbm-web` project (Settings →
-      Functions). If a specific video generation genuinely runs past 5
-      minutes, that's still not covered on Hobby — Pro's 800s tier would be
-      needed, a billing decision, not a code fix.
+- [x] ~~Confirm Fluid Compute is enabled on the `tbm-web` project~~ —
+      confirmed on 2026-08-26. If a specific video generation genuinely
+      runs past 5 minutes, that's still not covered on Hobby — Pro's 800s
+      tier would be needed, a billing decision, not a code fix.
 - [ ] `GET /ai/projects`'s response shape (used by the new polling fallback)
       has no recorded contract — no `contracts/ai-projects.json`, no
       `lib/api/schemas/ai.ts` entry. `pollProjectStatus()` in
