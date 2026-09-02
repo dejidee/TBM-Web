@@ -65,7 +65,7 @@ export default function CTASection() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="text-white/50 font-manrope text-base sm:text-lg max-w-md mb-10"
               >
-                Book a consultation, get a free project estimate, or start shopping premium materials — all in one place.
+                Book a consultation, get a free project estimate, or start shopping premium materials, all in one place.
               </motion.p>
 
               <motion.div

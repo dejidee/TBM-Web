@@ -168,7 +168,7 @@ export default function BeforeAfter({
         {/* ── After image — full background ─────────────────── */}
         <Image
           src={after}
-          alt={label ? `${label} — after` : "After"}
+          alt={label ? `${label}, after` : "After"}
           fill
           className="object-cover"
           draggable={false}
@@ -181,7 +181,7 @@ export default function BeforeAfter({
         >
           <Image
             src={before}
-            alt={label ? `${label} — before` : "Before"}
+            alt={label ? `${label}, before` : "Before"}
             fill
             className="object-cover"
             draggable={false}

@@ -21,7 +21,7 @@ const STEPS = [
     fullShot: "/guide/bogat/01-marketplace-full.png",
     fullAlt: "Marketplace with filter sidebar",
     cropShot: "/guide/bogat/02-filter-sidebar.png",
-    cropLabel: "The filter panel — on the left side of the page",
+    cropLabel: "The filter panel, on the left side of the page",
   },
   {
     number: "03",
@@ -41,8 +41,8 @@ const STEPS = [
   },
   {
     number: "05",
-    action: "Tap 'Buy Now' to go straight to checkout — or 'Add to Cart' to keep browsing.",
-    detail: "Some products show 'Request Price' instead — tap it and TBM will send you a quote within 24 hours.",
+    action: "Tap 'Buy Now' to go straight to checkout, or 'Add to Cart' to keep browsing.",
+    detail: "Some products show 'Request Price' instead. Tap it and TBM will send you a quote within 24 hours.",
     fullShot: "/guide/bogat/06-add-to-cart-buttons.png",
     fullAlt: "Buy Now and Add to Cart buttons",
     cropShot: null,

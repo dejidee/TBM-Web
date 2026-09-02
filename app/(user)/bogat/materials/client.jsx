@@ -284,7 +284,7 @@ export default function BogatMaterialsClient({ initialData }) {
             Signature collections of bespoke stone
           </h1>
           <p className="mt-5 max-w-xl text-[15px] text-white/50 leading-relaxed">
-            Made-to-order vanities, basins and stone furniture — each piece
+            Made-to-order vanities, basins and stone furniture, each piece
             handcrafted to the proportions of your space, in 8–12 weeks.
           </p>
 
@@ -447,7 +447,7 @@ export default function BogatMaterialsClient({ initialData }) {
               }
               emptyMessage={
                 activeFilters.searchTerm
-                  ? "Try a different name or collection — or clear the search to see everything."
+                  ? "Try a different name or collection, or clear the search to see everything."
                   : undefined
               }
               onReset={

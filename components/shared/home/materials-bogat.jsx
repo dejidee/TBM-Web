@@ -212,7 +212,7 @@ export default function MaterialsBogatSection() {
               className="mt-3 text-white/45 text-sm font-manrope leading-relaxed max-w-md"
             >
               TBM&apos;s premium bathroom vanity, sanitaryware and finishing
-              brand — sourced, priced, and delivered across Nigeria.
+              brand, sourced, priced, and delivered across Nigeria.
             </motion.p>
           </div>
 
@@ -283,7 +283,7 @@ export default function MaterialsBogatSection() {
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-6 gap-y-2">
             {[
               "Authentic Materials",
-              "Fast Delivery — Abuja & Lagos",
+              "Fast Delivery to Abuja & Lagos",
               "Expert Support",
             ].map((item) => (
               <span

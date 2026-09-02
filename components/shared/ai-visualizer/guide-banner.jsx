@@ -40,7 +40,7 @@ export default function ZioraGuideBanner() {
                 New to Ziora? Nine steps to your first design.
               </p>
               <p className="mt-1 text-white/50 text-[13px] leading-snug">
-                Account to download — every step shown with real screenshots.
+                Account to download. Every step shown with real screenshots.
               </p>
             </div>
           </div>

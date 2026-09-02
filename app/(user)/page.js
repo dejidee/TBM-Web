@@ -10,9 +10,9 @@ import WhyChooseTBM from "@/components/shared/home/why-choose-tbm";
 import CTASection from "@/components/shared/home/cta";
 
 export const metadata = {
-  title: "TBM Building Services – Luxury Renovation & Smart Construction",
+  title: "TBM Building Services: Luxury Renovation & Smart Construction",
   description:
-    "Premium renovation and construction company in Abuja & Lagos. We design, visualize, and build luxury spaces using Ziora — our AI-powered 3D design and project estimation system.",
+    "Premium renovation and construction company in Abuja & Lagos. We design, visualize, and build luxury spaces using Ziora, our AI-powered 3D design and project estimation system.",
   keywords: [
     "TBM Building Services",
     "luxury renovation Abuja",
@@ -31,9 +31,9 @@ export const metadata = {
     locale: "en_NG",
     url: "https://tbmbuilding.com",
     siteName: "TBM Building Services",
-    title: "TBM Building Services – Luxury Renovation & Smart Construction",
+    title: "TBM Building Services: Luxury Renovation & Smart Construction",
     description:
-      "Premium renovation, AI-powered design with Ziora, and certified materials from Bogat — all in one platform.",
+      "Premium renovation, AI-powered design with Ziora, and certified materials from Bogat, all in one platform.",
   },
 };
 

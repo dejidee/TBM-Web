@@ -20,7 +20,7 @@ export default function TBMJourney() {
             The TBM Journey
           </h2>
           <p className="text-white/50 text-base sm:text-lg max-w-xl mx-auto">
-            Founded in response to a gap in the market — and built to close it.
+            Founded in response to a gap in the market, and built to close it.
           </p>
         </motion.div>
 
@@ -55,7 +55,7 @@ export default function TBMJourney() {
                 >
                   <p className="text-white/60 leading-relaxed text-sm">
                     TBM was built to introduce order, control, and quality
-                    into an industry that often lacks all three — construction
+                    into an industry that often lacks all three. Construction
                     and renovation shouldn&apos;t be chaotic, uncertain, or
                     stressful.
                   </p>
@@ -79,7 +79,7 @@ export default function TBMJourney() {
                 >
                   <p className="text-white/60 leading-relaxed text-sm">
                     Ziora gives clients a way to see possibilities before
-                    execution begins — bringing clarity and confidence into
+                    execution begins, bringing clarity and confidence into
                     the process, assisted by TBM&apos;s own team.
                   </p>
                 </div>
@@ -88,7 +88,7 @@ export default function TBMJourney() {
                   <h3 className="text-2xl font-bold text-white mb-4 font-poppins">Ziora Launch</h3>
                   <p className="text-white/50 leading-relaxed text-sm">
                     Launched Ziora, our technology platform for planning and
-                    decision-making — AI-powered design visualization, space
+                    decision-making: AI-powered design visualization, space
                     transformation previews, and guided renovation planning.
                   </p>
                 </div>

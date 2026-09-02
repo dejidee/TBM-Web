@@ -55,7 +55,7 @@ const ORDERING_NOTES = [
   {
     Icon: Gem,
     label: "One-of-a-kind stone",
-    description: "Veining and colour vary — every slab is natural and unique.",
+    description: "Veining and colour vary. Every slab is natural and unique.",
   },
   {
     Icon: Ruler,
@@ -183,7 +183,7 @@ export default function MaterialDetailClient({
           ...product,
           price: selectedVariant.price,
           priceDisplay: selectedVariant.priceDisplay,
-          name: `${product.name} — ${selectedVariant.label}`,
+          name: `${product.name} (${selectedVariant.label})`,
         }
       : product;
     addToCart.mutate(
@@ -210,7 +210,7 @@ export default function MaterialDetailClient({
           ...product,
           price: selectedVariant.price,
           priceDisplay: selectedVariant.priceDisplay,
-          name: `${product.name} — ${selectedVariant.label}`,
+          name: `${product.name} (${selectedVariant.label})`,
         }
       : product;
     try {
@@ -628,7 +628,7 @@ export default function MaterialDetailClient({
 
                 {isMadeToOrder && (
                   <p className="text-[11px] text-white/35 leading-relaxed text-center">
-                    Reserve your size and finish now — our design team confirms
+                    Reserve your size and finish now. Our design team confirms
                     the final quote, stone selection and 8–12 week timeline
                     before any payment is taken.
                   </p>
@@ -679,7 +679,7 @@ export default function MaterialDetailClient({
                 </h2>
                 {product.shortDescription && (
                   <p className="mt-4 text-[14px] text-white/45 leading-relaxed">
-                    {product.shortDescription} — each piece made to order to the
+                    {product.shortDescription}. Each piece is made to order to the
                     proportions of your wall.
                   </p>
                 )}

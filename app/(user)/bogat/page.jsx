@@ -1,9 +1,9 @@
 import BogatClient from "./client";
 
 export const metadata = {
-  title: "Bogat Signature Collections | TBM — Luxury Bathroom Vanities for Nigerian Homes",
+  title: "Bogat Signature Collections | TBM | Luxury Bathroom Vanities for Nigerian Homes",
   description:
-    "Explore Bogat's signature stone vanity collections — luxury bathroom vanities, basins, and stone furniture. Sourced for quality, supplied by TBM across Nigeria.",
+    "Explore Bogat's signature stone vanity collections: luxury bathroom vanities, basins, and stone furniture. Sourced for quality, supplied by TBM across Nigeria.",
   keywords:
     "Bogat bathroom vanity Nigeria, luxury stone vanity Abuja, bathroom sanitaryware Lagos, basins Nigeria, Bogat by TBM",
   openGraph: {

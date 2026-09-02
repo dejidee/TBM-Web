@@ -3,9 +3,9 @@ import BogatMaterialsClient from "./client";
 import { API_URL } from "@/lib/env";
 
 export const metadata = {
-  title: "Shop Bogat Signature Collections | TBM — Luxury Bathroom Vanities Nigeria",
+  title: "Shop Bogat Signature Collections | TBM | Luxury Bathroom Vanities Nigeria",
   description:
-    "Browse Bogat's signature stone vanity collections — luxury bathroom vanities, basins, and stone furniture. Fixed pricing and request-quote options. Delivered across Nigeria.",
+    "Browse Bogat's signature stone vanity collections: luxury bathroom vanities, basins, and stone furniture. Fixed pricing and request-quote options. Delivered across Nigeria.",
   keywords:
     "Bogat bathroom vanity Nigeria, luxury stone vanity Abuja, bathroom sanitaryware Lagos, basins Nigeria, bathroom-ware Nigeria",
   openGraph: {

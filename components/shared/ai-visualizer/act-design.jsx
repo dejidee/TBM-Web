@@ -74,7 +74,7 @@ const ROWS = [
     label: "The job, not a mood board",
     title: "Organised the way a build is",
     body: "Interiors, structure, furniture, materials. Ziora tags a project the way the work is actually divided, so what comes back is scoped to the job rather than a room-styling exercise.",
-    caption: "Tag groups — Create a New Design",
+    caption: "Tag groups: Create a New Design",
     shot: {
       src: "/guide/ziora/08-new-design-upload.png",
       alt: "Ziora's project tag groups: Interior Design expanded, with Construction and Furniture as peer groups below",
@@ -91,7 +91,7 @@ const ROWS = [
   {
     label: "Still or walkthrough",
     title: "Choose what you get back",
-    body: "A single high-resolution render, or an animated walkthrough of the space. Describe what you want in plain English — there is no drawing to commission and no brief to write.",
+    body: "A single high-resolution render, or an animated walkthrough of the space. Describe what you want in plain English; there is no drawing to commission and no brief to write.",
     caption: "Output type and description",
     shot: {
       src: "/guide/ziora/07-new-design-modal.png",
@@ -105,7 +105,7 @@ const ROWS = [
   {
     label: "Compare and revise",
     title: "Every option in one place",
-    body: "Designs are saved to your library as you generate them — reopen one, download it, share it with your team or your builder, and run it again until it is right.",
+    body: "Designs are saved to your library as you generate them. Reopen one, download it, share it with your team or your builder, and run it again until it is right.",
     caption: "Your saved designs",
     shot: {
       src: "/guide/ziora/10-design-cards.png",
@@ -138,7 +138,7 @@ export default function ActDesign() {
             </h2>
           </div>
           <p className="text-white/70 text-[15px] leading-relaxed max-w-sm lg:text-right lg:pb-2">
-            Not a preview of the software — the software. Every screen below is
+            Not a preview of the software. This is the software. Every screen below is
             the product as it ships today.
           </p>
         </motion.div>

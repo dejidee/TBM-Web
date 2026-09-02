@@ -17,7 +17,7 @@ const STEPS = [
   {
     number: "02",
     action:
-      "Pick a plan — start free with Economy, upgrade whenever you need more.",
+      "Pick a plan. Start free with Economy, upgrade whenever you need more.",
     detail:
       "Scroll down on the Ziora page and click 'Choose Plan'. The Economy plan is free to start.",
     fullShot: "/guide/ziora/05-pricing-plans.png",
@@ -53,7 +53,7 @@ const STEPS = [
     action:
       "Choose 'Still Image' or 'Video Tour', then describe what you want.",
     detail:
-      "Write in plain English — e.g. 'A modern bedroom with warm wood tones and soft lighting'.",
+      "Write in plain English, e.g. 'A modern bedroom with warm wood tones and soft lighting'.",
     fullShot: "/guide/ziora/07-new-design-modal.png",
     fullAlt:
       "Create a New Design modal showing type selection and description field",
@@ -78,7 +78,7 @@ const STEPS = [
   {
     number: "09",
     action:
-      "Your design appears as a card — click '...' to Download, Share, or Edit.",
+      "Your design appears as a card. Click '...' to Download, Share, or Edit.",
     detail:
       "Use 'Share' to copy a shareable link. Use 'Download' to save the image to your device.",
     fullShot: "/guide/ziora/10-design-cards.png",
@@ -176,7 +176,7 @@ function StepSection({ step }) {
             className="max-w-5xl mx-auto px-6 sm:px-10 mt-8"
           >
             <p className="text-[10px] font-bold text-[#D4AF37]/45 uppercase tracking-[0.3em] font-manrope mb-4">
-              Zoom in — actions available on each design card
+              Zoom in: actions available on each design card
             </p>
             <div
               className="overflow-hidden border"

@@ -291,7 +291,7 @@ function StyleGrid({ value, onChange }) {
   if (isError) {
     return (
       <p className="text-[13px] text-white/35">
-        Styles couldn&rsquo;t load — you can still generate without one.
+        Styles couldn&rsquo;t load, but you can still generate without one.
       </p>
     );
   }
@@ -627,7 +627,7 @@ export default function StudioView() {
         if (outcome === "timeout") {
           setStep("error");
           setErrorMsg(
-            "Still working on it — this can take a few minutes. Check My Designs shortly, or try again.",
+            "Still working on it. This can take a few minutes. Check My Designs shortly, or try again.",
           );
           return;
         }
@@ -744,7 +744,7 @@ export default function StudioView() {
             Create a New Design
           </h1>
           <p className="mt-1.5 max-w-2xl text-[15px] font-medium text-white/50">
-            Upload your room, choose a style, and describe the vision — Ziora renders the rest.
+            Upload your room, choose a style, and describe the vision. Ziora renders the rest.
           </p>
         </div>
 
@@ -931,7 +931,7 @@ export default function StudioView() {
               <SectionHeader
                 n="4"
                 title="Describe the space you want"
-                hint="The more specific — materials, colours, mood, lighting — the better."
+                hint="The more specific (materials, colours, mood, lighting), the better."
               />
               <textarea
                 value={prompt}

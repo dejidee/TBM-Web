@@ -307,7 +307,7 @@ export default function ZioraSection() {
                 style={{ fontSize: 16, maxWidth: 320 }}
               >
                 Upload your space, choose your style and get stunning 3D designs
-                with a cost estimate range in minutes — assisted by TBM&apos;s
+                with a cost estimate range in minutes, assisted by TBM&apos;s
                 team.
               </p>
             </Reveal>

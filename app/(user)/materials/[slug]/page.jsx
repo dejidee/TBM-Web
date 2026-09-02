@@ -65,10 +65,10 @@ export async function generateMetadata({ params }) {
   const description =
     product.shortDescription ||
     product.description ||
-    `${product.name} — ${product.priceDisplay ?? "Request Price"}. ${product.inStock ? "In stock and ready to ship." : ""}`;
+    `${product.name}: ${product.priceDisplay ?? "Request Price"}. ${product.inStock ? "In stock and ready to ship." : ""}`;
 
   return {
-    title: `${product.name} | TBM — Building & Construction`,
+    title: `${product.name} | TBM Building & Construction`,
     description,
     keywords:
       product.tags ||

@@ -1,7 +1,7 @@
 import AIVisualizerView from "@/components/shared/ai-visualizer/visualizer-view";
 
 export const metadata = {
-  title: "Ziora AI — Design & Visualize Before You Build",
+  title: "Ziora AI: Design & Visualize Before You Build",
   description:
     "Ziora AI by TBM creates 3D interior designs from a single room photo. Upload a photo, choose a style, and see what's possible before you build.",
   keywords: [
@@ -15,7 +15,7 @@ export const metadata = {
     "Design with Ziora",
   ],
   openGraph: {
-    title: "Ziora AI — Design & Visualize | TBM Building Services",
+    title: "Ziora AI: Design & Visualize | TBM Building Services",
     description:
       "See your space redesigned before a single tile is laid. 3D designs powered by Ziora AI.",
     type: "website",

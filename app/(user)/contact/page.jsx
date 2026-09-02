@@ -82,7 +82,7 @@ const FAQS = [
   },
   {
     q: "Do you offer virtual consultations?",
-    a: "Yes — video consultations are available. You can also use Ziora AI to generate a design concept before booking a formal session.",
+    a: "Yes, video consultations are available. You can also use Ziora AI to generate a design concept before booking a formal session.",
   },
   {
     q: "Is there a fee for the initial project review?",
@@ -90,7 +90,7 @@ const FAQS = [
   },
   {
     q: "Can I inquire about a specific product from the Bogat store?",
-    a: "Yes — select 'Product / Material Inquiry' and describe the product you're interested in. Our team will respond with availability and pricing.",
+    a: "Yes. Select 'Product / Material Inquiry' and describe the product you're interested in. Our team will respond with availability and pricing.",
   },
 ];
 
@@ -266,7 +266,7 @@ function ContactPageInner() {
               className="text-white/50 text-sm sm:text-base mb-6 sm:mb-8 leading-relaxed"
             >
               Choose your inquiry type below and we&apos;ll route your message
-              to the right team — renovation, materials, Ziora AI, or
+              to the right team: renovation, materials, Ziora AI, or
               partnerships.
             </motion.p>
 
@@ -655,7 +655,7 @@ function ContactPageInner() {
                       ? "Tell us about your Ziora design inquiry or project..."
                       : selectedType.key === "partnership"
                         ? "Tell us about your company and what you're proposing..."
-                        : "Tell us about your project — space, scope, timeline, location..."
+                        : "Tell us about your project: space, scope, timeline, location..."
                 }
                 rows={5}
                 required
@@ -797,7 +797,7 @@ function ContactPageInner() {
                 </svg>
                 <p className="text-sm sm:text-base leading-relaxed mb-4 text-white/80">
                   &ldquo;TBM transformed our renovation process. The Ziora AI
-                  tool gave us clarity before we spent a naira — and the
+                  tool gave us clarity before we spent a naira, and the
                   execution team delivered exactly what was promised.&rdquo;
                 </p>
                 <div className="flex items-center gap-3">

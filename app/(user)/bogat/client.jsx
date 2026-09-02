@@ -141,7 +141,7 @@ const HOW_TO_SHOP = [
     step: "01",
     Icon: Search,
     title: "Browse & Search",
-    desc: "Head to the Marketplace and filter by category, brand, or price — or search by product name.",
+    desc: "Head to the Marketplace and filter by category, brand, or price, or search by product name.",
   },
   {
     step: "02",
@@ -237,7 +237,7 @@ export default function BogatClient() {
               className="text-white/50 text-[14px] sm:text-[17px] leading-relaxed mb-8 max-w-[85%]"
             >
               TBM&apos;s premium bathroom vanity, sanitaryware, and finishing
-              brand — for luxury homes and commercial spaces across Nigeria.
+              brand for luxury homes and commercial spaces across Nigeria.
             </motion.p>
 
             <motion.div
@@ -436,7 +436,7 @@ export default function BogatClient() {
                     <span className="text-[#D4AF37]">We&apos;ve got your guide.</span>
                   </h3>
                   <p className="text-white/40 text-sm sm:text-[15px] leading-relaxed max-w-xl mb-6">
-                    6 steps — browsing the catalogue, filtering by category, selecting your variant,
+                    6 steps: browsing the catalogue, filtering by category, selecting your variant,
                     adding to cart, and receiving delivery at your door.
                   </p>
 
@@ -648,7 +648,7 @@ export default function BogatClient() {
               <div className="relative overflow-hidden aspect-[4/5] lg:aspect-auto lg:h-[520px] bg-[#111]">
                 <Image
                   src="/hero/re-imagine.png"
-                  alt="Bogat showroom — experience premium materials in person"
+                  alt="Bogat showroom: experience premium materials in person"
                   fill
                   className="object-cover"
                 />

@@ -40,7 +40,7 @@ export default function ConsultationDetailClient({ id }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      showToast.error("Could not copy — select the address bar instead.");
+      showToast.error("Could not copy. Select the address bar instead.");
     }
   };
 
@@ -53,7 +53,7 @@ export default function ConsultationDetailClient({ id }) {
         <h1 className="mt-2 text-[28px] font-semibold text-white">Consultation details</h1>
         <p className="mt-1.5 text-[14px] text-white/45">
           {token && !isAuthenticated
-            ? "This link is how you manage your booking — keep it somewhere safe."
+            ? "This link is how you manage your booking, so keep it somewhere safe."
             : "Reschedule, cancel, or complete payment below."}
         </p>
 

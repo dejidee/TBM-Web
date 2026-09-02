@@ -15,7 +15,7 @@ const FAQS = [
   },
   {
     q: "Can I buy materials without booking a renovation project?",
-    a: "Absolutely. The Bogat store is fully independent — you can browse, add to cart, and checkout for any product without engaging TBM for project execution.",
+    a: "Absolutely. The Bogat store is fully independent; you can browse, add to cart, and checkout for any product without engaging TBM for project execution.",
   },
   {
     q: "How long does a typical bathroom renovation take?",
@@ -27,7 +27,7 @@ const FAQS = [
   },
   {
     q: "What is the consultation fee?",
-    a: "Initial consultations are structured to give you a full project assessment, scope, and estimate. Our team will confirm current consultation fees during the booking step — and the fee is credited toward your project if you proceed.",
+    a: "Initial consultations are structured to give you a full project assessment, scope, and estimate. Our team will confirm current consultation fees during the booking step, and the fee is credited toward your project if you proceed.",
   },
   {
     q: "Can I track my project progress?",

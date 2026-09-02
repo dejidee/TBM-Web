@@ -60,7 +60,7 @@ export default function TrendingClient({ products = [] }) {
             Featured Materials
           </h2>
           <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto leading-relaxed">
-            Explore our most popular renovation and construction materials — quality-certified and sourced through Bogat for every stage of your project.
+            Explore our most popular renovation and construction materials, quality-certified and sourced through Bogat for every stage of your project.
           </p>
           <div className="flex justify-center mt-4">
             <div className="w-20 h-1 bg-primary rounded-full" />

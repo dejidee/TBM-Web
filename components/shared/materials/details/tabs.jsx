@@ -116,7 +116,7 @@ export default function ProductTabs({ material }) {
                   },
                   {
                     title: "Natural stone",
-                    body: "Final veining and colour vary because every slab is natural — no two pieces are identical. Bespoke widths are quoted individually.",
+                    body: "Final veining and colour vary because every slab is natural; no two pieces are identical. Bespoke widths are quoted individually.",
                   },
                   {
                     title: "Pricing & delivery",

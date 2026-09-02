@@ -157,7 +157,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <p className="text-white/30 text-xs font-manrope tracking-wide">
-            © 2026 TBM Building Services — The Building Doctors. All Rights
+            © 2026 TBM Building Services, The Building Doctors. All Rights
             Reserved.
           </p>
           <Link

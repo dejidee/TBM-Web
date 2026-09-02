@@ -364,7 +364,7 @@ export default function PrivacyPolicyPage() {
             className="flex flex-wrap items-center gap-x-6 gap-y-2 mb-6"
           >
             <span className="text-white/35 text-sm">
-              TBM Building Services — "The Building Doctor"
+              TBM Building Services, &ldquo;The Building Doctor&rdquo;
             </span>
             <span
               className="w-1 h-1 rounded-full hidden sm:block"
@@ -684,12 +684,12 @@ export default function PrivacyPolicyPage() {
             </BodyText>
             <BulletList
               items={[
-                "Paystack — Payment processing and transaction management",
-                "Cloudinary — Secure image and media storage",
-                "OpenAI — AI-powered image generation and design services",
-                "Replicate — Video generation services",
-                "Email Service Providers — Transactional and promotional email delivery",
-                "Cloud Hosting Providers — Platform infrastructure and data storage",
+                "Paystack: Payment processing and transaction management",
+                "Cloudinary: Secure image and media storage",
+                "OpenAI: AI-powered image generation and design services",
+                "Replicate: Video generation services",
+                "Email Service Providers: Transactional and promotional email delivery",
+                "Cloud Hosting Providers: Platform infrastructure and data storage",
               ]}
             />
             <BodyText className="mt-3">
@@ -701,7 +701,7 @@ export default function PrivacyPolicyPage() {
             <SubHeading>4.2 Vendors & Delivery Partners</SubHeading>
             <BodyText>
               When you place an order, we share your delivery address and
-              contact information with assigned vendors and delivery agents —
+              contact information with assigned vendors and delivery agents,
               only to the extent needed to complete delivery.
             </BodyText>
 
@@ -981,7 +981,7 @@ export default function PrivacyPolicyPage() {
             heading="Children's Privacy"
           >
             <Callout type="warning">
-              <strong>Age Restriction — 18+:</strong> Our Platform and services
+              <strong>Age Restriction (18+):</strong> Our Platform and services
               are intended exclusively for users aged{" "}
               <strong>18 years and older</strong>. We do not knowingly collect,
               use, or disclose personal information from children under 18.
@@ -1057,8 +1057,8 @@ export default function PrivacyPolicyPage() {
             <BulletList
               items={[
                 "Nigeria Data Protection Regulation (NDPR)",
-                "General Data Protection Regulation (GDPR) — for European users",
-                "California Consumer Privacy Act (CCPA) — for California users",
+                "General Data Protection Regulation (GDPR), for European users",
+                "California Consumer Privacy Act (CCPA), for California users",
                 "Other applicable data protection and privacy laws",
               ]}
             />

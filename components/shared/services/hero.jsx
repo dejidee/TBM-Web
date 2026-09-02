@@ -27,7 +27,7 @@ export default function ServicesHero() {
             What We Do
           </h1>
           <p className="text-base sm:text-lg font-manrope text-white/50 max-w-xl mb-10">
-            From full-scale renovation and interior fit-outs to maintenance and design consultation — TBM delivers expert execution at every stage.
+            From full-scale renovation and interior fit-outs to maintenance and design consultation, TBM delivers expert execution at every stage.
           </p>
           <div className="flex flex-col sm:flex-row gap-3">
             <Link href="/consultation" className="btn-gold px-8 py-4">

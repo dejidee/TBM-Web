@@ -8,7 +8,7 @@ const PILLARS = [
   {
     label: "TBM Projects",
     tagline: "Renovation · Construction · Fit-Out · Interiors",
-    desc: "End-to-end project execution — from initial inspection and design through to final handover. We handle homes, apartments, and commercial spaces across Abuja and Lagos.",
+    desc: "End-to-end project execution, from initial inspection and design through to final handover. We handle homes, apartments, and commercial spaces across Abuja and Lagos.",
     cta: "View Projects",
     href: "/project",
     src: "/site-images/web/villa-modern-after.jpg",
@@ -16,7 +16,7 @@ const PILLARS = [
   {
     label: "Bogat Store",
     tagline: "Bathroom · Kitchen · Plumbing · Finishing",
-    desc: "Browse and order premium construction materials directly — WCs, basins, faucets, tiles, water heaters, and more. Fixed prices and request-quote options available.",
+    desc: "Browse and order premium construction materials directly: WCs, basins, faucets, tiles, water heaters, and more. Fixed prices and request-quote options available.",
     cta: "Shop Materials",
     href: "/materials",
     src: "/site-images/web/kitchen-island.jpg",

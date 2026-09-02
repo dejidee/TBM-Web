@@ -64,7 +64,7 @@ const CAPABILITIES = [
     // Coming Soon: no package tier currently ships a working cost estimate
     // (package-tiers.jsx marks every cost-estimate feature Coming Soon), so
     // this can't be described as a live capability yet.
-    desc: "A costed breakdown, not a ballpark — Coming Soon",
+    desc: "A costed breakdown, not a ballpark (Coming Soon)",
   },
   {
     Icon: LayoutGrid,
@@ -85,7 +85,7 @@ const ACTS = [
   {
     id: "imagine",
     word: "Imagine.",
-    line: "Describe the space in plain English. Ziora renders it — as a still, or as a walkthrough.",
+    line: "Describe the space in plain English. Ziora renders it as a still, or as a walkthrough.",
   },
   {
     id: "design",
@@ -95,7 +95,7 @@ const ACTS = [
   {
     id: "build",
     word: "Build.",
-    line: "Cost estimates to Nigerian market rates, broken out line by line — coming soon.",
+    line: "Cost estimates to Nigerian market rates, broken out line by line. Coming soon.",
   },
 ];
 
