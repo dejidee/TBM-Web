@@ -313,7 +313,7 @@ export default function ConsultationClient() {
             Book a Consultation
           </h1>
           <p className="mt-4 text-white/50 text-[15px] leading-relaxed max-w-xl">
-            Choose a service and a real available time — your slot is confirmed the moment you book it, not requested.
+            Choose a service and a real available time. Your slot is confirmed the moment you book it, not requested.
           </p>
         </div>
 
@@ -463,7 +463,7 @@ export default function ConsultationClient() {
                     <p className="mt-1 text-[13px] text-white/70 leading-relaxed">
                       {isInPerson
                         ? "A consultant will travel to this address, so please be precise."
-                        : "Your session is remote — we still need the location to apply the right rates and team."}
+                        : "Your session is remote, but we still need the location to apply the right rates and team."}
                     </p>
                   </div>
 
@@ -492,7 +492,7 @@ export default function ConsultationClient() {
                   <div>
                     <h2 className="text-[15px] font-semibold text-white">Choose a time</h2>
                     <p className="mt-1 text-[13px] text-white/70 leading-relaxed">
-                      Real availability — booking a slot confirms it immediately.
+                      Real availability. Booking a slot confirms it immediately.
                     </p>
                   </div>
 
@@ -552,7 +552,7 @@ export default function ConsultationClient() {
                       })}
                     </div>
                   ) : (
-                    <p className="text-[13px] text-white/50 text-center py-6">No slots for this day — try another date.</p>
+                    <p className="text-[13px] text-white/50 text-center py-6">No slots for this day. Try another date.</p>
                   )}
 
                   {formik.touched.scheduledStart && formik.errors.scheduledStart && (
@@ -603,7 +603,7 @@ export default function ConsultationClient() {
                       <p className="mt-1 text-[12px] text-white/50 leading-relaxed max-w-sm">
                         {selectedType?.fee > 0
                           ? "You'll pay by card on the next step. Your slot is held once booked."
-                          : "This consultation type is free — no payment needed."}
+                          : "This consultation type is free. No payment needed."}
                       </p>
                     </div>
                     <span className="text-white text-xl font-extrabold font-primary tabular-nums shrink-0">
@@ -685,7 +685,7 @@ export default function ConsultationClient() {
           </div>
 
           {step === STEPS.length && !stepIsValid && formik.submitCount > 0 && (
-            <p className="mt-3 text-[12px] text-red-400 text-right">Some details are still missing — check the steps above.</p>
+            <p className="mt-3 text-[12px] text-red-400 text-right">Some details are still missing. Check the steps above.</p>
           )}
         </form>
       </div>

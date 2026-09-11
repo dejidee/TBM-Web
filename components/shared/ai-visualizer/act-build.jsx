@@ -85,14 +85,14 @@ export default function ActBuild() {
           viewport={{ once: true }}
           transition={enter()}
         >
-          <span className="z-eyebrow mb-5">Build — Coming Soon</span>
+          <span className="z-eyebrow mb-5">Build (Coming Soon)</span>
           <h2 className="font-primary text-[2.25rem] sm:text-5xl font-bold tracking-tight leading-[1.05]">
             <span className="text-white">Know the number</span>{" "}
             <span className="z-gold-text">before you break ground</span>
           </h2>
           <p className="mt-6 text-white/70 text-[15px] leading-relaxed">
             The design is the easy half. What decides whether a project happens
-            is the cost — and whether anyone is accountable for it once the
+            is the cost, and whether anyone is accountable for it once the
             renders are closed. This costed breakdown is in development; the
             sample below shows what it will look like.
           </p>
@@ -192,7 +192,7 @@ export default function ActBuild() {
 
             <p className="text-white/70 text-[15px] leading-relaxed">
               And when it is time to build, the design is only the start of
-              the conversation — TBM built the house at the top of this page.
+              the conversation. TBM built the house at the top of this page.
             </p>
 
             <div className="mt-7 flex flex-col sm:flex-row gap-3">

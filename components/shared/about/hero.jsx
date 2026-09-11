@@ -45,7 +45,7 @@ export default function Hero() {
 
             {/* Subtitle */}
             <p className="text-lg sm:text-xl text-white/90 leading-relaxed font-manrope max-w-2xl mb-8 [text-shadow:0_1px_12px_rgba(0,0,0,0.6)]">
-              We blend AI visualization with world-class materials and expert execution — bringing your dream space to life before the first brick is laid.
+              We blend AI visualization with world-class materials and expert execution, bringing your dream space to life before the first brick is laid.
             </p>
 
             {/* CTAs */}

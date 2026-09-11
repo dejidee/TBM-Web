@@ -5,17 +5,17 @@ const ARMS = [
   {
     name: "TBM",
     role: "Execution",
-    desc: "Construction, renovation, interior fit-outs, and full project management — where ideas are translated into reality with precision and discipline.",
+    desc: "Construction, renovation, interior fit-outs, and full project management, where ideas are translated into reality with precision and discipline.",
   },
   {
     name: "Bogat",
     role: "Materials",
-    desc: "Carefully selected, high-quality bathroom vanity, sanitaryware, and finishing materials — ensuring every project matches the desired standard of finish.",
+    desc: "Carefully selected, high-quality bathroom vanity, sanitaryware, and finishing materials, ensuring every project matches the desired standard of finish.",
   },
   {
     name: "Ziora",
     role: "Technology",
-    desc: "A TBM-assisted planning tool — AI-powered design visualization, space transformation previews, and guided renovation planning.",
+    desc: "A TBM-assisted planning tool: AI-powered design visualization, space transformation previews, and guided renovation planning.",
   },
 ];
 

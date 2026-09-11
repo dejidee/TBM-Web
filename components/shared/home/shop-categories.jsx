@@ -240,7 +240,7 @@ export default function ShopCategories() {
               Shop by Category
             </h2>
             <p className="mt-4 text-base text-[#7A736C] font-manrope max-w-xl">
-              Premium building and finishing materials sourced from certified suppliers — delivered to your site.
+              Premium building and finishing materials sourced from certified suppliers, delivered to your site.
             </p>
           </div>
           <Link

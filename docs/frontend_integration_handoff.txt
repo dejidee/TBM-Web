@@ -1,0 +1,195 @@
+Yes—deployed to the live backend. I rechecked it just now: GET /api/v1/ai/styles returned 200 application/json.
+
+FRONTEND INTEGRATION HANDOFF
+
+Base URL
+https://tbmdev-001-site1.dtempurl.com
+
+Use the direct backend for generation. The custom-domain/Vercel API proxy previously returned 405 for POST requests and may time out during video generation.
+
+AUTHENTICATION
+
+All endpoints except /api/v1/ai/styles require:
+Authorization: Bearer <USER_ACCESS_TOKEN>
+
+Never expose Replicate credentials in the frontend.
+
+INTEGRATION FLOW
+
+1. Upload the room
+
+POST /api/v1/ai/upload-room
+Content-Type: multipart/form-data
+
+Form field:
+file: <JPG, PNG or WEBP, maximum 10 MB>
+
+Response:
+{
+  "success": true,
+  "imageUrl": "https://res.cloudinary.com/.../room.jpg"
+}
+
+Always use this upload endpoint. Do not submit Google Images/cache URLs.
+
+2. Create the project
+
+Image:
+POST /api/v1/ai/projects
+Content-Type: application/json
+
+{
+  "sourceImageUrl": "<imageUrl from upload>",
+  "outputType": 1,
+  "prompt": "Transform this kitchen into a contemporary Nigerian luxury kitchen with warm natural stone, durable cabinetry and layered lighting.",
+  "contextLabel": "Kitchen"
+}
+
+Video uses "outputType": 2.
+
+Values:
+1 = Image
+2 = Video
+
+Save the returned id; it becomes projectId.
+
+3A. Generate an image
+
+POST /api/v1/ai/generate/image
+Content-Type: application/json
+
+{
+  "projectId": "<project id>",
+  "sourceImageUrl": "<uploaded imageUrl>",
+  "prompt": "Transform this kitchen into a refined contemporary Nigerian kitchen suitable for a Lagos home, using warm stone surfaces, practical premium cabinetry, layered lighting and locally appropriate finishes.",
+  "style": "afro-minimalism",
+  "contextTags": [
+    "Kitchen design",
+    "Renovation",
+    "Cabinets",
+    "Wood",
+    "Tiles",
+    "Natural stone"
+  ]
+}
+
+3B. Generate a video
+
+POST /api/v1/ai/generate/video
+Content-Type: application/json
+
+{
+  "projectId": "<project id>",
+  "sourceImageUrl": "<uploaded imageUrl>",
+  "prompt": "Show this existing kitchen transforming into a refined contemporary Nigerian luxury kitchen with warm natural stone, premium cabinetry and layered lighting.",
+  "style": "afro-minimalism",
+  "durationSeconds": 5,
+  "contextTags": [
+    "Kitchen design",
+    "Renovation",
+    "Cabinets",
+    "Wood",
+    "Tiles",
+    "Natural stone"
+  ]
+}
+
+Use 5 seconds initially. The current model supports up to 15 seconds, but longer videos cost more and take longer.
+
+CRITICAL AUTOMATIC-INVENTORY RULE
+
+Do not send selectedProductIds and do not create a product-selection screen.
+
+The backend automatically:
+- Selects relevant in-stock Bogat SKUs.
+- Retrieves their catalogue photos.
+- Sends those references to the image model.
+- Returns the selected products as matchedProducts.
+
+matchedProducts is read-only result metadata. It must not become a pre-generation picker.
+
+SUCCESSFUL GENERATION RESPONSE
+
+{
+  "designId": "uuid",
+  "projectId": "uuid",
+  "outputType": 1,
+  "outputUrl": "https://res.cloudinary.com/.../generated-image.jpg",
+  "width": 1024,
+  "height": 1024,
+  "durationSeconds": null,
+  "provider": "Replicate",
+  "providerJobId": "provider-job-id",
+  "createdAt": "2026-08-28T...",
+  "matchedProducts": [
+    {
+      "productId": "uuid",
+      "sku": "BGT-JOA-003",
+      "name": "Joaillerie Stone Aura",
+      "role": "Stone surface / finish",
+      "price": 750000,
+      "priceDisplay": "₦750,000.00",
+      "imageUrl": "https://res.cloudinary.com/...",
+      "inStock": true
+    }
+  ]
+}
+
+CORRECT FRONTEND FIELD MAPPING
+
+Operation                         Media field
+Room upload                       imageUrl
+Create project                    id
+Generation response               outputUrl
+GET /api/v1/ai/projects           latestDesignUrl
+Product card                      matchedProducts[].imageUrl
+
+FOR THE RESULT
+
+{result.outputType === 1 ? (
+  <img src={result.outputUrl} alt="Generated room design" />
+) : (
+  <video
+    src={result.outputUrl}
+    controls
+    playsInline
+    preload="metadata"
+  />
+)}
+
+Do not use the prompt, sourceImageUrl, or product image as the generated result. This was likely responsible for the previously broken design card.
+
+LOADING AND TIMEOUT HANDLING
+
+- Image generation typically takes around 60–90 seconds.
+- Video generation can take several minutes.
+- Do not use a 60–100-second frontend timeout.
+- Avoid Vercel serverless proxying for these requests.
+- Prevent duplicate submissions while generation is running.
+- Show a persistent “Generating your design” state.
+- As a recovery fallback, poll:
+  GET /api/v1/ai/projects
+
+Project statuses:
+1 = Pending
+2 = Processing
+3 = Completed
+4 = Failed
+
+When completed, render latestDesignUrl.
+
+ERRORS
+
+{
+  "success": false,
+  "message": "Human-readable error"
+}
+
+Handle:
+400: invalid image/payload/project mismatch.
+401: expired or missing access token.
+403: subscription/quota failure.
+429: rate limit.
+500: provider/backend failure.
+
+The UI should display message, never the entire raw error object.

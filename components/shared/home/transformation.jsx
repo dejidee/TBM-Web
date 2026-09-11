@@ -150,7 +150,7 @@ export default function TransformationSection() {
                 />
                 <p className="mt-3 text-[13px] font-manrope text-white/40 text-center lg:text-left">
                   <span className="text-[#D4AF37] font-semibold">{active.category || "Renovation"}</span>
-                  {active.title ? ` — ${active.title}` : ""}
+                  {active.title ? `: ${active.title}` : ""}
                 </p>
               </div>
             </Reveal>

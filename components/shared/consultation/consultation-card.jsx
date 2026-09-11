@@ -112,7 +112,7 @@ function ReschedulePanel({ consultation, token, onDone, onCancel }) {
           ))}
         </div>
       ) : (
-        <p className="text-[12px] text-white/40 text-center py-3">No slots this day — try another date.</p>
+        <p className="text-[12px] text-white/40 text-center py-3">No slots this day. Try another date.</p>
       )}
 
       <button type="button" onClick={onCancel} className="mt-3 text-[12px] text-white/40 hover:text-white">

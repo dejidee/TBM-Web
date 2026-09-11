@@ -26,7 +26,7 @@ const SERVICES = [
     portfolioCategory: "Interior Renovation",
     tagline: "Transform existing spaces into premium environments",
     intro:
-      "TBM specialises in full-scope renovation projects for homes, apartments, and commercial spaces — from structural upgrades to complete interior overhauls.",
+      "TBM specialises in full-scope renovation projects for homes, apartments, and commercial spaces, from structural upgrades to complete interior overhauls.",
     includes: [
       "Site assessment and feasibility review",
       "Full demolition and structural works",
@@ -73,7 +73,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Do you handle FF&E procurement?",
-        a: "Yes — we can coordinate furniture and equipment sourcing through trusted third-party suppliers, and bathroom fixtures through Bogat.",
+        a: "Yes. We can coordinate furniture and equipment sourcing through trusted third-party suppliers, and bathroom fixtures through Bogat.",
       },
     ],
   },
@@ -104,7 +104,7 @@ const SERVICES = [
       },
       {
         q: "Do you handle small bathroom refreshes?",
-        a: "Yes — re-tiling, fixture swap-outs, and regrouting are all within scope.",
+        a: "Yes. Re-tiling, fixture swap-outs, and regrouting are all within scope.",
       },
     ],
   },
@@ -114,7 +114,7 @@ const SERVICES = [
     slug: "kitchen-remodeling",
     tagline: "The kitchen you always wanted",
     intro:
-      "Full kitchen design and installation — custom cabinetry, countertops, splashbacks, appliance integration, and all associated plumbing and electrical works.",
+      "Full kitchen design and installation: custom cabinetry, countertops, splashbacks, appliance integration, and all associated plumbing and electrical works.",
     includes: [
       "Kitchen layout and design",
       "Cabinet and drawer unit supply and fitting",
@@ -130,7 +130,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Do you supply kitchen units?",
-        a: "Yes — we can supply through our trusted kitchen partners or work with your chosen brand.",
+        a: "Yes. We can supply through our trusted kitchen partners or work with your chosen brand.",
       },
     ],
   },
@@ -141,7 +141,7 @@ const SERVICES = [
     portfolioCategory: "Construction (Shell to Finish)",
     tagline: "Ground up. Done right.",
     intro:
-      "TBM manages new-build construction projects from foundation to finishing — residential and light commercial, with full project management and supervision.",
+      "TBM manages new-build construction projects from foundation to finishing, residential and light commercial, with full project management and supervision.",
     includes: [
       "Foundation and substructure",
       "Structural frame and roofing",
@@ -167,7 +167,7 @@ const SERVICES = [
     slug: "maintenance",
     tagline: "Keep your property in peak condition",
     intro:
-      "Planned and reactive maintenance services for residential and commercial properties — plumbing, electrical, painting, tiling repairs, and general works.",
+      "Planned and reactive maintenance services for residential and commercial properties: plumbing, electrical, painting, tiling repairs, and general works.",
     includes: [
       "Plumbing repairs and emergency callouts",
       "Electrical fault-finding and repairs",
@@ -183,7 +183,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Do you do emergency callouts?",
-        a: "Yes — emergency plumbing and electrical callouts are available for clients in Abuja and Lagos.",
+        a: "Yes. Emergency plumbing and electrical callouts are available for clients in Abuja and Lagos.",
       },
     ],
   },
@@ -193,7 +193,7 @@ const SERVICES = [
     slug: "design-consultation",
     tagline: "Start with clarity",
     intro:
-      "A structured design consultation gives you a full project brief, Ziora AI concepts, material recommendations, and a realistic budget — before any work begins.",
+      "A structured design consultation gives you a full project brief, Ziora AI concepts, material recommendations, and a realistic budget, all before any work begins.",
     includes: [
       "Site visit or remote session",
       "Ziora AI concept generation",
@@ -205,7 +205,7 @@ const SERVICES = [
     whoFor:
       "Anyone starting a renovation or fit-out who wants clarity before committing",
     timeline: "1–2 days for output after session",
-    pricing: "Fixed consultation fee — credited toward project if you proceed",
+    pricing: "Fixed consultation fee, credited toward project if you proceed",
     faqs: [
       {
         q: "Is the consultation fee refundable?",
@@ -235,7 +235,7 @@ const SERVICES = [
     faqs: [
       {
         q: "Can you supervise projects outside Abuja and Lagos?",
-        a: "On a case-by-case basis — contact us to discuss.",
+        a: "On a case-by-case basis. Contact us to discuss.",
       },
     ],
   },

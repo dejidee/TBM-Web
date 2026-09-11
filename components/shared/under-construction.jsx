@@ -127,7 +127,7 @@ export default function UnderConstruction() {
           transition={{ duration: 0.8, delay: 0.55 }}
           className="font-manrope text-white/38 text-[1.0rem] leading-relaxed mb-12 max-w-[480px]"
         >
-          We're putting the finishing touches on our new platform — luxury
+          We're putting the finishing touches on our new platform: luxury
           renovation, AI-powered design, and premium materials, all in one place.
         </motion.p>
 

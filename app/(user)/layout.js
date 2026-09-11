@@ -9,7 +9,7 @@ import TBMConcierge from "@/components/common/concierge/main";
 // renders LoadingScreen and TBMToaster twice.
 
 export const metadata = {
-  title: "TBM Building Services — Design. Price. Build.",
+  title: "TBM Building Services: Design. Price. Build.",
   description:
     "Premium renovation, construction materials, and AI-powered space visualization across Abuja and Lagos.",
 };

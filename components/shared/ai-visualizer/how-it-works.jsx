@@ -35,7 +35,7 @@ const STEPS = [
     number: "01",
     Icon: Upload,
     title: "Upload Your Space",
-    desc: "Start with what you already have — a floor plan, a rough sketch, or a photo taken on your phone.",
+    desc: "Start with what you already have: a floor plan, a rough sketch, or a photo taken on your phone.",
     outcome: "A digital model of your room",
   },
   {
@@ -48,8 +48,8 @@ const STEPS = [
   {
     number: "03",
     Icon: ReceiptText,
-    title: "Get Project Estimate — Coming Soon",
-    desc: "Every concept will come costed to Nigerian market rates — construction, finishing and materials, line by line.",
+    title: "Get Project Estimate (Coming Soon)",
+    desc: "Every concept will come costed to Nigerian market rates: construction, finishing and materials, line by line.",
     outcome: "An itemised cost breakdown (in development)",
   },
   {
@@ -90,7 +90,7 @@ function ActionBlock({ className = "" }) {
         </Link>
       </div>
       <p className="mt-5 text-white/50 text-xs leading-relaxed">
-        Start free on the Economy plan — upgrade only when you need more.
+        Start free on the Economy plan. Upgrade only when you need more.
       </p>
     </div>
   );
@@ -141,7 +141,7 @@ export default function HowItWorks() {
 
           <p className="mt-7 text-white/70 text-[15px] leading-relaxed max-w-md">
             No drawings to commission, no quotes to chase. Upload one photo and
-            see the design — cost estimates are coming soon.
+            see the design. Cost estimates are coming soon.
           </p>
 
           <ActionBlock className="hidden lg:block mt-10" />

@@ -198,7 +198,7 @@ export default function ProductGallery({
             >
               <Image
                 src={images[index]}
-                alt={`${name} — view ${index + 1}`}
+                alt={`${name}, view ${index + 1}`}
                 fill
                 className="object-contain"
                 sizes="(max-width: 1024px) 100vw, 55vw"
@@ -306,7 +306,7 @@ export default function ProductGallery({
                   >
                     <Image
                       src={images[index]}
-                      alt={`${name} — view ${index + 1}`}
+                      alt={`${name}, view ${index + 1}`}
                       fill
                       className="object-contain"
                       sizes="90vw"

@@ -167,7 +167,7 @@ function ConsultationVerifyContent() {
 
     finish(
       "uncertain",
-      "We couldn't reach our servers to confirm this payment. If you were charged, do not pay again — check back in a moment or contact support.",
+      "We couldn't reach our servers to confirm this payment. If you were charged, do not pay again; check back in a moment or contact support.",
     );
   }, [reference, consultationId, checkOnce, finish, router]);
 

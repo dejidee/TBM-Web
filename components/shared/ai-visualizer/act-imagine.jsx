@@ -44,7 +44,7 @@ export default function ActImagine() {
             <span className="z-gold-text">before you build it</span>
           </h2>
           <p className="mt-6 text-white/70 text-[15px] leading-relaxed">
-            Not a mood board — the finished thing, from the space you have
+            Not a mood board. The finished thing, from the space you have
             today. This one is real: drag to move between the frame and the
             handover.
           </p>
@@ -76,7 +76,7 @@ export default function ActImagine() {
           <div className="mt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
             <div className="flex items-center gap-2.5">
               <span aria-hidden className="h-px w-6 bg-gold/50 shrink-0" />
-              <p className="z-micro">Contemporary Luxury Villa, Abuja — frame to finish</p>
+              <p className="z-micro">Contemporary Luxury Villa, Abuja: frame to finish</p>
             </div>
 
             <Link

@@ -66,7 +66,7 @@ export default function OrderDetailsPage({ params }) {
           </p>
           <p className="text-[14px] text-white/40 mb-6">
             {isError
-              ? "Your order is safe — this is a problem reaching it. Try again in a moment."
+              ? "Your order is safe. This is a problem reaching it. Try again in a moment."
               : "It may have been cancelled, or belong to another account."}
           </p>
           <Link

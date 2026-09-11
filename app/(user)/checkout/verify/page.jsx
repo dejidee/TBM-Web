@@ -137,7 +137,7 @@ function CheckoutVerifyContent() {
           "uncertain",
           `We're still waiting on a status for this payment${
             result.paymentStatus ? ` (currently: ${result.paymentStatus})` : ""
-          }. If you were charged, do not pay again — it will show up on your order shortly.`,
+          }. If you were charged, do not pay again; it will show up on your order shortly.`,
         );
       }
       return;
@@ -145,7 +145,7 @@ function CheckoutVerifyContent() {
 
     finish(
       "uncertain",
-      "We couldn't reach our servers to confirm this payment. If you were charged, do not pay again — check back in a moment or contact support with your order number.",
+      "We couldn't reach our servers to confirm this payment. If you were charged, do not pay again; check back in a moment or contact support with your order number.",
     );
   }, [reference, orderId, checkOnce, finish, router]);
 

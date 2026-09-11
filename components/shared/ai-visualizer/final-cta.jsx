@@ -61,7 +61,7 @@ export default function FinalCTA() {
         </h2>
 
         <p className="mt-7 text-white/70 text-base leading-relaxed max-w-lg mx-auto">
-          Upload one photo and see the space and the specification — then talk
+          Upload one photo and see the space and the specification, then talk
           to the people who would build it.
         </p>
 
@@ -82,7 +82,7 @@ export default function FinalCTA() {
         </div>
 
         <p className="mt-6 text-white/50 text-xs">
-          Start free on the Economy plan — upgrade only when you need more.
+          Start free on the Economy plan. Upgrade only when you need more.
         </p>
 
         <Link

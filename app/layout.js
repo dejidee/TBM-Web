@@ -28,7 +28,7 @@ const poppins = Poppins({
 
 export const metadata = {
   title: {
-    default: "TBM Building Services — Design. Price. Build.",
+    default: "TBM Building Services: Design. Price. Build.",
     template: "%s | TBM Building Services",
   },
 
@@ -50,9 +50,9 @@ export const metadata = {
     locale: "en_NG",
     url: "https://tbmbuilding.com",
     siteName: "TBM Building Services",
-    title: "TBM Building Services — Design. Price. Build.",
+    title: "TBM Building Services: Design. Price. Build.",
     description:
-      "Premium renovation, AI-powered design with Ziora, and certified materials from Bogat — all in one platform across Abuja and Lagos.",
+      "Premium renovation, AI-powered design with Ziora, and certified materials from Bogat, all in one platform across Abuja and Lagos.",
     images: [
       {
         url: "/og-image.png",

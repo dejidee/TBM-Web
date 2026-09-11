@@ -10,13 +10,13 @@ const paymentMethods = [
   {
     id: "Paystack",
     label: "Card / Bank / USSD",
-    description: "Pay securely via Paystack — card, bank transfer, or USSD",
+    description: "Pay securely via Paystack: card, bank transfer, or USSD",
     icon: CreditCard,
   },
   {
     id: "BankTransfer",
     label: "Direct Bank Transfer",
-    description: "Transfer directly to our account — we confirm within 24 hrs",
+    description: "Transfer directly to our account; we confirm within 24 hrs",
     icon: Landmark,
   },
 ];

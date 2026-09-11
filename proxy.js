@@ -74,8 +74,18 @@ export function proxy(request) {
   // curtain regardless of what they asked for. This runs before, and takes
   // priority over, the auth rules below: while the gate is down even a valid
   // admin session can't reach its own login or dashboard.
+  //
+  // *.vercel.app is exempt on purpose: it's the internal testing surface
+  // (unindexed, unguessable per-deployment/branch aliases), not the public
+  // domain. The team needs to see the real Production build there while
+  // www.tbmbuilding.com stays curtained for everyone else — same build,
+  // same NEXT_PUBLIC_SITE_LIVE value, gated on hostname instead.
+  const isInternalTestHost = (request.headers.get("host") || "").endsWith(
+    ".vercel.app",
+  );
   if (
     process.env.NEXT_PUBLIC_SITE_LIVE !== "true" &&
+    !isInternalTestHost &&
     pathname !== "/site-locked"
   ) {
     const url = request.nextUrl.clone();

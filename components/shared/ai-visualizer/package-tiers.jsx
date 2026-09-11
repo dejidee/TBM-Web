@@ -217,7 +217,7 @@ function QuotaBar({ used, allowed }) {
       </div>
       {isHigh && (
         <p className="text-[11px] text-orange-400 font-manrope">
-          Running low — consider upgrading.
+          Running low. Consider upgrading.
         </p>
       )}
     </div>
@@ -252,7 +252,7 @@ const TIERS = [
       "50 generations per billing period",
       "Multiple style variations",
       "Style selection control",
-      "Basic cost range estimate — Coming Soon",
+      "Basic cost range estimate (Coming Soon)",
       "Priority rendering queue",
     ],
   },
@@ -265,10 +265,10 @@ const TIERS = [
     badge: "Full Access",
     features: [
       "Unlimited generations",
-      "Full material mapping (BOQ) — Coming Soon",
-      "Detailed cost breakdown — Coming Soon",
-      "Start Project with TBM — Coming Soon",
-      "Buy Bathroom Vanities via Bogat — Coming Soon",
+      "Full material mapping, BOQ (Coming Soon)",
+      "Detailed cost breakdown (Coming Soon)",
+      "Start Project with TBM (Coming Soon)",
+      "Buy Bathroom Vanities via Bogat (Coming Soon)",
       "Execution-ready output",
     ],
   },
@@ -688,7 +688,7 @@ export default function PackageTiers({ id, onSubscribed }) {
                       <span className="font-mono uppercase">
                         {appliedPromo}
                       </span>{" "}
-                      — not valid or not applicable
+                      is not valid or not applicable
                     </span>
                   )}
                   {promoStatus === null && (

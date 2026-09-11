@@ -64,7 +64,7 @@ function BeforeAfterSlider({ beforeUrl, afterUrl, beforeCaption, afterCaption, t
         {/* After (background) */}
         <Image
           src={afterUrl}
-          alt={`${title} — after renovation`}
+          alt={`${title}, after renovation`}
           fill
           sizes="(max-width: 1024px) 100vw, 60vw"
           draggable={false}
@@ -79,7 +79,7 @@ function BeforeAfterSlider({ beforeUrl, afterUrl, beforeCaption, afterCaption, t
         <div className="absolute inset-0 overflow-hidden" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
           <Image
             src={beforeUrl}
-            alt={`${title} — before renovation`}
+            alt={`${title}, before renovation`}
             fill
             sizes="(max-width: 1024px) 100vw, 60vw"
             draggable={false}
@@ -201,7 +201,7 @@ export default function ProjectDetailClient({ item }) {
               {hasSlider ? (
                 <div>
                   <p className="text-white/40 text-xs font-manrope uppercase tracking-widest mb-4">
-                    Before &amp; After — drag the handle to compare
+                    Before &amp; After: drag the handle to compare
                   </p>
                   <BeforeAfterSlider
                     beforeUrl={before}

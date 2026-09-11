@@ -24,8 +24,50 @@ import {
   useGenerateImage,
   useGenerateVideo,
   useAIStyles,
+  aiKeys,
 } from "@/hooks/use-ai-services";
+import { aiProjectsApi } from "@/lib/api/ai-services";
 import { useSubscriptionState } from "@/hooks/use-subscription";
+
+const PROJECT_STATUS = { PENDING: 1, PROCESSING: 2, COMPLETED: 3, FAILED: 4 };
+
+const ROOM_TYPES = [
+  "Kitchen",
+  "Living Room",
+  "Bedroom",
+  "Bathroom",
+  "Dining Room",
+  "Home Office",
+  "Outdoor Space",
+];
+
+/**
+ * A dropped connection mid-generation isn't proof the backend failed too —
+ * generation keeps running server-side regardless of whether this tab is
+ * still attached to the response. This is the documented recovery path:
+ * poll the project list for its real outcome instead of assuming failure
+ * and letting the user resubmit into a duplicate generation.
+ *
+ * `GET /ai/projects`'s response shape is unverified against a live response
+ * (no recorded contract yet — see BACKLOG.md), so every field is read
+ * defensively rather than asserted.
+ */
+async function pollProjectStatus(projectId, { intervalMs = 5000, maxAttempts = 36 } = {}) {
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    await new Promise((resolve) => setTimeout(resolve, intervalMs));
+    let res;
+    try {
+      res = await aiProjectsApi.getProjects();
+    } catch {
+      continue; // a failed poll isn't a failed generation — just try again
+    }
+    const items = res?.data?.items ?? res?.data ?? res?.items ?? [];
+    const project = items.find((p) => p?.id === projectId);
+    if (project?.status === PROJECT_STATUS.COMPLETED) return "completed";
+    if (project?.status === PROJECT_STATUS.FAILED) return "failed";
+  }
+  return "timeout";
+}
 
 const GOLD = "linear-gradient(135deg, #D4AF37 0%, #b8962e 100%)";
 
@@ -249,7 +291,7 @@ function StyleGrid({ value, onChange }) {
   if (isError) {
     return (
       <p className="text-[13px] text-white/35">
-        Styles couldn&rsquo;t load — you can still generate without one.
+        Styles couldn&rsquo;t load, but you can still generate without one.
       </p>
     );
   }
@@ -456,6 +498,7 @@ export default function StudioView() {
   // value — after that the field is the user's, and editing it must not be
   // undone by a re-render.
   const [prompt, setPrompt] = useState(() => searchParams.get("prompt") ?? "");
+  const [roomType, setRoomType] = useState("");
   const [contextTags, setContextTags] = useState([]);
   const [file, setFile] = useState(null);
   const [filePreview, setFilePreview] = useState(null);
@@ -533,6 +576,10 @@ export default function StudioView() {
     if (!canSubmit) return;
     setErrorMsg("");
     setStep("generating");
+
+    // Hoisted so the catch block can poll for this project's real outcome
+    // instead of assuming failure the moment the request throws.
+    let projectId;
     try {
       let sourceImageUrl;
       if (file) {
@@ -544,26 +591,51 @@ export default function StudioView() {
         sourceImageUrl,
         outputType,
         prompt,
+        contextLabel: roomType || undefined,
         contextTags: contextTags.length > 0 ? contextTags : undefined,
       });
-      const projectId =
-        projectRes?.id ?? projectRes?.data?.id ?? projectRes?.data?.projectId;
+      projectId = projectRes?.id ?? projectRes?.data?.id ?? projectRes?.data?.projectId;
       if (!projectId) throw new Error("Project creation failed.");
 
-      // `style` is the id from GET /ai/styles, sent at generation time.
+      // `style` is the id from GET /ai/styles. sourceImageUrl/prompt/contextTags
+      // are resent here, not just at project creation — matching the backend's
+      // documented generate/image and generate/video request shape.
       const style = styleId || undefined;
+      const generatePayload = {
+        projectId,
+        sourceImageUrl,
+        prompt,
+        contextTags: contextTags.length > 0 ? contextTags : undefined,
+        style,
+      };
       if (outputType === 1) {
-        await generateImage.mutateAsync({ projectId, style });
+        await generateImage.mutateAsync(generatePayload);
       } else {
-        await generateVideo.mutateAsync({ projectId, durationSeconds: 9, style });
+        await generateVideo.mutateAsync({ ...generatePayload, durationSeconds: 9 });
       }
 
       setStep("done");
-      queryClient.invalidateQueries({ queryKey: ["ai-projects"] });
+      queryClient.invalidateQueries({ queryKey: aiKeys.projects() });
     } catch (err) {
+      if (projectId) {
+        const outcome = await pollProjectStatus(projectId).catch(() => "timeout");
+        if (outcome === "completed") {
+          setStep("done");
+          queryClient.invalidateQueries({ queryKey: aiKeys.projects() });
+          return;
+        }
+        if (outcome === "timeout") {
+          setStep("error");
+          setErrorMsg(
+            "Still working on it. This can take a few minutes. Check My Designs shortly, or try again.",
+          );
+          return;
+        }
+        // outcome === "failed" falls through to the generic message below.
+      }
       const msg =
         err?.message ||
-        (err?.status === 403 && err?.code === "subscription_quota_exceeded"
+        (err?.status === 403
           ? "Your generation quota is used up. Upgrade your plan to continue."
           : "Something went wrong. Please try again.");
       setStep("error");
@@ -672,7 +744,7 @@ export default function StudioView() {
             Create a New Design
           </h1>
           <p className="mt-1.5 max-w-2xl text-[15px] font-medium text-white/50">
-            Upload your room, choose a style, and describe the vision — Ziora renders the rest.
+            Upload your room, choose a style, and describe the vision. Ziora renders the rest.
           </p>
         </div>
 
@@ -770,6 +842,29 @@ export default function StudioView() {
               accept="image/jpeg,image/png,image/webp"
               onChange={handleFileChange}
             />
+
+            <div className="mt-4">
+              <label
+                htmlFor="room-type"
+                className="mb-1.5 block text-[11px] font-semibold uppercase tracking-wider text-white/30"
+              >
+                Room type (optional)
+              </label>
+              <select
+                id="room-type"
+                value={roomType}
+                onChange={(e) => setRoomType(e.target.value)}
+                className="w-full rounded-xl border border-white/10 px-3.5 py-2.5 text-sm text-white outline-none transition-colors focus:border-[#D4AF37]/50"
+                style={{ background: "#1a1a1a" }}
+              >
+                <option value="">Not specified</option>
+                {ROOM_TYPES.map((r) => (
+                  <option key={r} value={r}>
+                    {r}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
           {/* Right: options */}
@@ -836,7 +931,7 @@ export default function StudioView() {
               <SectionHeader
                 n="4"
                 title="Describe the space you want"
-                hint="The more specific — materials, colours, mood, lighting — the better."
+                hint="The more specific (materials, colours, mood, lighting), the better."
               />
               <textarea
                 value={prompt}
