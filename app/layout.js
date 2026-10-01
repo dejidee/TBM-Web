@@ -1,6 +1,6 @@
 import { Inter, Manrope, Poppins, Titillium_Web } from "next/font/google";
 import "./globals.css";
-
+import { Analytics } from "@vercel/analytics/next";
 import Providers from "@/components/common/providers";
 
 const titilum = Titillium_Web({
@@ -86,6 +86,7 @@ export default function RootLayout({ children }) {
         className={`${titilum.variable} ${inter.variable} ${manRope.variable} ${poppins.variable} antialiased`}
       >
         <Providers>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );
