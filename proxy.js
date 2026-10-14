@@ -66,8 +66,38 @@ function isExpired(token) {
   }
 }
 
+// A bare, unbranded page — deliberately nothing that names the app, so the
+// site reads as gone rather than as "under construction".
+const DOWN_PAGE = `<html>
+<head><title>404 Not Found</title></head>
+<body>
+<center><h1>404 Not Found</h1></center>
+<hr>
+</body>
+</html>
+`;
+
 export function proxy(request) {
   const { pathname, search } = request.nextUrl;
+
+  const isInternalTestHost = (request.headers.get("host") || "").endsWith(
+    ".vercel.app",
+  );
+
+  // Takedown switch: SITE_DOWN=true answers every public route with a plain
+  // 404, ahead of the curtain and the auth rules. Server-only on purpose — a
+  // NEXT_PUBLIC_ var would ship in the bundle. Scope it to Production in
+  // Vercel and rebuild; *.vercel.app stays exempt, as for the curtain below.
+  if (process.env.SITE_DOWN === "true" && !isInternalTestHost) {
+    return new NextResponse(DOWN_PAGE, {
+      status: 404,
+      headers: {
+        "content-type": "text/html",
+        "cache-control": "no-store",
+        "x-robots-tag": "noindex",
+      },
+    });
+  }
 
   // Site-wide lock: when the public gate is down, no route renders — not just
   // "/". A visitor (or a bot, or a bookmark into /admin/login) gets the same
@@ -80,9 +110,6 @@ export function proxy(request) {
   // domain. The team needs to see the real Production build there while
   // www.tbmbuilding.com stays curtained for everyone else — same build,
   // same NEXT_PUBLIC_SITE_LIVE value, gated on hostname instead.
-  const isInternalTestHost = (request.headers.get("host") || "").endsWith(
-    ".vercel.app",
-  );
   if (
     process.env.NEXT_PUBLIC_SITE_LIVE !== "true" &&
     !isInternalTestHost &&
@@ -116,6 +143,7 @@ export function proxy(request) {
 export const config = {
   // Broad on purpose: the site-wide lock above has to see every route, not
   // just the previously-gated prefixes. Excludes only what the /site-locked
-  // page itself needs to render (its JS/CSS chunks) and the favicon.
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // page itself needs to render (its JS/CSS chunks). The favicon is matched
+  // so SITE_DOWN can 404 it too — a TBM icon in the tab would give it away.
+  matcher: ["/((?!_next/static|_next/image).*)"],
 };
